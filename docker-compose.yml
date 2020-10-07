@@ -11,7 +11,7 @@ services:
             MYSQL_PASSWORD: illusorywall
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: illusory_wall
-        restart: on-failure
+        restart: unless-stopped
 
     illusorywall:
         build: ./IllusoryWall
@@ -22,4 +22,4 @@ services:
             - db
         ports:
             - 80:80
-        restart: on-failure
+        restart: unless-stopped

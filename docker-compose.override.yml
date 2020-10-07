@@ -3,6 +3,7 @@ services:
     db:
         ports:
             - 3306:3306
+        restart: 'no'
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin:latest
@@ -19,4 +20,4 @@ services:
             PMA_ARBIRARY: 1
         ports:
             - 8080:80
-        restart: on-failure
+        restart: 'no'
