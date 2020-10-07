@@ -1,5 +1,5 @@
 ﻿using System;
 
 namespace WebScraper {
-    public class WebScraper { }
+    public class Scraper { }
 }
