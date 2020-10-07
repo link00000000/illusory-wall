@@ -51,5 +51,5 @@ docker-compose up -d -f docker-compose.yml db illusorywall
 -   `/IllusoryWall`: Project solution
 -   `/IllusoryWall/IllusoryWall`: IllusoryWall server application
 -   `/IllusoryWall/IllusoryWall/ClientApp`: Web Client
--   `/IllusoryWall/WebScraper`: Web scraper application
+-   `/IllusoryWall/WebScraper`: Web scraper shared library
 -   `/Client`: Symbolic link to `/IllusoryWall/IllusoryWall/ClientApp`
