@@ -1,8 +1,8 @@
-# Illusory Wall
+# Illusory Wall 🧱👻🚪
 
 A project for Database Management 🔐 @ The University of Akron 🎓
 
-## Development
+## Development 🏗
 
 ### Requirements
 
@@ -27,7 +27,7 @@ cd IllusoryWall && dotnet watch -p IllusoryWall run
 -   PHPMyAdmin Interface: http://localhost:8080
 -   Application: http://localhost:5000 or https://localhost:5001
 
-## Production
+## Production ✨
 
 ### Requirements
 
@@ -44,7 +44,7 @@ docker-compose up -d -f docker-compose.yml db illusorywall
 
 -   Application: http://localhost
 
-## Structure
+## Structure 🏛
 
 -   `/db`: Build files for MySQL docker image
 -   `/.mysql_data`: Data volume used by MySQL docker image
