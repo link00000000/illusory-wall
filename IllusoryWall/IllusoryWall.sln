@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IllusoryWall", "IllusoryWall\IllusoryWall.csproj", "{D6B6A4AC-E0F3-4BB6-85E9-258AD5C8CF50}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebScraper", "WebScraper\WebScraper.csproj", "{4F2396FF-7C61-4D6F-B8BF-D7AF5FF97FD7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,17 @@ Global
 		{D6B6A4AC-E0F3-4BB6-85E9-258AD5C8CF50}.Release|x64.Build.0 = Release|Any CPU
 		{D6B6A4AC-E0F3-4BB6-85E9-258AD5C8CF50}.Release|x86.ActiveCfg = Release|Any CPU
 		{D6B6A4AC-E0F3-4BB6-85E9-258AD5C8CF50}.Release|x86.Build.0 = Release|Any CPU
+		{4F2396FF-7C61-4D6F-B8BF-D7AF5FF97FD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F2396FF-7C61-4D6F-B8BF-D7AF5FF97FD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F2396FF-7C61-4D6F-B8BF-D7AF5FF97FD7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4F2396FF-7C61-4D6F-B8BF-D7AF5FF97FD7}.Debug|x64.Build.0 = Debug|Any CPU
+		{4F2396FF-7C61-4D6F-B8BF-D7AF5FF97FD7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4F2396FF-7C61-4D6F-B8BF-D7AF5FF97FD7}.Debug|x86.Build.0 = Debug|Any CPU
+		{4F2396FF-7C61-4D6F-B8BF-D7AF5FF97FD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F2396FF-7C61-4D6F-B8BF-D7AF5FF97FD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F2396FF-7C61-4D6F-B8BF-D7AF5FF97FD7}.Release|x64.ActiveCfg = Release|Any CPU
+		{4F2396FF-7C61-4D6F-B8BF-D7AF5FF97FD7}.Release|x64.Build.0 = Release|Any CPU
+		{4F2396FF-7C61-4D6F-B8BF-D7AF5FF97FD7}.Release|x86.ActiveCfg = Release|Any CPU
+		{4F2396FF-7C61-4D6F-B8BF-D7AF5FF97FD7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
