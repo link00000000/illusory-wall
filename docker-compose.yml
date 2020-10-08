@@ -7,8 +7,8 @@ services:
         volumes:
             - ./.mysql_data:/var/lib/mysql
         environment:
-            MYSQL_USER: illusorywall
-            MYSQL_PASSWORD: illusorywall
+            MYSQL_USER: user
+            MYSQL_PASSWORD: user
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: illusory_wall
         restart: unless-stopped
