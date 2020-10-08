@@ -10,3 +10,5 @@ docker-compose.*.yml
 **/obj
 bin/
 obj/
+IllusoryWall/ClientApp/node_modules/
+IllusoryWall/ClientApp/build

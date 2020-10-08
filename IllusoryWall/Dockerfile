@@ -15,12 +15,14 @@ RUN apt-get install -y nodejs
 # copy csproj and restore as distinct layers
 COPY *.sln .
 COPY IllusoryWall/*.csproj ./IllusoryWall/
+COPY WebScraper/*.csproj ./WebScraper/
 RUN dotnet restore
 
 # copy everything else and build app
 COPY IllusoryWall/. ./IllusoryWall/
+COPY WebScraper/. ./WebScraper/
 WORKDIR /source/IllusoryWall
-RUN dotnet publish -c release -o /app --no-restore
+RUN dotnet publish -c release -o /app --no-restore -v minimal
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
