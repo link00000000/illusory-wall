@@ -5,17 +5,32 @@ using System.Text;
 
 namespace IllusoryWall.Models
 {
+    /// <summary>
+    ///     Model class for the Damages table
+    /// </summary>
     public class Damage
     {
+        /// <summary>
+        ///     Id for the table entry
+        /// </summary>
         public int Id { get; set; }
 
-        [Required]
+        /// <summary>
+        ///     EnemyId for a foreign key that is the id of the enemy the entry refers to.
+        /// </summary>
         public int EnemyId { get; set; }
 
         [Required]
+        /// <summary>
+        ///     Column to explain what type of damage the entry is referring to.
+        ///     (i.e Thrust, Slash, Blunt, Magic, Fire, Poison, etc)
+        /// </summary>
         public string DamageType { get; set; }
 
         [Required]
+        /// <summary>
+        ///     Column to distinguish if the damage type is a weakness (W), Resistance (R), or Immunity (I)
+        /// </summary>
         public char Category { get; set; }
 
     }

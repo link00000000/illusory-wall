@@ -12,9 +12,20 @@ namespace IllusoryWall.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+
+    /// <summary>
+    ///     Controller class to handle requests to Enemy
+    /// </summary>
     public class EnemyController : ControllerBase
     {
+        /// <summary>
+        ///     IllusoryWallContext object for reuse throughout API
+        /// </summary>
         private readonly IllusoryWallContext _context;
+
+        /// <summary>
+        ///     Constructor
+        /// </summary>
         public EnemyController()
         {
             _context = new IllusoryWallContext();
