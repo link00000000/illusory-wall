@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
+using System.Text.Json.Serialization;
 
 namespace IllusoryWall.Models
 {
@@ -18,7 +18,8 @@ namespace IllusoryWall.Models
         /// <summary>
         ///     EnemyId for a foreign key that is the id of the enemy the entry refers to.
         /// </summary>
-        public int EnemyId { get; set; }
+        [JsonIgnore]
+        public virtual Enemy Enemy { get; set; }
 
         /// <summary>
         ///     Column to explain what type of damage the entry is referring to.

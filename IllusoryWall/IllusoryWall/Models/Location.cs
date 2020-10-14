@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
+using System.Text.Json.Serialization;
 
 namespace IllusoryWall.Models
 {
@@ -19,8 +19,8 @@ namespace IllusoryWall.Models
         ///     Field to the id of the enemy in this location
         ///     Is a foreign key to the Enemies table
         /// </summary>
-        [Required]
-        public int EnemyId { get; set; }
+        [JsonIgnore]
+        public virtual Enemy Enemy { get; set; }
 
         /// <summary>
         ///     Field for the hp of the enemy in the location

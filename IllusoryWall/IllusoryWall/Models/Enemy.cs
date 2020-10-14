@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IllusoryWall.Models
 {
@@ -46,16 +46,19 @@ namespace IllusoryWall.Models
         /// <summary>
         ///     Connection to the Locations table
         /// </summary>
+        [InverseProperty("Enemy")]
         public virtual ICollection<Location> Locations { get; set; }
 
         /// <summary>
         ///     Connection to the Drops table
         /// </summary>
+        [InverseProperty("Enemy")]
         public virtual ICollection<Drop> Drops { get; set; }
 
         /// <summary>
         ///     Connection to the Damages table
         /// </summary>
+        [InverseProperty("Enemy")]
         public virtual ICollection<Damage> Damages { get; set; }
     }
 }

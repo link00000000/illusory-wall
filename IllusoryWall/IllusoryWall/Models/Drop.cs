@@ -20,7 +20,8 @@ namespace IllusoryWall.Models
         ///     Field for the id of the enemy the drop is matched with. 
         ///     It is a foreign key field
         /// </summary>
-        public int EnemyId { get; set; }
+        [JsonIgnore]
+        public virtual Enemy Enemy { get; set; }
 
         /// <summary>
         ///     Field for the name of the drop
