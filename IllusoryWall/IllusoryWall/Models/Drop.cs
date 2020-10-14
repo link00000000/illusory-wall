@@ -40,6 +40,5 @@ namespace IllusoryWall.Models
         ///     is located.
         /// </summary>
         public string Location { get; set; }
-
     }
 }
