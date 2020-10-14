@@ -8,7 +8,8 @@ A project for Database Management 🔐 @ The University of Akron 🎓
 
 -   .NET Core 3.1
 -   ASP\.NET Core 3.1
--   NodeJS 14.x and NPM
+-   NodeJS 14.x
+-   Yarn
 -   Docker and docker-compose
 
 ### Usage
