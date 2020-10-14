@@ -37,6 +37,5 @@ namespace IllusoryWall.Models
         ///     Field for the name of the location
         /// </summary>
         public string Name { get; set; }
-
     }
 }

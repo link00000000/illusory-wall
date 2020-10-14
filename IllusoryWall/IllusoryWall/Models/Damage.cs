@@ -20,18 +20,17 @@ namespace IllusoryWall.Models
         /// </summary>
         public int EnemyId { get; set; }
 
-        [Required]
         /// <summary>
         ///     Column to explain what type of damage the entry is referring to.
         ///     (i.e Thrust, Slash, Blunt, Magic, Fire, Poison, etc)
         /// </summary>
+        [Required]
         public string DamageType { get; set; }
 
-        [Required]
         /// <summary>
         ///     Column to distinguish if the damage type is a weakness (W), Resistance (R), or Immunity (I)
         /// </summary>
+        [Required]
         public char Category { get; set; }
-
     }
 }

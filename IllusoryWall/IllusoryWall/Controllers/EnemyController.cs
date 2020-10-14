@@ -30,7 +30,5 @@ namespace IllusoryWall.Controllers
         {
             _context = new IllusoryWallContext();
         }
-
-
     }
 }
