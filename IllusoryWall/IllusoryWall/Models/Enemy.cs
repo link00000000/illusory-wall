@@ -15,10 +15,10 @@ namespace IllusoryWall.Models
         /// </summary>
         public int Id { get; set; }
 
-        [Required]
         /// <summary>
         ///     Field for the name of the Enemy entry.
         /// </summary>
+        [Required]
         public string Name { get; set; }
 
         /// <summary>
@@ -26,10 +26,10 @@ namespace IllusoryWall.Models
         /// </summary>
         public string Description { get; set; }
 
-        [Required]
         /// <summary>
         ///     Boolean field whether the enemy respawns or not
         /// </summary>
+        [Required]
         public bool Respawns { get; set; }
 
         /// <summary>
@@ -37,10 +37,10 @@ namespace IllusoryWall.Models
         /// </summary>
         public string Class { get; set; }
 
-        [Required]
         /// <summary>
         ///     Field to store the path to the image for the enemy
         /// </summary>
+        [Required]
         public string ImagePath { get; set; }
 
         /// <summary>
