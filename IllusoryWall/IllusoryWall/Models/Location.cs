@@ -15,11 +15,11 @@ namespace IllusoryWall.Models
         /// </summary>
         public int Id { get; set; }
 
-        [Required]
         /// <summary>
         ///     Field to the id of the enemy in this location
         ///     Is a foreign key to the Enemies table
         /// </summary>
+        [Required]
         public int EnemyId { get; set; }
 
         /// <summary>
@@ -32,10 +32,10 @@ namespace IllusoryWall.Models
         /// </summary>
         public int Souls { get; set; }
 
-        [Required]
         /// <summary>
         ///     Field for the name of the location
         /// </summary>
+        [Required]
         public string Name { get; set; }
     }
 }
