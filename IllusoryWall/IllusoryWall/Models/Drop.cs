@@ -22,10 +22,10 @@ namespace IllusoryWall.Models
         /// </summary>
         public int EnemyId { get; set; }
 
-        [Required]
         /// <summary>
         ///     Field for the name of the drop
         /// </summary>
+        [Required]
         public string Name { get; set; }
 
         /// <summary>
