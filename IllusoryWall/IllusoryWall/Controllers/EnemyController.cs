@@ -30,5 +30,25 @@ namespace IllusoryWall.Controllers
         {
             _context = new IllusoryWallContext();
         }
+
+        /// <summary>
+        ///     Endpoint to insert new enemies into the database
+        /// </summary>
+        /// <param name="enemy">Enemy model object to insert into database</param>
+        /// <returns>The HttpStatusCode for the state of the transaction</returns>
+        [HttpPost]
+        [Route("AddEnemy")]
+        public HttpStatusCode AddEnemy(Enemy enemy)
+        {
+            // add enemy andd save changes
+            _context.Enemies.Add(enemy);
+            int count = _context.SaveChanges();
+            
+            // if changes occurred it worked, else something went wrong
+            if(count > 0)
+                return HttpStatusCode.OK;
+
+            return HttpStatusCode.InternalServerError;
+        }
     }
 }
