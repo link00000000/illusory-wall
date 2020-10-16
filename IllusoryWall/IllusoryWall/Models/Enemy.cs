@@ -29,7 +29,6 @@ namespace IllusoryWall.Models
         /// <summary>
         ///     Boolean field whether the enemy respawns or not
         /// </summary>
-        [Required]
         public bool Respawns { get; set; }
 
         /// <summary>
@@ -40,7 +39,6 @@ namespace IllusoryWall.Models
         /// <summary>
         ///     Field to store the path to the image for the enemy
         /// </summary>
-        [Required]
         public string ImagePath { get; set; }
 
         /// <summary>
