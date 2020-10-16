@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Net;
 using IllusoryWall.Data;
 using IllusoryWall.Models;
@@ -42,7 +41,16 @@ namespace IllusoryWall.Controllers
         {
             // add enemy andd save changes
             _context.Enemies.Add(enemy);
-            int count = _context.SaveChanges();
+            int count;
+            
+            try
+            {
+                count = _context.SaveChanges();
+            }
+            catch (System.Exception)
+            {  
+                return HttpStatusCode.InternalServerError;
+            }
             
             // if changes occurred it worked, else something went wrong
             if(count > 0)
