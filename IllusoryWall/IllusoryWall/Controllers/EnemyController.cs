@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Net;
 using IllusoryWall.Data;
 using IllusoryWall.Models;
@@ -29,6 +28,35 @@ namespace IllusoryWall.Controllers
         public EnemyController()
         {
             _context = new IllusoryWallContext();
+        }
+
+        /// <summary>
+        ///     Endpoint to insert new enemies into the database
+        /// </summary>
+        /// <param name="enemy">Enemy model object to insert into database</param>
+        /// <returns>The HttpStatusCode for the state of the transaction</returns>
+        [HttpPost]
+        [Route("Add")]
+        public HttpStatusCode AddEnemy(Enemy enemy)
+        {
+            // add enemy andd save changes
+            _context.Enemies.Add(enemy);
+            int count;
+            
+            try
+            {
+                count = _context.SaveChanges();
+            }
+            catch (System.Exception)
+            {  
+                return HttpStatusCode.InternalServerError;
+            }
+            
+            // if changes occurred it worked, else something went wrong
+            if(count > 0)
+                return HttpStatusCode.OK;
+
+            return HttpStatusCode.InternalServerError;
         }
     }
 }
