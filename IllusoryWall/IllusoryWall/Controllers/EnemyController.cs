@@ -46,7 +46,7 @@ namespace IllusoryWall.Controllers
 
             // if no results return with 404
             if(!Results.Any())
-                return NotFound(Results);
+                return NotFound();
 
             // if results return json with 200
             return Ok(Results);
