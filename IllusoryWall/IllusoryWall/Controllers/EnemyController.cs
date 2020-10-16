@@ -40,16 +40,16 @@ namespace IllusoryWall.Controllers
         public IActionResult GetEnemy(string enemyName)
         {
             // get results
-            ICollection<Enemy> Results = _context.Enemies
+            ICollection<Enemy> results = _context.Enemies
                                                  .Where(p => p.Name == enemyName)
                                                  .ToArray();
 
             // if no results return with 404
-            if(!Results.Any())
+            if(!results.Any())
                 return NotFound();
 
             // if results return json with 200
-            return Ok(Results);
+            return Ok(results);
         }
 
         /// <summary>
