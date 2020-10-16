@@ -37,7 +37,7 @@ namespace IllusoryWall.Controllers
         /// <param name="enemy">Enemy model object to insert into database</param>
         /// <returns>The HttpStatusCode for the state of the transaction</returns>
         [HttpPost]
-        [Route("AddEnemy")]
+        [Route("Add")]
         public HttpStatusCode AddEnemy(Enemy enemy)
         {
             // add enemy andd save changes
