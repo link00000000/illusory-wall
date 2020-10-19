@@ -59,7 +59,7 @@ namespace IllusoryWall.Controllers
         /// <returns>The HttpStatusCode for the state of the transaction</returns>
         [HttpPost]
         [Route("Add")]
-        public HttpStatusCode AddEnemy(Enemy enemy)
+        public IActionResult AddEnemy(Enemy enemy)
         {
             // add enemy andd save changes
             _context.Enemies.Add(enemy);
@@ -69,16 +69,17 @@ namespace IllusoryWall.Controllers
             {
                 count = _context.SaveChanges();
             }
-            catch (System.Exception)
+            catch (System.Exception oops)
             {  
-                return HttpStatusCode.InternalServerError;
+                Console.Write("\n" + oops.ToString() + "\n\n");
+                return StatusCode(500);
             }
             
             // if changes occurred it worked, else something went wrong
             if(count > 0)
-                return HttpStatusCode.OK;
+                return Ok();
 
-            return HttpStatusCode.InternalServerError;
+            return StatusCode(500);
         }
     }
 }
