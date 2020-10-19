@@ -43,5 +43,17 @@ namespace IllusoryWall.Data
                         builder => builder.EnableRetryOnFailure());
 
         }
+
+        /// <summary>
+        ///     Calls when creating the models to fine tune some of the options
+        /// </summary>
+        /// <param name="builder">Object to set options for specific models</param>
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            // Make the Name attribute in the Enemy model unique
+            builder.Entity<Enemy>()
+                .HasIndex(p => p.Name)
+                .IsUnique();
+        }
     }
 }
