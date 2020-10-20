@@ -86,7 +86,11 @@ export class AddEnemyForm extends Component<IProps, IState> {
                     />
 
                     <Button
-                        type='primary'
+                        type={
+                            this.state.disableRespawnCheckbox
+                                ? 'primary'
+                                : 'dashed'
+                        }
                         size='small'
                         onClick={this.toggleRespawnCheckbox}
                         className={styles['checkbox-button']}
