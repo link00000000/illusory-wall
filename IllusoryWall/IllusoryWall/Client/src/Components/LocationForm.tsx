@@ -1,9 +1,13 @@
 import { Button, Form, Input, InputNumber } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import React, { Component } from 'react'
+import { IWLocation } from '../Utils/Models'
 import styles from './LocationForm.module.css'
 
-type IProps = {}
+type IProps = {
+    onSubmit: (location: IWLocation) => void
+    onCancel: () => void
+}
 type IState = {}
 
 export class LocationForm extends Component<IProps, IState> {
@@ -20,12 +24,21 @@ export class LocationForm extends Component<IProps, IState> {
         this.state = {}
     }
 
-    private async handleSubmit(formData: any): Promise<void> {
-        // @TODO Handle submit
+    /**
+     * Bind from data to model and invoke callback
+     * @param formData Data entered into the form
+     */
+    private handleSubmit(formData: any): void {
+        const model = formData as IWLocation
+        if (this.props.onSubmit) this.props.onSubmit(model)
     }
 
+    /**
+     * Perform the props.onCancel callback if there is one
+     * @param _event Click event
+     */
     private handleCancel(): void {
-        // @TODO Handle cancel and call parent callback
+        if (this.props.onCancel) this.props.onCancel()
     }
 
     render() {
@@ -46,11 +59,11 @@ export class LocationForm extends Component<IProps, IState> {
                 </Form.Item>
 
                 <Form.Item label='HP' name='hp'>
-                    <InputNumber />
+                    <InputNumber min={0} />
                 </Form.Item>
 
                 <Form.Item label='Souls' name='souls'>
-                    <InputNumber />
+                    <InputNumber min={0} />
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
