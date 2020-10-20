@@ -1,11 +1,12 @@
-import { Checkbox } from 'antd'
+import { Button, Checkbox } from 'antd'
 import { CheckboxChangeEvent } from 'antd/lib/checkbox'
 import React, { Component } from 'react'
 import { IWEnemy } from '../Common/Models'
 import { commit } from './AddEnemyAPI'
+import styles from './AddEnemyForm.module.css'
 
 type IProps = {}
-type IState = { model: IWEnemy }
+type IState = { disableRespawnCheckbox: boolean; model: IWEnemy }
 
 /**
  * Form used to input information for a new enemy
@@ -19,8 +20,10 @@ export class AddEnemyForm extends Component<IProps, IState> {
         this.handleTextChange = this.handleTextChange.bind(this)
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.toggleRespawnCheckbox = this.toggleRespawnCheckbox.bind(this)
 
         this.state = {
+            disableRespawnCheckbox: true,
             model: {
                 name: ''
             }
@@ -68,6 +71,16 @@ export class AddEnemyForm extends Component<IProps, IState> {
         if (error) throw error
     }
 
+    /**
+     * Toggle enable and disable respawn checkbox input
+     */
+    private toggleRespawnCheckbox() {
+        this.setState({
+            disableRespawnCheckbox: !this.state.disableRespawnCheckbox,
+            model: { ...this.state.model, respawns: undefined }
+        })
+    }
+
     render() {
         return (
             <form onSubmit={this.handleSubmit}>
@@ -91,12 +104,22 @@ export class AddEnemyForm extends Component<IProps, IState> {
                 </label>
 
                 <label>
-                    Respawns
                     <Checkbox
                         name='respawns'
                         onChange={this.handleCheckboxChange}
                         checked={this.state.model.respawns ?? false}
+                        disabled={this.state.disableRespawnCheckbox}
                     />
+                    <span className={styles['checkbox-label']}>Respawns</span>
+                    <Button
+                        type='primary'
+                        size='small'
+                        onClick={this.toggleRespawnCheckbox}
+                    >
+                        {!this.state.disableRespawnCheckbox
+                            ? 'Disable'
+                            : 'Enable'}
+                    </Button>
                 </label>
 
                 <label>
