@@ -12,9 +12,9 @@ export type IWEnemy = {
 }
 
 export type IWLocation = {
+    name: string
     hp: number
     souls: number
-    name: string
 }
 
 export type IWDrop = {
