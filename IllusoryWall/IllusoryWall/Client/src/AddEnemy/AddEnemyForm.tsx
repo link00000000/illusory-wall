@@ -40,6 +40,8 @@ export class AddEnemyForm extends Component<IProps, IState> {
     private async handleSubmit(model: IWEnemy): Promise<void> {
         if (this.props.onSubmit) this.props.onSubmit()
 
+        if (this.state.disableRespawnCheckbox) delete model.respawns
+
         const error = await commit(model)
         if (error) {
             if (this.props.onFailure) this.props.onFailure(error)
