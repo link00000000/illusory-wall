@@ -10,6 +10,7 @@ type IProps = {
     onSubmit?: () => void
     onSuccess?: () => void
     onFailure?: (error?: Error) => void
+    onCancel?: () => void
 }
 type IState = { disableRespawnCheckbox: boolean }
 
@@ -25,6 +26,7 @@ export class AddEnemyForm extends Component<IProps, IState> {
         super(props)
 
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleCancel = this.handleCancel.bind(this)
         this.toggleRespawnCheckbox = this.toggleRespawnCheckbox.bind(this)
 
         this._formRef = React.createRef<FormInstance>()
@@ -49,6 +51,16 @@ export class AddEnemyForm extends Component<IProps, IState> {
         }
 
         if (this.props.onSuccess) this.props.onSuccess()
+    }
+
+    /**
+     * Perform the props.onCancel callback if there is one
+     * @param _event Click event
+     */
+    private handleCancel(
+        _event: React.MouseEvent<HTMLElement, MouseEvent>
+    ): void {
+        if (this.props.onCancel) this.props.onCancel()
     }
 
     /**
@@ -118,8 +130,20 @@ export class AddEnemyForm extends Component<IProps, IState> {
                 {/* @TODO: IWDamage Form */}
 
                 <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
-                    <Button type='primary' htmlType='submit'>
+                    <Button
+                        type='primary'
+                        htmlType='submit'
+                        className={styles['tail-button']}
+                    >
                         Add Enemy
+                    </Button>
+
+                    <Button
+                        type='default'
+                        onClick={this.handleCancel}
+                        className={styles['tail-button']}
+                    >
+                        Cancel
                     </Button>
                 </Form.Item>
             </Form>
