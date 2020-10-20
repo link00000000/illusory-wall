@@ -1,3 +1,5 @@
+/* There are mirrored from the API */
+
 export interface IWEnemy {
     name: string
     description?: string

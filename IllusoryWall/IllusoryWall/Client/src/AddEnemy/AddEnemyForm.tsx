@@ -5,11 +5,9 @@ import { commit } from './AddEnemyAPI'
 type IProps = {}
 type IState = { model: IWEnemy }
 
-interface input {
-    displayName?: string
-    type?: string
-}
-
+/**
+ * Form used to input information for a new enemy
+ */
 export class AddEnemyForm extends Component<IProps, IState> {
     static displayName = AddEnemyForm.name
 
@@ -27,6 +25,10 @@ export class AddEnemyForm extends Component<IProps, IState> {
         }
     }
 
+    /**
+     * Update state on text input change
+     * @param event Text input or textarea update event
+     */
     private handleTextChange(
         event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
     ): void {
@@ -36,6 +38,10 @@ export class AddEnemyForm extends Component<IProps, IState> {
         } as any)
     }
 
+    /**
+     * Update state on checkbox input change
+     * @param event Checkbox update event
+     */
     private handleCheckboxChange(
         event: React.FormEvent<HTMLInputElement>
     ): void {
@@ -48,6 +54,10 @@ export class AddEnemyForm extends Component<IProps, IState> {
         } as any)
     }
 
+    /**
+     * Commit new enemy to API
+     * @param event Form submit event
+     */
     private async handleSubmit(
         event: React.FormEvent<HTMLFormElement>
     ): Promise<void> {

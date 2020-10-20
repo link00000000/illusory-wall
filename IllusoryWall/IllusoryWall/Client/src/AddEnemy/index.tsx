@@ -5,6 +5,9 @@ import { AddEnemyLayout as Layout } from './AddEnemyLayout'
 type IProps = {}
 type IState = {}
 
+/**
+ * /add-enemy route
+ */
 export class AddEnemy extends Component<IProps, IState> {
     static displayName = AddEnemy.name
 

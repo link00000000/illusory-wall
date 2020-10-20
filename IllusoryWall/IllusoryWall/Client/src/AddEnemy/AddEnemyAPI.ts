@@ -3,6 +3,10 @@ import { IWEnemy } from '../Common/Models'
 
 const ENDPOINT = '/enemy/add'
 
+/**
+ * Add new enemy to database
+ * @param model New enemy model to add to database
+ */
 export async function commit(model: IWEnemy): Promise<Error | null> {
     try {
         const response = await axios({
