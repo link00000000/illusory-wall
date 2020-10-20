@@ -2,7 +2,7 @@ import { Button, Form, Input, Radio } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import TextArea from 'antd/lib/input/TextArea'
 import React, { Component } from 'react'
-import { commit } from '../API/AddEnemyAPI'
+import { commit } from '../API/AddEnemy'
 import { IWEnemy } from '../Utils/Models'
 import styles from './AddEnemyForm.module.css'
 
