@@ -1,8 +1,8 @@
 import { message } from 'antd'
 import { MessageType } from 'antd/lib/message'
 import React, { Component } from 'react'
-import { AddEnemyForm } from './AddEnemyForm'
-import { AddEnemyLayout as Layout } from './AddEnemyLayout'
+import { AddEnemyForm } from '../Components/AddEnemyForm'
+import { AddEnemyLayout as Layout } from '../Layouts/AddEnemyLayout'
 
 type IProps = {}
 type IState = {

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { IWEnemy } from '../Common/Models'
+import { IWEnemy } from '../Utils/Models'
 
 const ENDPOINT = '/enemy/add'
 
