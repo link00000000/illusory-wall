@@ -1,3 +1,5 @@
+import { Checkbox } from 'antd'
+import { CheckboxChangeEvent } from 'antd/lib/checkbox'
 import React, { Component } from 'react'
 import { IWEnemy } from '../Common/Models'
 import { commit } from './AddEnemyAPI'
@@ -42,10 +44,8 @@ export class AddEnemyForm extends Component<IProps, IState> {
      * Update state on checkbox input change
      * @param event Checkbox update event
      */
-    private handleCheckboxChange(
-        event: React.FormEvent<HTMLInputElement>
-    ): void {
-        const { name } = event.currentTarget
+    private handleCheckboxChange(event: CheckboxChangeEvent): void {
+        const { name } = event.target
         const key = name as keyof IWEnemy
         const value = !this.state.model[key]
 
@@ -92,8 +92,7 @@ export class AddEnemyForm extends Component<IProps, IState> {
 
                 <label>
                     Respawns
-                    <input
-                        type='checkbox'
+                    <Checkbox
                         name='respawns'
                         onChange={this.handleCheckboxChange}
                         checked={this.state.model.respawns ?? false}

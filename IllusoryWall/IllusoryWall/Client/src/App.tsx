@@ -1,7 +1,7 @@
+import 'antd/dist/antd.css'
 import React from 'react'
 import { Route } from 'react-router'
 import { AddEnemy } from './AddEnemy'
-import './App.css'
 
 function App() {
     return (
