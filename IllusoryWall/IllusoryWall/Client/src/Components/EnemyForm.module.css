@@ -5,3 +5,7 @@
 .tail-button:last-child {
     margin-right: 0;
 }
+
+.add-location-button {
+    margin-top: 8px;
+}

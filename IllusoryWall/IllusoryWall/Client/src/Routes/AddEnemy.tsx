@@ -29,6 +29,8 @@ export class AddEnemy extends Component<IProps, IState> {
     }
 
     private async handleSubmit(model: IWEnemy): Promise<void> {
+        console.log(model)
+
         this.showLoading()
 
         const error = await AddEnemeyAPI.commit(model)

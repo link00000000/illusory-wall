@@ -1,8 +1,9 @@
-import { Button, Form, Input, Radio } from 'antd'
+import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
+import { Button, Form, Input, Radio, Table } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import TextArea from 'antd/lib/input/TextArea'
 import React, { Component } from 'react'
-import { IWEnemy } from '../Utils/Models'
+import { IWEnemy, IWLocation } from '../Utils/Models'
 import styles from './EnemyForm.module.css'
 
 type IProps = {
@@ -10,7 +11,9 @@ type IProps = {
     onCancel?: () => void
     submitText?: string
 }
-type IState = {}
+type IState = {
+    locations: IWLocation[]
+}
 
 /**
  * Form used to input information for a new enemy
@@ -25,8 +28,12 @@ export class EnemyForm extends Component<IProps, IState> {
 
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleCancel = this.handleCancel.bind(this)
+        this.locationsList = this.locationsList.bind(this)
+        this.removeLocation = this.removeLocation.bind(this)
 
-        this._formRef = React.createRef<FormInstance>()
+        this.state = {
+            locations: [{ name: 'Test location', hp: 10, souls: 20 }]
+        }
     }
 
     /**
@@ -43,6 +50,8 @@ export class EnemyForm extends Component<IProps, IState> {
         }
 
         const model = formData as IWEnemy
+        model.locations = this.state.locations
+
         if (this.props.onSubmit) this.props.onSubmit(model)
     }
 
@@ -53,13 +62,64 @@ export class EnemyForm extends Component<IProps, IState> {
         if (this.props.onCancel) this.props.onCancel()
     }
 
+    private locationsList(): JSX.Element {
+        const addLocationButton = (
+            <Button
+                block
+                type='dashed'
+                className={styles['add-location-button']}
+            >
+                <PlusCircleOutlined />
+                Add Location
+            </Button>
+        )
+
+        if (this.state.locations.length === 0) return addLocationButton
+
+        return (
+            <>
+                <Table
+                    columns={[
+                        { title: 'Name', dataIndex: 'name' },
+                        { title: 'HP', dataIndex: 'hp' },
+                        { title: 'Souls', dataIndex: 'souls' },
+                        { dataIndex: 'action' }
+                    ]}
+                    dataSource={this.state.locations.map((location) => ({
+                        ...location,
+                        key: location.name,
+                        action: (
+                            <Button
+                                type='text'
+                                onClick={() =>
+                                    this.removeLocation(location.name)
+                                }
+                            >
+                                <MinusCircleOutlined />
+                            </Button>
+                        )
+                    }))}
+                    pagination={{ hideOnSinglePage: true }}
+                />
+                {addLocationButton}
+            </>
+        )
+    }
+
+    private removeLocation(locationName: string): void {
+        const newLocationState = this.state.locations
+        newLocationState.splice(
+            this.state.locations.findIndex((x) => x.name === locationName),
+            1
+        )
+        this.setState({ locations: newLocationState })
+    }
+
     render() {
         return (
             <Form
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 8 }}
                 onFinish={this.handleSubmit}
-                layout='horizontal'
+                layout='vertical'
                 ref={this._formRef}
             >
                 <Form.Item
@@ -95,13 +155,13 @@ export class EnemyForm extends Component<IProps, IState> {
                     <Input />
                 </Form.Item>
 
-                {/* @TODO: IWLocation Form */}
+                <Form.Item name='locations'>{this.locationsList()}</Form.Item>
 
                 {/* @TODO: IWDrop Form */}
 
                 {/* @TODO: IWDamage Form */}
 
-                <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
+                <Form.Item>
                     <Button
                         type='primary'
                         htmlType='submit'
