@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input } from 'antd'
+import { Button, Form, Input, Radio } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import TextArea from 'antd/lib/input/TextArea'
 import React, { Component } from 'react'
@@ -12,7 +12,7 @@ type IProps = {
     onFailure?: (error?: Error) => void
     onCancel?: () => void
 }
-type IState = { disableRespawnCheckbox: boolean }
+type IState = {}
 
 /**
  * Form used to input information for a new enemy
@@ -27,24 +27,29 @@ export class AddEnemyForm extends Component<IProps, IState> {
 
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleCancel = this.handleCancel.bind(this)
-        this.toggleRespawnCheckbox = this.toggleRespawnCheckbox.bind(this)
 
         this._formRef = React.createRef<FormInstance>()
-
-        this.state = {
-            disableRespawnCheckbox: true
-        }
     }
 
     /**
-     * Commit new enemy to API
+     * Bind form data to model and commit new enemy to API
      */
-    private async handleSubmit(model: IWEnemy): Promise<void> {
+    private async handleSubmit(formData: any): Promise<void> {
         if (this.props.onSubmit) this.props.onSubmit()
 
-        if (this.state.disableRespawnCheckbox) delete model.respawns
+        console.log(formData.respawns)
 
+        // If respawns is -1, dont bind the respawns atribute to model
+        if (formData.respawns === -1) {
+            delete formData.respawns
+        } else {
+            // Convert integer value to boolean
+            formData.respawns = !!formData.respawns
+        }
+
+        const model = formData as IWEnemy
         const error = await commit(model)
+
         if (error) {
             if (this.props.onFailure) this.props.onFailure(error)
             return
@@ -61,15 +66,6 @@ export class AddEnemyForm extends Component<IProps, IState> {
         _event: React.MouseEvent<HTMLElement, MouseEvent>
     ): void {
         if (this.props.onCancel) this.props.onCancel()
-    }
-
-    /**
-     * Toggle enable and disable respawn checkbox input
-     */
-    private toggleRespawnCheckbox() {
-        this.setState({
-            disableRespawnCheckbox: !this.state.disableRespawnCheckbox
-        })
     }
 
     render() {
@@ -93,26 +89,17 @@ export class AddEnemyForm extends Component<IProps, IState> {
                     <TextArea />
                 </Form.Item>
 
-                <Form.Item label='Respawns' name='repsawns'>
-                    <Checkbox
-                        name='respawns'
-                        disabled={this.state.disableRespawnCheckbox}
-                    />
-
-                    <Button
-                        type={
-                            this.state.disableRespawnCheckbox
-                                ? 'primary'
-                                : 'dashed'
-                        }
+                <Form.Item label='Respawns' name='respawns'>
+                    <Radio.Group
+                        options={[
+                            { label: 'Respawns', value: 1 },
+                            { label: "Doesn't Respawn", value: 0 },
+                            { label: 'Disabled', value: -1 }
+                        ]}
+                        optionType='button'
+                        defaultValue={-1}
                         size='small'
-                        onClick={this.toggleRespawnCheckbox}
-                        className={styles['checkbox-button']}
-                    >
-                        {!this.state.disableRespawnCheckbox
-                            ? 'Disable'
-                            : 'Enable'}
-                    </Button>
+                    />
                 </Form.Item>
 
                 <Form.Item label='Class' name='class'>

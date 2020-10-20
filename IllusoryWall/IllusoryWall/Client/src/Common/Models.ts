@@ -1,6 +1,6 @@
 /* There are mirrored from the API */
 
-export interface IWEnemy {
+export type IWEnemy = {
     name: string
     description?: string
     respawns?: boolean
@@ -11,18 +11,18 @@ export interface IWEnemy {
     damages?: IWDamage[]
 }
 
-export interface IWLocation {
+export type IWLocation = {
     hp: number
     souls: number
     name: string
 }
 
-export interface IWDrop {
+export type IWDrop = {
     rate: number
     location: string
 }
 
-export interface IWDamage {
+export type IWDamage = {
     type: string
     category: string
 }
