@@ -1,12 +1,13 @@
-import { Button, Checkbox } from 'antd'
-import { CheckboxChangeEvent } from 'antd/lib/checkbox'
+import { Button, Checkbox, Form, Input } from 'antd'
+import { FormInstance } from 'antd/lib/form'
+import TextArea from 'antd/lib/input/TextArea'
 import React, { Component } from 'react'
 import { IWEnemy } from '../Common/Models'
 import { commit } from './AddEnemyAPI'
 import styles from './AddEnemyForm.module.css'
 
 type IProps = {}
-type IState = { disableRespawnCheckbox: boolean; model: IWEnemy }
+type IState = { disableRespawnCheckbox: boolean }
 
 /**
  * Form used to input information for a new enemy
@@ -14,60 +15,27 @@ type IState = { disableRespawnCheckbox: boolean; model: IWEnemy }
 export class AddEnemyForm extends Component<IProps, IState> {
     static displayName = AddEnemyForm.name
 
+    private _formRef = React.createRef<FormInstance>()
+
     constructor(props: IProps) {
         super(props)
 
-        this.handleTextChange = this.handleTextChange.bind(this)
-        this.handleCheckboxChange = this.handleCheckboxChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
         this.toggleRespawnCheckbox = this.toggleRespawnCheckbox.bind(this)
 
+        this._formRef = React.createRef<FormInstance>()
+
         this.state = {
-            disableRespawnCheckbox: true,
-            model: {
-                name: ''
-            }
+            disableRespawnCheckbox: true
         }
     }
 
     /**
-     * Update state on text input change
-     * @param event Text input or textarea update event
-     */
-    private handleTextChange(
-        event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
-    ): void {
-        const { name, value } = event.currentTarget
-        this.setState({
-            model: { ...this.state.model, [name]: value }
-        } as any)
-    }
-
-    /**
-     * Update state on checkbox input change
-     * @param event Checkbox update event
-     */
-    private handleCheckboxChange(event: CheckboxChangeEvent): void {
-        const { name } = event.target
-        const key = name as keyof IWEnemy
-        const value = !this.state.model[key]
-
-        this.setState({
-            model: { ...this.state.model, [key]: value }
-        } as any)
-    }
-
-    /**
      * Commit new enemy to API
-     * @param event Form submit event
      */
-    private async handleSubmit(
-        event: React.FormEvent<HTMLFormElement>
-    ): Promise<void> {
-        event.preventDefault()
-
+    private async handleSubmit(model: IWEnemy): Promise<void> {
         // TODO: More graceful error, like showing a message to the user
-        const error = await commit(this.state.model)
+        const error = await commit(model)
         if (error) throw error
     }
 
@@ -76,71 +44,56 @@ export class AddEnemyForm extends Component<IProps, IState> {
      */
     private toggleRespawnCheckbox() {
         this.setState({
-            disableRespawnCheckbox: !this.state.disableRespawnCheckbox,
-            model: { ...this.state.model, respawns: undefined }
+            disableRespawnCheckbox: !this.state.disableRespawnCheckbox
         })
     }
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
-                <label>
-                    Name
-                    <input
-                        type='text'
-                        name='name'
-                        onChange={this.handleTextChange}
-                        value={this.state.model.name ?? ''}
-                    />
-                </label>
+            <Form
+                labelCol={{ span: 8 }}
+                wrapperCol={{ span: 8 }}
+                onFinish={this.handleSubmit}
+                layout='horizontal'
+                ref={this._formRef}
+            >
+                <Form.Item
+                    label='Name'
+                    name='name'
+                    rules={[{ required: true }]}
+                >
+                    <Input />
+                </Form.Item>
 
-                <label>
-                    Description
-                    <textarea
-                        name='description'
-                        onChange={this.handleTextChange}
-                        value={this.state.model.description ?? ''}
-                    />
-                </label>
+                <Form.Item label='Description' name='description'>
+                    <TextArea />
+                </Form.Item>
 
-                <label>
+                <Form.Item label='Respawns' name='repsawns'>
                     <Checkbox
                         name='respawns'
-                        onChange={this.handleCheckboxChange}
-                        checked={this.state.model.respawns ?? false}
                         disabled={this.state.disableRespawnCheckbox}
                     />
-                    <span className={styles['checkbox-label']}>Respawns</span>
+
                     <Button
                         type='primary'
                         size='small'
                         onClick={this.toggleRespawnCheckbox}
+                        className={styles['checkbox-button']}
                     >
                         {!this.state.disableRespawnCheckbox
                             ? 'Disable'
                             : 'Enable'}
                     </Button>
-                </label>
+                </Form.Item>
 
-                <label>
-                    Class
-                    <input
-                        type='text'
-                        name='class'
-                        onChange={this.handleTextChange}
-                        value={this.state.model.class ?? ''}
-                    />
-                </label>
+                <Form.Item label='Class' name='class'>
+                    <Input />
+                </Form.Item>
 
-                <label>
-                    Image
-                    <input
-                        type='url'
-                        name='imagePath'
-                        onChange={this.handleTextChange}
-                        value={this.state.model.imagePath ?? ''}
-                    />
-                </label>
+                <Form.Item label='Image' name='image'>
+                    <Input />
+                </Form.Item>
 
                 {/* @TODO: IWLocation Form */}
 
@@ -148,8 +101,12 @@ export class AddEnemyForm extends Component<IProps, IState> {
 
                 {/* @TODO: IWDamage Form */}
 
-                <input type='submit' value='Add'></input>
-            </form>
+                <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
+                    <Button type='primary' htmlType='submit'>
+                        Submit
+                    </Button>
+                </Form.Item>
+            </Form>
         )
     }
 }
