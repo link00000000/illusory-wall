@@ -6,7 +6,11 @@ import { IWEnemy } from '../Common/Models'
 import { commit } from './AddEnemyAPI'
 import styles from './AddEnemyForm.module.css'
 
-type IProps = {}
+type IProps = {
+    onSubmit?: () => void
+    onSuccess?: () => void
+    onFailure?: (error?: Error) => void
+}
 type IState = { disableRespawnCheckbox: boolean }
 
 /**
@@ -34,9 +38,15 @@ export class AddEnemyForm extends Component<IProps, IState> {
      * Commit new enemy to API
      */
     private async handleSubmit(model: IWEnemy): Promise<void> {
-        // TODO: More graceful error, like showing a message to the user
+        if (this.props.onSubmit) this.props.onSubmit()
+
         const error = await commit(model)
-        if (error) throw error
+        if (error) {
+            if (this.props.onFailure) this.props.onFailure(error)
+            return
+        }
+
+        if (this.props.onSuccess) this.props.onSuccess()
     }
 
     /**
@@ -103,7 +113,7 @@ export class AddEnemyForm extends Component<IProps, IState> {
 
                 <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
                     <Button type='primary' htmlType='submit'>
-                        Submit
+                        Add Enemy
                     </Button>
                 </Form.Item>
             </Form>
