@@ -81,5 +81,36 @@ namespace IllusoryWall.Controllers
 
             return StatusCode(500);
         }
+
+        [HttpGet]
+        [Route("Remove/{id}")]
+        public IActionResult AddEnemy(int id)
+        {
+            // add enemy andd save changes
+            Enemy enemy = _context.Enemies.Find(id);
+
+            if(enemy == null)
+                return StatusCode(404);
+
+            _context.Enemies.Remove(enemy);
+            
+            int count;
+            
+            try
+            {
+                count = _context.SaveChanges();
+            }
+            catch (System.Exception oops)
+            {  
+                Console.Write("\n" + oops.ToString() + "\n\n");
+                return StatusCode(500);
+            }
+            
+            // if changes occurred it worked, else something went wrong
+            if(count > 0)
+                return Ok();
+
+            return StatusCode(500);
+        }
     }
 }
