@@ -5,8 +5,8 @@ import { IWLocation } from '../Utils/Models'
 import styles from './LocationForm.module.css'
 
 type IProps = {
-    onSubmit: (location: IWLocation) => void
-    onCancel: () => void
+    onSubmit?: (location: IWLocation) => void
+    onCancel?: () => void
 }
 type IState = {}
 
@@ -35,7 +35,6 @@ export class LocationForm extends Component<IProps, IState> {
 
     /**
      * Perform the props.onCancel callback if there is one
-     * @param _event Click event
      */
     private handleCancel(): void {
         if (this.props.onCancel) this.props.onCancel()
@@ -59,11 +58,11 @@ export class LocationForm extends Component<IProps, IState> {
                 </Form.Item>
 
                 <Form.Item label='HP' name='hp'>
-                    <InputNumber min={0} />
+                    <InputNumber min={0} precision={0} />
                 </Form.Item>
 
                 <Form.Item label='Souls' name='souls'>
-                    <InputNumber min={0} />
+                    <InputNumber min={0} precision={0} />
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ offset: 8, span: 8 }}>

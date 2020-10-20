@@ -2,23 +2,21 @@ import { Button, Form, Input, Radio } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import TextArea from 'antd/lib/input/TextArea'
 import React, { Component } from 'react'
-import { commit } from '../API/AddEnemy'
 import { IWEnemy } from '../Utils/Models'
-import styles from './AddEnemyForm.module.css'
+import styles from './EnemyForm.module.css'
 
 type IProps = {
-    onSubmit?: () => void
-    onSuccess?: () => void
-    onFailure?: (error?: Error) => void
+    onSubmit?: (model: IWEnemy) => void
     onCancel?: () => void
+    submitText?: string
 }
 type IState = {}
 
 /**
  * Form used to input information for a new enemy
  */
-export class AddEnemyForm extends Component<IProps, IState> {
-    static displayName = AddEnemyForm.name
+export class EnemyForm extends Component<IProps, IState> {
+    static displayName = EnemyForm.name
 
     private _formRef = React.createRef<FormInstance>()
 
@@ -32,13 +30,10 @@ export class AddEnemyForm extends Component<IProps, IState> {
     }
 
     /**
-     * Bind form data to model and commit new enemy to API
+     * Bind form data to model and invoke callback
+     * @param formData Data entered into the form
      */
     private async handleSubmit(formData: any): Promise<void> {
-        if (this.props.onSubmit) this.props.onSubmit()
-
-        console.log(formData.respawns)
-
         // If respawns is -1, dont bind the respawns atribute to model
         if (formData.respawns === -1) {
             delete formData.respawns
@@ -48,23 +43,13 @@ export class AddEnemyForm extends Component<IProps, IState> {
         }
 
         const model = formData as IWEnemy
-        const error = await commit(model)
-
-        if (error) {
-            if (this.props.onFailure) this.props.onFailure(error)
-            return
-        }
-
-        if (this.props.onSuccess) this.props.onSuccess()
+        if (this.props.onSubmit) this.props.onSubmit(model)
     }
 
     /**
      * Perform the props.onCancel callback if there is one
-     * @param _event Click event
      */
-    private handleCancel(
-        _event: React.MouseEvent<HTMLElement, MouseEvent>
-    ): void {
+    private handleCancel(): void {
         if (this.props.onCancel) this.props.onCancel()
     }
 
@@ -122,7 +107,7 @@ export class AddEnemyForm extends Component<IProps, IState> {
                         htmlType='submit'
                         className={styles['tail-button']}
                     >
-                        Add Enemy
+                        {this.props.submitText || 'Submit'}
                     </Button>
 
                     <Button
