@@ -1,5 +1,5 @@
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
-import { Button, Form, Input, Modal, Radio, Table } from 'antd'
+import { Button, Form, Input, Radio, Table } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import TextArea from 'antd/lib/input/TextArea'
 import React, { Component } from 'react'
@@ -21,6 +21,9 @@ type IState = {
  */
 export class EnemyForm extends Component<IProps, IState> {
     static displayName = EnemyForm.name
+
+    private readonly _formSpan = 8
+    private readonly _formOffset = 8
 
     private _formRef = React.createRef<FormInstance>()
 
@@ -122,8 +125,10 @@ export class EnemyForm extends Component<IProps, IState> {
         return (
             <Form
                 onFinish={this.handleSubmit}
-                layout='vertical'
+                layout='horizontal'
                 ref={this._formRef}
+                labelCol={{ span: this._formOffset }}
+                wrapperCol={{ span: this._formOffset }}
             >
                 <Form.Item
                     label='Name'
@@ -158,31 +163,35 @@ export class EnemyForm extends Component<IProps, IState> {
                     <Input />
                 </Form.Item>
 
-                <Form.Item name='locations'>{this.locationsList()}</Form.Item>
-                <Modal
-                    visible={this.state.showLocationsModal}
-                    title='Add Location'
-                    okText='Add Location'
-                    cancelText='Cancel'
-                    onCancel={() => {}}
+                <Form.Item
+                    wrapperCol={{
+                        span: this._formSpan,
+                        offset: this._formOffset
+                    }}
                 >
-                    <LocationForm
-                        visible={this.state.showLocationsModal}
-                        onCancel={() => {
-                            this.setState({ showLocationsModal: false })
-                        }}
-                        onSubmit={(newLocation) => {
-                            this.setState({ showLocationsModal: false })
-                            this.addLocation(newLocation)
-                        }}
-                    ></LocationForm>
-                </Modal>
+                    {this.locationsList()}
+                </Form.Item>
+                <LocationForm
+                    visible={this.state.showLocationsModal}
+                    onCancel={() => {
+                        this.setState({ showLocationsModal: false })
+                    }}
+                    onSubmit={(newLocation) => {
+                        this.setState({ showLocationsModal: false })
+                        this.addLocation(newLocation)
+                    }}
+                />
 
                 {/* @TODO: IWDrop Form */}
 
                 {/* @TODO: IWDamage Form */}
 
-                <Form.Item>
+                <Form.Item
+                    wrapperCol={{
+                        span: this._formSpan,
+                        offset: this._formOffset
+                    }}
+                >
                     <Button
                         type='primary'
                         htmlType='submit'
