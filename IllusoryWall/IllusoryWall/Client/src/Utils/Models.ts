@@ -24,6 +24,14 @@ export type IWDrop = {
 }
 
 export type IWDamage = {
-    type?: string
-    category?: string
+    damageType:
+        | 'magic'
+        | 'fire'
+        | 'lightning'
+        | 'dark'
+        | 'standard'
+        | 'strike'
+        | 'slash'
+        | 'thrust'
+    category?: 'weakness' | 'resistance' | 'immunity'
 }

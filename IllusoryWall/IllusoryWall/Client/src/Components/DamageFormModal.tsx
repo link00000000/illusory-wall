@@ -1,4 +1,4 @@
-import { Form, Input, Modal } from 'antd'
+import { Form, Modal, Select } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import React, { Component } from 'react'
 import { IWDamage } from '../Utils/Models'
@@ -70,12 +70,35 @@ export class DamageFormModal extends Component<IProps, IState> {
                     labelCol={{ span: 4 }}
                     wrapperCol={{ span: 16 }}
                 >
-                    <Form.Item label='Type' name='type'>
-                        <Input />
+                    <Form.Item label='Type' name='damageType' required>
+                        <Select showSearch>
+                            <Select.Option value='magic'>Magic</Select.Option>
+                            <Select.Option value='fire'>Fire</Select.Option>
+                            <Select.Option value='lightning'>
+                                Lightning
+                            </Select.Option>
+                            <Select.Option value='dark'>Dark</Select.Option>
+                            <Select.Option value='standard'>
+                                Standard
+                            </Select.Option>
+                            <Select.Option value='strike'>Strike</Select.Option>
+                            <Select.Option value='slash'>Slash</Select.Option>
+                            <Select.Option value='thrust'>Thrust</Select.Option>
+                        </Select>
                     </Form.Item>
 
                     <Form.Item label='Category' name='category'>
-                        <Input />
+                        <Select showSearch>
+                            <Select.Option value='weakness'>
+                                Weakness
+                            </Select.Option>
+                            <Select.Option value='resistance'>
+                                Resistance
+                            </Select.Option>
+                            <Select.Option value='immunity'>
+                                Immunity
+                            </Select.Option>
+                        </Select>
                     </Form.Item>
                 </Form>
             </Modal>

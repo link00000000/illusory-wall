@@ -284,11 +284,11 @@ export class EnemyForm extends Component<IProps, IState> {
      * @param damage Damage to remove
      */
     private removeDamage(damage: string): void {
-        const { type, category } = JSON.parse(damage)
+        const { damageType, category }: IWDamage = JSON.parse(damage)
         const newDamageState = this.state.damages
         newDamageState.splice(
             this.state.damages.findIndex(
-                (x) => x.type === type && x.category === category
+                (x) => x.damageType === damageType && x.category === category
             ),
             1
         )
