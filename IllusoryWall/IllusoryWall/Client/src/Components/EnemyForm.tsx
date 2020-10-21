@@ -1,10 +1,11 @@
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
-import { Button, Form, Input, Radio, Table } from 'antd'
+import { Button, Form, Input, Radio, Select, Table } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import TextArea from 'antd/lib/input/TextArea'
 import React, { Component } from 'react'
 import DamageCategoryDisplayNames from '../Utils/DamageCategoryDisplayNames'
 import DamageTypeDisplayNames from '../Utils/DamageTypeDisplayNames'
+import EnemyClassDisplayNames from '../Utils/EnemyClassDisplayNames'
 import { IWDamage, IWDrop, IWEnemy, IWLocation } from '../Utils/Models'
 import { DamageFormModal } from './DamageFormModal'
 import { DropFormModal } from './DropFormModal'
@@ -335,7 +336,20 @@ export class EnemyForm extends Component<IProps, IState> {
                 </Form.Item>
 
                 <Form.Item label='Class' name='class'>
-                    <Input />
+                    <Select showSearch>
+                        <Select.Option value='boss'>
+                            {EnemyClassDisplayNames['boss']}
+                        </Select.Option>
+                        <Select.Option value='generic'>
+                            {EnemyClassDisplayNames['generic']}
+                        </Select.Option>
+                        <Select.Option value='npc'>
+                            {EnemyClassDisplayNames['npc']}
+                        </Select.Option>
+                        <Select.Option value='invader'>
+                            {EnemyClassDisplayNames['invader']}
+                        </Select.Option>
+                    </Select>
                 </Form.Item>
 
                 <Form.Item label='Image' name='image'>

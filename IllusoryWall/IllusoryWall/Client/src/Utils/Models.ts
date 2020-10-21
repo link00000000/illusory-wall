@@ -4,7 +4,7 @@ export type IWEnemy = {
     name: string
     description?: string
     respawns?: boolean
-    class?: string
+    class?: 'boss' | 'generic' | 'npc' | 'invader'
     imagePath?: string
     locations?: IWLocation[]
     drops?: IWDrop[]
