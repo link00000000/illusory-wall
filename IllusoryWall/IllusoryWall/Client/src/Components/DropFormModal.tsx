@@ -69,6 +69,7 @@ export class DropFormModal extends Component<IProps, IState> {
                     ref={this._formRef}
                     labelCol={{ span: 4 }}
                     wrapperCol={{ span: 16 }}
+                    initialValues={{ rate: 0 }}
                 >
                     <Form.Item
                         label='Name'
@@ -79,7 +80,14 @@ export class DropFormModal extends Component<IProps, IState> {
                     </Form.Item>
 
                     <Form.Item label='Rate' name='rate'>
-                        <InputNumber min={0} max={100} />
+                        <InputNumber
+                            min={0}
+                            max={100}
+                            formatter={(value) => `${value}%`}
+                            parser={(value) =>
+                                value?.replace('%', '') as React.Key
+                            }
+                        />
                     </Form.Item>
 
                     <Form.Item label='Location' name='location'>
