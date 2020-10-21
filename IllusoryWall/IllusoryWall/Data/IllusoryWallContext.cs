@@ -54,6 +54,22 @@ namespace IllusoryWall.Data
             builder.Entity<Enemy>()
                 .HasIndex(p => p.Name)
                 .IsUnique();
+
+            // Make foreign keys optional but cascade on delete
+            builder.Entity<Location>()
+                .HasOne(i => i.Enemy)
+                .WithMany(d => d.Locations)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Drop>()
+                .HasOne(i => i.Enemy)
+                .WithMany(d => d.Drops)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Damage>()
+                .HasOne(i => i.Enemy)
+                .WithMany(d => d.Damages)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
