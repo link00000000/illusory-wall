@@ -3,7 +3,8 @@ import { Button, Form, Input, Radio, Table } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import TextArea from 'antd/lib/input/TextArea'
 import React, { Component } from 'react'
-import { IWDrop, IWEnemy, IWLocation } from '../Utils/Models'
+import { IWDamage, IWDrop, IWEnemy, IWLocation } from '../Utils/Models'
+import { DamageFormModal } from './DamageFormModal'
 import { DropFormModal } from './DropFormModal'
 import styles from './EnemyForm.module.css'
 import { LocationFormModal } from './LocationFormModal'
@@ -15,8 +16,10 @@ type IProps = {
 type IState = {
     locations: IWLocation[]
     drops: IWDrop[]
+    damages: IWDamage[]
     showLocationsModal: boolean
     showDropsModal: boolean
+    showDamageModal: boolean
 }
 
 /**
@@ -34,15 +37,26 @@ export class EnemyForm extends Component<IProps, IState> {
         super(props)
 
         this.handleSubmit = this.handleSubmit.bind(this)
+
         this.locationsList = this.locationsList.bind(this)
         this.addLocation = this.addLocation.bind(this)
         this.removeLocation = this.removeLocation.bind(this)
 
+        this.dropsList = this.dropsList.bind(this)
+        this.addDrop = this.addDrop.bind(this)
+        this.removeDrop = this.removeDrop.bind(this)
+
+        this.damageList = this.damageList.bind(this)
+        this.addDamage = this.addDamage.bind(this)
+        this.removeDamage = this.removeDamage.bind(this)
+
         this.state = {
             locations: [],
             drops: [],
+            damages: [],
             showLocationsModal: false,
-            showDropsModal: false
+            showDropsModal: false,
+            showDamageModal: false
         }
     }
 
@@ -63,10 +77,14 @@ export class EnemyForm extends Component<IProps, IState> {
         const model = formData as IWEnemy
         model.locations = this.state.locations
         model.drops = this.state.drops
+        model.damages = this.state.damages
 
         if (this.props.onSubmit) this.props.onSubmit(model)
     }
 
+    /**
+     * Generate a table containing all locations for the enemy
+     */
     private locationsList(): JSX.Element {
         const addLocationButton = (
             <Button
@@ -114,10 +132,18 @@ export class EnemyForm extends Component<IProps, IState> {
         )
     }
 
+    /**
+     * Add location to enemy
+     * @param model Location to add
+     */
     private addLocation(model: IWLocation): void {
         this.setState({ locations: [...this.state.locations, model] })
     }
 
+    /**
+     * Remove location from enemy
+     * @param locationName Location to remove
+     */
     private removeLocation(locationName: string): void {
         const newLocationState = this.state.locations
         newLocationState.splice(
@@ -127,6 +153,9 @@ export class EnemyForm extends Component<IProps, IState> {
         this.setState({ locations: newLocationState })
     }
 
+    /**
+     * Generate a table containing all drops for the enemy
+     */
     private dropsList(): JSX.Element {
         const addDropsButton = (
             <Button
@@ -172,10 +201,18 @@ export class EnemyForm extends Component<IProps, IState> {
         )
     }
 
+    /**
+     * Add drop to enemy
+     * @param model Drop to add
+     */
     private addDrop(model: IWDrop): void {
         this.setState({ drops: [...this.state.drops, model] })
     }
 
+    /**
+     * Remove drop from enemy
+     * @param dropName Drop to remove
+     */
     private removeDrop(dropName: string): void {
         const newDropState = this.state.drops
         newDropState.splice(
@@ -183,6 +220,79 @@ export class EnemyForm extends Component<IProps, IState> {
             1
         )
         this.setState({ drops: newDropState })
+    }
+
+    /**
+     * Generate a table containing all damage for the enemy
+     */
+    private damageList(): JSX.Element {
+        const addDamageButton = (
+            <Button
+                block
+                type='dashed'
+                className={styles['add-location-button']}
+                onClick={() => {
+                    this.setState({ showDamageModal: true })
+                }}
+            >
+                <PlusCircleOutlined />
+                Add Damage Type
+            </Button>
+        )
+
+        if (this.state.damages.length === 0) return addDamageButton
+
+        return (
+            <>
+                <Table
+                    columns={[
+                        { title: 'Type', dataIndex: 'type' },
+                        { title: 'Category', dataIndex: 'category' },
+                        { dataIndex: 'action' }
+                    ]}
+                    dataSource={this.state.damages.map((damage) => ({
+                        ...damage,
+                        key: JSON.stringify(damage),
+                        action: (
+                            <Button
+                                type='text'
+                                onClick={() =>
+                                    this.removeDamage(JSON.stringify(damage))
+                                }
+                            >
+                                <MinusCircleOutlined />
+                            </Button>
+                        )
+                    }))}
+                    pagination={{ hideOnSinglePage: true }}
+                />
+                {addDamageButton}
+            </>
+        )
+    }
+
+    /**
+     * Add damage to enemy
+     * @param model Damage to add
+     */
+    private addDamage(model: IWDamage): void {
+        this.setState({ damages: [...this.state.damages, model] })
+    }
+
+    /**
+     * Remove damage from enemy
+     * @param damage Damage to remove
+     */
+    private removeDamage(damage: string): void {
+        const { type, category } = JSON.parse(damage)
+        const newDamageState = this.state.damages
+        newDamageState.splice(
+            this.state.damages.findIndex(
+                (x) => x.type === type && x.category === category
+            ),
+            1
+        )
+        this.setState({ damages: newDamageState })
     }
 
     render() {
@@ -265,9 +375,24 @@ export class EnemyForm extends Component<IProps, IState> {
                     />
                 </Form.Item>
 
-                {/* @TODO: IWDrop Form */}
-
-                {/* @TODO: IWDamage Form */}
+                <Form.Item
+                    wrapperCol={{
+                        span: this._formSpan,
+                        offset: this._formOffset
+                    }}
+                >
+                    {this.damageList()}
+                    <DamageFormModal
+                        visible={this.state.showDamageModal}
+                        onCancel={() => {
+                            this.setState({ showDamageModal: false })
+                        }}
+                        onSubmit={(newDamage) => {
+                            this.setState({ showDamageModal: false })
+                            this.addDamage(newDamage)
+                        }}
+                    />
+                </Form.Item>
 
                 <Form.Item
                     wrapperCol={{

@@ -1,4 +1,4 @@
-/* There are mirrored from the API */
+/* Mirrored from API */
 
 export type IWEnemy = {
     name: string
@@ -13,17 +13,17 @@ export type IWEnemy = {
 
 export type IWLocation = {
     name: string
-    hp: number
-    souls: number
+    hp?: number
+    souls?: number
 }
 
 export type IWDrop = {
     name: string
-    rate: number
-    location: string
+    rate?: number
+    location?: string
 }
 
 export type IWDamage = {
-    type: string
-    category: string
+    type?: string
+    category?: string
 }
