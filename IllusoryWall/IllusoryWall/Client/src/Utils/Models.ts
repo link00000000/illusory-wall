@@ -18,6 +18,7 @@ export type IWLocation = {
 }
 
 export type IWDrop = {
+    name: string
     rate: number
     location: string
 }

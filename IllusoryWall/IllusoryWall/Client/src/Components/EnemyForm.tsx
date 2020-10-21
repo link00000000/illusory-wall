@@ -3,7 +3,8 @@ import { Button, Form, Input, Radio, Table } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import TextArea from 'antd/lib/input/TextArea'
 import React, { Component } from 'react'
-import { IWEnemy, IWLocation } from '../Utils/Models'
+import { IWDrop, IWEnemy, IWLocation } from '../Utils/Models'
+import { DropFormModal } from './DropFormModal'
 import styles from './EnemyForm.module.css'
 import { LocationFormModal } from './LocationFormModal'
 
@@ -13,7 +14,9 @@ type IProps = {
 }
 type IState = {
     locations: IWLocation[]
+    drops: IWDrop[]
     showLocationsModal: boolean
+    showDropsModal: boolean
 }
 
 /**
@@ -36,8 +39,10 @@ export class EnemyForm extends Component<IProps, IState> {
         this.removeLocation = this.removeLocation.bind(this)
 
         this.state = {
-            locations: [{ name: 'Test location', hp: 10, souls: 20 }],
-            showLocationsModal: false
+            locations: [],
+            drops: [],
+            showLocationsModal: false,
+            showDropsModal: false
         }
     }
 
@@ -57,6 +62,7 @@ export class EnemyForm extends Component<IProps, IState> {
         // Bind data to model
         const model = formData as IWEnemy
         model.locations = this.state.locations
+        model.drops = this.state.drops
 
         if (this.props.onSubmit) this.props.onSubmit(model)
     }
@@ -121,6 +127,64 @@ export class EnemyForm extends Component<IProps, IState> {
         this.setState({ locations: newLocationState })
     }
 
+    private dropsList(): JSX.Element {
+        const addDropsButton = (
+            <Button
+                block
+                type='dashed'
+                className={styles['add-location-button']}
+                onClick={() => {
+                    this.setState({ showDropsModal: true })
+                }}
+            >
+                <PlusCircleOutlined />
+                Add Drops
+            </Button>
+        )
+
+        if (this.state.drops.length === 0) return addDropsButton
+
+        return (
+            <>
+                <Table
+                    columns={[
+                        { title: 'Name', dataIndex: 'name' },
+                        { title: 'Rate', dataIndex: 'rate' },
+                        { title: 'Location', dataIndex: 'location' },
+                        { dataIndex: 'action' }
+                    ]}
+                    dataSource={this.state.drops.map((drop) => ({
+                        ...drop,
+                        key: drop.name,
+                        action: (
+                            <Button
+                                type='text'
+                                onClick={() => this.removeDrop(drop.name)}
+                            >
+                                <MinusCircleOutlined />
+                            </Button>
+                        )
+                    }))}
+                    pagination={{ hideOnSinglePage: true }}
+                />
+                {addDropsButton}
+            </>
+        )
+    }
+
+    private addDrop(model: IWDrop): void {
+        this.setState({ drops: [...this.state.drops, model] })
+    }
+
+    private removeDrop(dropName: string): void {
+        const newDropState = this.state.drops
+        newDropState.splice(
+            this.state.drops.findIndex((x) => x.name === dropName),
+            1
+        )
+        this.setState({ drops: newDropState })
+    }
+
     render() {
         return (
             <Form
@@ -170,17 +234,36 @@ export class EnemyForm extends Component<IProps, IState> {
                     }}
                 >
                     {this.locationsList()}
+                    <LocationFormModal
+                        visible={this.state.showLocationsModal}
+                        onCancel={() => {
+                            this.setState({ showLocationsModal: false })
+                        }}
+                        onSubmit={(newLocation) => {
+                            this.setState({ showLocationsModal: false })
+                            this.addLocation(newLocation)
+                        }}
+                    />
                 </Form.Item>
-                <LocationFormModal
-                    visible={this.state.showLocationsModal}
-                    onCancel={() => {
-                        this.setState({ showLocationsModal: false })
+
+                <Form.Item
+                    wrapperCol={{
+                        span: this._formSpan,
+                        offset: this._formOffset
                     }}
-                    onSubmit={(newLocation) => {
-                        this.setState({ showLocationsModal: false })
-                        this.addLocation(newLocation)
-                    }}
-                />
+                >
+                    {this.dropsList()}
+                    <DropFormModal
+                        visible={this.state.showDropsModal}
+                        onCancel={() => {
+                            this.setState({ showDropsModal: false })
+                        }}
+                        onSubmit={(newDrop) => {
+                            this.setState({ showDropsModal: false })
+                            this.addDrop(newDrop)
+                        }}
+                    />
+                </Form.Item>
 
                 {/* @TODO: IWDrop Form */}
 
