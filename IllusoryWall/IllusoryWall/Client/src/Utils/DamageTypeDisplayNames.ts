@@ -3,7 +3,7 @@ const DamageTypeDisplayNames = {
     fire: 'Fire',
     lightning: 'Lightning',
     dark: 'Dark',
-    standard: 'Standard',
+    physical: 'Physical',
     strike: 'Strike',
     slash: 'Slash',
     thrust: 'Thrust'
