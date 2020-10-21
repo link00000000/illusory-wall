@@ -5,7 +5,7 @@ import TextArea from 'antd/lib/input/TextArea'
 import React, { Component } from 'react'
 import { IWEnemy, IWLocation } from '../Utils/Models'
 import styles from './EnemyForm.module.css'
-import { LocationForm } from './LocationFormModal'
+import { LocationFormModal } from './LocationFormModal'
 
 type IProps = {
     onSubmit?: (model: IWEnemy) => void
@@ -171,7 +171,7 @@ export class EnemyForm extends Component<IProps, IState> {
                 >
                     {this.locationsList()}
                 </Form.Item>
-                <LocationForm
+                <LocationFormModal
                     visible={this.state.showLocationsModal}
                     onCancel={() => {
                         this.setState({ showLocationsModal: false })

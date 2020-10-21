@@ -11,8 +11,8 @@ type IProps = {
 }
 type IState = {}
 
-export class LocationForm extends Component<IProps, IState> {
-    static displayName = LocationForm.name
+export class LocationFormModal extends Component<IProps, IState> {
+    static displayName = LocationFormModal.name
 
     private readonly _modalTitle = 'Add Location'
     private readonly _modalOkText = 'Add Location'

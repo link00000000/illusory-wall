@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { LocationForm } from '../Components/LocationFormModal'
+import { LocationFormModal } from '../Components/LocationFormModal'
 import { IWLocation } from '../Utils/Models'
 
 type IProps = {}
@@ -28,7 +28,7 @@ export class TestRoute extends Component<IProps, IState> {
     render() {
         return (
             <div>
-                <LocationForm
+                <LocationFormModal
                     onSubmit={this.handleSubmit}
                     onCancel={this.handleCancel}
                 />
