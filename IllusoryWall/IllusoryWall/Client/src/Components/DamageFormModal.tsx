@@ -90,8 +90,8 @@ export class DamageFormModal extends Component<IProps, IState> {
                             <Select.Option value='dark'>
                                 {DamageTypeDisplayNames['dark']}
                             </Select.Option>
-                            <Select.Option value='standard'>
-                                {DamageTypeDisplayNames['standard']}
+                            <Select.Option value='physical'>
+                                {DamageTypeDisplayNames['physical']}
                             </Select.Option>
                             <Select.Option value='strike'>
                                 {DamageTypeDisplayNames['strike']}
