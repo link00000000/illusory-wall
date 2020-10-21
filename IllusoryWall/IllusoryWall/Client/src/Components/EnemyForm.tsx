@@ -93,7 +93,6 @@ export class EnemyForm extends Component<IProps, IState> {
             <Button
                 block
                 type='dashed'
-                className={styles['add-location-button']}
                 onClick={() => {
                     this.setState({ showLocationsModal: true })
                 }}
