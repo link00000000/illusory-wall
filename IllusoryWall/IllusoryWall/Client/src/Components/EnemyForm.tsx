@@ -3,6 +3,8 @@ import { Button, Form, Input, Radio, Table } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import TextArea from 'antd/lib/input/TextArea'
 import React, { Component } from 'react'
+import DamageCategoryDisplayNames from '../Utils/DamageCategoryDisplayNames'
+import DamageTypeDisplayNames from '../Utils/DamageTypeDisplayNames'
 import { IWDamage, IWDrop, IWEnemy, IWLocation } from '../Utils/Models'
 import { DamageFormModal } from './DamageFormModal'
 import { DropFormModal } from './DropFormModal'
@@ -246,12 +248,15 @@ export class EnemyForm extends Component<IProps, IState> {
             <>
                 <Table
                     columns={[
-                        { title: 'Type', dataIndex: 'type' },
+                        { title: 'Type', dataIndex: 'damageType' },
                         { title: 'Category', dataIndex: 'category' },
                         { dataIndex: 'action' }
                     ]}
                     dataSource={this.state.damages.map((damage) => ({
-                        ...damage,
+                        damageType: DamageTypeDisplayNames[damage.damageType],
+                        category: damage.category
+                            ? DamageCategoryDisplayNames[damage.category]
+                            : '',
                         key: JSON.stringify(damage),
                         action: (
                             <Button

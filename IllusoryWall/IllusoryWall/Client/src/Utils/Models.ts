@@ -33,5 +33,5 @@ export type IWDamage = {
         | 'strike'
         | 'slash'
         | 'thrust'
-    category?: 'weakness' | 'resistance' | 'immunity'
+    category?: 'w' | 'r' | 'i'
 }

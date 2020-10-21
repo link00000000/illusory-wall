@@ -1,6 +1,8 @@
 import { Form, Modal, Select } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import React, { Component } from 'react'
+import DamageCategoryDisplayNames from '../Utils/DamageCategoryDisplayNames'
+import DamageTypeDisplayNames from '../Utils/DamageTypeDisplayNames'
 import { IWDamage } from '../Utils/Models'
 
 type IProps = {
@@ -70,33 +72,49 @@ export class DamageFormModal extends Component<IProps, IState> {
                     labelCol={{ span: 4 }}
                     wrapperCol={{ span: 16 }}
                 >
-                    <Form.Item label='Type' name='damageType' required>
+                    <Form.Item
+                        label='Type'
+                        name='damageType'
+                        rules={[{ required: true }]}
+                    >
                         <Select showSearch>
-                            <Select.Option value='magic'>Magic</Select.Option>
-                            <Select.Option value='fire'>Fire</Select.Option>
+                            <Select.Option value='magic'>
+                                {DamageTypeDisplayNames['magic']}
+                            </Select.Option>
+                            <Select.Option value='fire'>
+                                {DamageTypeDisplayNames['fire']}
+                            </Select.Option>
                             <Select.Option value='lightning'>
-                                Lightning
+                                {DamageTypeDisplayNames['lightning']}
                             </Select.Option>
-                            <Select.Option value='dark'>Dark</Select.Option>
+                            <Select.Option value='dark'>
+                                {DamageTypeDisplayNames['dark']}
+                            </Select.Option>
                             <Select.Option value='standard'>
-                                Standard
+                                {DamageTypeDisplayNames['standard']}
                             </Select.Option>
-                            <Select.Option value='strike'>Strike</Select.Option>
-                            <Select.Option value='slash'>Slash</Select.Option>
-                            <Select.Option value='thrust'>Thrust</Select.Option>
+                            <Select.Option value='strike'>
+                                {DamageTypeDisplayNames['strike']}
+                            </Select.Option>
+                            <Select.Option value='slash'>
+                                {DamageTypeDisplayNames['slash']}
+                            </Select.Option>
+                            <Select.Option value='thrust'>
+                                {DamageTypeDisplayNames['thrust']}
+                            </Select.Option>
                         </Select>
                     </Form.Item>
 
                     <Form.Item label='Category' name='category'>
                         <Select showSearch>
-                            <Select.Option value='weakness'>
-                                Weakness
+                            <Select.Option value='w'>
+                                {DamageCategoryDisplayNames['w']}
                             </Select.Option>
-                            <Select.Option value='resistance'>
-                                Resistance
+                            <Select.Option value='r'>
+                                {DamageCategoryDisplayNames['r']}
                             </Select.Option>
-                            <Select.Option value='immunity'>
-                                Immunity
+                            <Select.Option value='i'>
+                                {DamageCategoryDisplayNames['i']}
                             </Select.Option>
                         </Select>
                     </Form.Item>
