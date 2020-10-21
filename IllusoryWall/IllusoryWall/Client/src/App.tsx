@@ -2,10 +2,9 @@ import 'antd/dist/antd.css'
 import React from 'react'
 import { Route } from 'react-router'
 import { AddEnemy } from './Routes/AddEnemy'
-import { TestRoute } from './Routes/TestRoute'
 import KebabToCamelCase from './Utils/KebabToCamelCase'
 
-const Routes = [AddEnemy, TestRoute]
+const Routes = [AddEnemy]
 
 function PopulateRoutes(routes: React.ComponentClass[] = Routes) {
     return routes.map((component) => {
