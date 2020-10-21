@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { LocationForm } from '../Components/LocationForm'
+import { LocationForm } from '../Components/LocationFormModal'
 import { IWLocation } from '../Utils/Models'
 
 type IProps = {}

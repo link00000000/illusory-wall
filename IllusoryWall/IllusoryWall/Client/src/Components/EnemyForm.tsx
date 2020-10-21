@@ -1,18 +1,19 @@
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
-import { Button, Form, Input, Radio, Table } from 'antd'
+import { Button, Form, Input, Modal, Radio, Table } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import TextArea from 'antd/lib/input/TextArea'
 import React, { Component } from 'react'
 import { IWEnemy, IWLocation } from '../Utils/Models'
 import styles from './EnemyForm.module.css'
+import { LocationForm } from './LocationFormModal'
 
 type IProps = {
     onSubmit?: (model: IWEnemy) => void
-    onCancel?: () => void
     submitText?: string
 }
 type IState = {
     locations: IWLocation[]
+    showLocationsModal: boolean
 }
 
 /**
@@ -27,12 +28,13 @@ export class EnemyForm extends Component<IProps, IState> {
         super(props)
 
         this.handleSubmit = this.handleSubmit.bind(this)
-        this.handleCancel = this.handleCancel.bind(this)
         this.locationsList = this.locationsList.bind(this)
+        this.addLocation = this.addLocation.bind(this)
         this.removeLocation = this.removeLocation.bind(this)
 
         this.state = {
-            locations: [{ name: 'Test location', hp: 10, souls: 20 }]
+            locations: [{ name: 'Test location', hp: 10, souls: 20 }],
+            showLocationsModal: false
         }
     }
 
@@ -49,17 +51,11 @@ export class EnemyForm extends Component<IProps, IState> {
             formData.respawns = !!formData.respawns
         }
 
+        // Bind data to model
         const model = formData as IWEnemy
         model.locations = this.state.locations
 
         if (this.props.onSubmit) this.props.onSubmit(model)
-    }
-
-    /**
-     * Perform the props.onCancel callback if there is one
-     */
-    private handleCancel(): void {
-        if (this.props.onCancel) this.props.onCancel()
     }
 
     private locationsList(): JSX.Element {
@@ -68,6 +64,9 @@ export class EnemyForm extends Component<IProps, IState> {
                 block
                 type='dashed'
                 className={styles['add-location-button']}
+                onClick={() => {
+                    this.setState({ showLocationsModal: true })
+                }}
             >
                 <PlusCircleOutlined />
                 Add Location
@@ -104,6 +103,10 @@ export class EnemyForm extends Component<IProps, IState> {
                 {addLocationButton}
             </>
         )
+    }
+
+    private addLocation(model: IWLocation): void {
+        this.setState({ locations: [...this.state.locations, model] })
     }
 
     private removeLocation(locationName: string): void {
@@ -156,6 +159,24 @@ export class EnemyForm extends Component<IProps, IState> {
                 </Form.Item>
 
                 <Form.Item name='locations'>{this.locationsList()}</Form.Item>
+                <Modal
+                    visible={this.state.showLocationsModal}
+                    title='Add Location'
+                    okText='Add Location'
+                    cancelText='Cancel'
+                    onCancel={() => {}}
+                >
+                    <LocationForm
+                        visible={this.state.showLocationsModal}
+                        onCancel={() => {
+                            this.setState({ showLocationsModal: false })
+                        }}
+                        onSubmit={(newLocation) => {
+                            this.setState({ showLocationsModal: false })
+                            this.addLocation(newLocation)
+                        }}
+                    ></LocationForm>
+                </Modal>
 
                 {/* @TODO: IWDrop Form */}
 
@@ -168,14 +189,6 @@ export class EnemyForm extends Component<IProps, IState> {
                         className={styles['tail-button']}
                     >
                         {this.props.submitText || 'Submit'}
-                    </Button>
-
-                    <Button
-                        type='default'
-                        onClick={this.handleCancel}
-                        className={styles['tail-button']}
-                    >
-                        Cancel
                     </Button>
                 </Form.Item>
             </Form>
