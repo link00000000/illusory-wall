@@ -22,7 +22,6 @@ export class AddEnemy extends Component<IProps, IState> {
         super(props)
 
         this.handleSubmit = this.handleSubmit.bind(this)
-        this.handleCancel = this.handleCancel.bind(this)
         this.showError = this.showError.bind(this)
         this.showSuccess = this.showSuccess.bind(this)
         this.showLoading = this.showLoading.bind(this)
@@ -40,10 +39,6 @@ export class AddEnemy extends Component<IProps, IState> {
         }
 
         this.showSuccess()
-    }
-
-    private handleCancel() {
-        // @TODO: Handle cancel
     }
 
     /**
@@ -94,7 +89,6 @@ export class AddEnemy extends Component<IProps, IState> {
                 <EnemyForm
                     submitText='Add Enemy'
                     onSubmit={this.handleSubmit}
-                    onCancel={this.handleCancel}
                 />
             </Layout>
         )
