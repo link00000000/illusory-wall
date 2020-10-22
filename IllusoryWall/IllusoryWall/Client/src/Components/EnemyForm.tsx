@@ -351,7 +351,7 @@ export class EnemyForm extends Component<IProps, IState> {
                     </Select>
                 </Form.Item>
 
-                <Form.Item label='Image' name='image'>
+                <Form.Item label='Image' name='imagePath'>
                     <Input />
                 </Form.Item>
 
