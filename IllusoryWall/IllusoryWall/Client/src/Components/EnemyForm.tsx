@@ -69,10 +69,8 @@ export class EnemyForm extends Component<IProps, IState> {
      * @param formData Data entered into the form
      */
     private async handleSubmit(formData: any): Promise<void> {
-        // If respawns is -1, dont bind the respawns atribute to model
-        if (formData.respawns === -1) {
-            delete formData.respawns
-        } else {
+
+        if (formData.respawns !== undefined) {
             // Convert integer value to boolean
             formData.respawns = !!formData.respawns
         }
@@ -327,7 +325,7 @@ export class EnemyForm extends Component<IProps, IState> {
                         options={[
                             { label: 'Respawns', value: 1 },
                             { label: "Doesn't Respawn", value: 0 },
-                            { label: 'Disabled', value: -1 }
+                            { label: 'Disabled', value: -1 } // Sets value to undefined
                         ]}
                         optionType='button'
                         defaultValue={-1}
@@ -337,7 +335,7 @@ export class EnemyForm extends Component<IProps, IState> {
 
                 <Form.Item label='Class' name='class'>
                     <Select showSearch>
-                        {Object.values(EnemyClass).map(className => (
+                        {Object.values(EnemyClass).map((className) => (
                             <Select.Option value={className}>
                                 {EnemyClassDisplayNames[className]}
                             </Select.Option>
