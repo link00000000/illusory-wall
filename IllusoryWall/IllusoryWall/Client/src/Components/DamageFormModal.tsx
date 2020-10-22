@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import DamageCategoryDisplayNames from '../Utils/DamageCategoryDisplayNames'
 import DamageTypeDisplayNames from '../Utils/DamageTypeDisplayNames'
 import { IWDamage } from '../Utils/Models'
+import { DamageType } from '../Utils/Types'
 
 type IProps = {
     onSubmit?: (location: IWDamage) => void
@@ -78,30 +79,11 @@ export class DamageFormModal extends Component<IProps, IState> {
                         rules={[{ required: true }]}
                     >
                         <Select showSearch>
-                            <Select.Option value='magic'>
-                                {DamageTypeDisplayNames['magic']}
-                            </Select.Option>
-                            <Select.Option value='fire'>
-                                {DamageTypeDisplayNames['fire']}
-                            </Select.Option>
-                            <Select.Option value='lightning'>
-                                {DamageTypeDisplayNames['lightning']}
-                            </Select.Option>
-                            <Select.Option value='dark'>
-                                {DamageTypeDisplayNames['dark']}
-                            </Select.Option>
-                            <Select.Option value='physical'>
-                                {DamageTypeDisplayNames['physical']}
-                            </Select.Option>
-                            <Select.Option value='strike'>
-                                {DamageTypeDisplayNames['strike']}
-                            </Select.Option>
-                            <Select.Option value='slash'>
-                                {DamageTypeDisplayNames['slash']}
-                            </Select.Option>
-                            <Select.Option value='thrust'>
-                                {DamageTypeDisplayNames['thrust']}
-                            </Select.Option>
+                            {Object.values(DamageType).map((damageTypeName) => (
+                                <Select.Option value={damageTypeName}>
+                                    {DamageTypeDisplayNames[damageTypeName]}
+                                </Select.Option>
+                            ))}
                         </Select>
                     </Form.Item>
 
