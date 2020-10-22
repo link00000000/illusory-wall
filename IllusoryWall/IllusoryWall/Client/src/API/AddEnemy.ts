@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { IWEnemy } from '../Utils/Models'
+import Nullify from '../Utils/Nullify'
 
 const ENDPOINT = '/enemy/add'
 
@@ -12,7 +13,7 @@ export async function commit(model: IWEnemy): Promise<Error | null> {
         const response = await axios({
             method: 'POST',
             url: ENDPOINT,
-            data: model
+            data: Nullify(model)
         })
 
         if (response.status !== 200) {
