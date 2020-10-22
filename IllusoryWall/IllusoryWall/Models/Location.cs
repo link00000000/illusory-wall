@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -25,12 +23,12 @@ namespace IllusoryWall.Models
         /// <summary>
         ///     Field for the hp of the enemy in the location
         /// </summary>
-        public int HP { get; set; }
+        public int? HP { get; set; }
 
         /// <summary>
         ///     Field for the souls dropped for the enemy in this location
         /// </summary>
-        public int Souls { get; set; }
+        public int? Souls { get; set; }
 
         /// <summary>
         ///     Field for the name of the location
