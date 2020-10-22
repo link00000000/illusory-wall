@@ -1,4 +1,6 @@
-const DamageTypeDisplayNames = {
+import { DamageType } from './Types'
+
+const DamageTypeDisplayNames: { [key in DamageType]: string } = {
     magic: 'Magic',
     fire: 'Fire',
     lightning: 'Lightning',

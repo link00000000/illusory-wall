@@ -1,10 +1,11 @@
 /* Mirrored from API */
+import { DamageCategory, DamageType, EnemyClass } from './Types'
 
 export type IWEnemy = {
     name: string
     description?: string
     respawns?: boolean
-    class?: 'boss' | 'generic' | 'npc' | 'invader'
+    class?: EnemyClass
     imagePath?: string
     locations?: IWLocation[]
     drops?: IWDrop[]
@@ -24,14 +25,6 @@ export type IWDrop = {
 }
 
 export type IWDamage = {
-    damageType:
-        | 'magic'
-        | 'fire'
-        | 'lightning'
-        | 'dark'
-        | 'standard'
-        | 'strike'
-        | 'slash'
-        | 'thrust'
-    category?: 'w' | 'r' | 'i'
+    damageType: DamageType
+    category?: DamageCategory
 }
