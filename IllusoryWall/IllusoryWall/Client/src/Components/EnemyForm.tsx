@@ -7,6 +7,7 @@ import DamageCategoryDisplayNames from '../Utils/DamageCategoryDisplayNames'
 import DamageTypeDisplayNames from '../Utils/DamageTypeDisplayNames'
 import EnemyClassDisplayNames from '../Utils/EnemyClassDisplayNames'
 import { IWDamage, IWDrop, IWEnemy, IWLocation } from '../Utils/Models'
+import { EnemyClass } from '../Utils/Types'
 import { DamageFormModal } from './DamageFormModal'
 import { DropFormModal } from './DropFormModal'
 import styles from './EnemyForm.module.css'
@@ -336,18 +337,11 @@ export class EnemyForm extends Component<IProps, IState> {
 
                 <Form.Item label='Class' name='class'>
                     <Select showSearch>
-                        <Select.Option value='boss'>
-                            {EnemyClassDisplayNames['boss']}
-                        </Select.Option>
-                        <Select.Option value='generic'>
-                            {EnemyClassDisplayNames['generic']}
-                        </Select.Option>
-                        <Select.Option value='npc'>
-                            {EnemyClassDisplayNames['npc']}
-                        </Select.Option>
-                        <Select.Option value='invader'>
-                            {EnemyClassDisplayNames['invader']}
-                        </Select.Option>
+                        {Object.values(EnemyClass).map(className => (
+                            <Select.Option value={className}>
+                                {EnemyClassDisplayNames[className]}
+                            </Select.Option>
+                        ))}
                     </Select>
                 </Form.Item>
 

@@ -1,9 +1,9 @@
 import { DamageCategory } from './Types'
 
 const DamageCategoryDisplayNames: { [key in DamageCategory]: string } = {
-    w: 'Weakness',
-    r: 'Resistance',
-    i: 'Immunity'
+    [DamageCategory.WEAKNESS]: 'Weakness',
+    [DamageCategory.RESISTANCE]: 'Resistance',
+    [DamageCategory.IMMUNITY]: 'Immunity'
 }
 
 export default DamageCategoryDisplayNames
