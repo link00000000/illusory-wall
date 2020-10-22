@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import DamageCategoryDisplayNames from '../Utils/DamageCategoryDisplayNames'
 import DamageTypeDisplayNames from '../Utils/DamageTypeDisplayNames'
 import { IWDamage } from '../Utils/Models'
-import { DamageType } from '../Utils/Types'
+import { DamageCategory, DamageType } from '../Utils/Types'
 
 type IProps = {
     onSubmit?: (location: IWDamage) => void
@@ -89,15 +89,17 @@ export class DamageFormModal extends Component<IProps, IState> {
 
                     <Form.Item label='Category' name='category'>
                         <Select showSearch>
-                            <Select.Option value='w'>
-                                {DamageCategoryDisplayNames['w']}
-                            </Select.Option>
-                            <Select.Option value='r'>
-                                {DamageCategoryDisplayNames['r']}
-                            </Select.Option>
-                            <Select.Option value='i'>
-                                {DamageCategoryDisplayNames['i']}
-                            </Select.Option>
+                            {Object.values(DamageCategory).map(
+                                (damageCategoryName) => (
+                                    <Select.Option value={damageCategoryName}>
+                                        {
+                                            DamageCategoryDisplayNames[
+                                                damageCategoryName
+                                            ]
+                                        }
+                                    </Select.Option>
+                                )
+                            )}
                         </Select>
                     </Form.Item>
                 </Form>
