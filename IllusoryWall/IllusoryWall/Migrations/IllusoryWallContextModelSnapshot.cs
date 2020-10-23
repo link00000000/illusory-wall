@@ -24,6 +24,7 @@ namespace IllusoryWall.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Category")
+                        .IsRequired()
                         .HasColumnType("varchar(1) CHARACTER SET utf8mb4");
 
                     b.Property<string>("DamageType")

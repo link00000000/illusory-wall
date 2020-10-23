@@ -2,12 +2,19 @@
 
 namespace IllusoryWall.Migrations
 {
-    public partial class MakeValuesInModelsNullable : Migration
+    public partial class MakeModelValuesNull : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<int>(
                 name: "Souls",
+                table: "Locations",
+                nullable: true,
+                oldClrType: typeof(int),
+                oldType: "int");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "HP",
                 table: "Locations",
                 nullable: true,
                 oldClrType: typeof(int),
@@ -26,19 +33,20 @@ namespace IllusoryWall.Migrations
                 nullable: true,
                 oldClrType: typeof(double),
                 oldType: "double");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Category",
-                table: "Damages",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "varchar(1) CHARACTER SET utf8mb4");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<int>(
                 name: "Souls",
+                table: "Locations",
+                type: "int",
+                nullable: false,
+                oldClrType: typeof(int),
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<int>(
+                name: "HP",
                 table: "Locations",
                 type: "int",
                 nullable: false,
@@ -59,14 +67,6 @@ namespace IllusoryWall.Migrations
                 type: "double",
                 nullable: false,
                 oldClrType: typeof(double),
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Category",
-                table: "Damages",
-                type: "varchar(1) CHARACTER SET utf8mb4",
-                nullable: false,
-                oldClrType: typeof(string),
                 oldNullable: true);
         }
     }

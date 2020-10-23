@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IllusoryWall.Migrations
 {
     [DbContext(typeof(IllusoryWallContext))]
-    [Migration("20201022164509_MakeValuesInModelsNullable")]
-    partial class MakeValuesInModelsNullable
+    [Migration("20201023020458_MakeModelValuesNull")]
+    partial class MakeModelValuesNull
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,6 +26,7 @@ namespace IllusoryWall.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Category")
+                        .IsRequired()
                         .HasColumnType("varchar(1) CHARACTER SET utf8mb4");
 
                     b.Property<string>("DamageType")
