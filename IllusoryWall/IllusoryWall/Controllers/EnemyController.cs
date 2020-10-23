@@ -59,11 +59,9 @@ namespace IllusoryWall.Controllers
         [Route("Add")]
         public IActionResult AddEnemy(Enemy enemy)
         {
-            // add enemy andd save changes
-            _context.Enemies.Add(enemy);
 
-            if(enemy == null)
-                return StatusCode(400);
+            // add enemy and save changes
+            _context.Enemies.Add(enemy);
 
             int count;
             
@@ -91,9 +89,9 @@ namespace IllusoryWall.Controllers
         /// <returns>Status code for the state of the transaction</returns>
         [HttpGet]
         [Route("Remove/{id}")]
-        public IActionResult AddEnemy(int id)
+        public IActionResult RemoveEnemy(int id)
         {
-            // add enemy andd save changes
+            // add enemy and save changes
             Enemy enemy = _context.Enemies.Find(id);
 
             if(enemy == null)
@@ -103,6 +101,59 @@ namespace IllusoryWall.Controllers
 
             int count;
             
+            try
+            {
+                count = _context.SaveChanges();
+            }
+            catch (System.Exception oops)
+            {  
+                Console.Write("\n" + oops.ToString() + "\n\n");
+                return StatusCode(500);
+            }
+            
+            // if changes occurred it worked, else something went wrong
+            if(count > 0)
+                return Ok();
+
+            return StatusCode(500);
+        }
+
+        /// <summary>
+        ///     Endpoint to modify an enemy (more like delete old entry and reinsert new entry). The Drops, Damages, and Locations ids
+        ///     must be set by the client's logic if the ids to stay the same
+        /// </summary>
+        /// <param name="newEnemy">Enemy filled with the updates</param>
+        /// <param name="id">id of enemy to update</param>
+        /// <returns>Status of resulting request</returns>
+        [HttpPost]
+        [Route("Update/{id}")]
+        public IActionResult UpdateEnemy(Enemy newEnemy, int id)
+        {
+            // get outdated enemy entry
+            Enemy enemy = _context.Enemies.Find(id);
+
+            // add the old enemy id to the new one
+            newEnemy.Id = id;
+
+            // remove old enemy entry
+            _context.Enemies.Remove(enemy);
+
+            int count;
+            
+            try
+            {
+                count = _context.SaveChanges();
+            }
+            catch (System.Exception oops)
+            {  
+                Console.Write("\n" + oops.ToString() + "\n\n");
+                return StatusCode(500);
+            }
+
+            // add new enemy
+            // do the delete and reinsert in separate saves or else the context registers it as trying to duplicate primary keys
+            _context.Enemies.Add(newEnemy);
+
             try
             {
                 count = _context.SaveChanges();
