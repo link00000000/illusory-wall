@@ -87,7 +87,11 @@ export class DamageFormModal extends Component<IProps, IState> {
                         </Select>
                     </Form.Item>
 
-                    <Form.Item label='Category' name='category'>
+                    <Form.Item
+                        label='Category'
+                        name='category'
+                        rules={[{ required: true }]}
+                    >
                         <Select showSearch>
                             {Object.values(DamageCategory).map(
                                 (damageCategoryName) => (
