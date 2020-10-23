@@ -167,12 +167,8 @@ namespace IllusoryWall.Controllers
             // if changes occurred it worked, else something went wrong
             if (count > 0)
                 return Ok();
-        }
 
-/// <summary>
-///     Endpoint to modify an enemy (more like delete old entry and reinsert new entry). The Drops, Damages, and Locations ids
-///     must be set by the client's logic if the ids to stay the same
-/// </summary>
-/// <param name="newEnemy">Enemy filled with the updates</param>
-/// <param name="id">id of enemy to update</param>
-/// <returns>Status of resulting request</returns>
+            return StatusCode(500);
+        }
+    }
+}
