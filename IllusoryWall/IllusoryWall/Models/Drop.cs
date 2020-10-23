@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace IllusoryWall.Models
@@ -33,7 +30,7 @@ namespace IllusoryWall.Models
         ///     Field for the percentage chance of the drop.
         ///     It is NULL if unknown and a 100% if guaranteed.
         /// </summary>
-        public double Rate { get; set; }
+        public double? Rate { get; set; }
 
         /// <summary>
         ///     Field for the Location it is dropped at.

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -29,7 +28,7 @@ namespace IllusoryWall.Models
         /// <summary>
         ///     Boolean field whether the enemy respawns or not
         /// </summary>
-        public bool Respawns { get; set; }
+        public bool? Respawns { get; set; }
 
         /// <summary>
         ///     Field for the class of the enemy entry. (Boss, General, NPC, Invader, etc)

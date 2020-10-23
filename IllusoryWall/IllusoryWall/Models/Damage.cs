@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -31,6 +29,7 @@ namespace IllusoryWall.Models
         /// <summary>
         ///     Column to distinguish if the damage type is a weakness (W), Resistance (R), or Immunity (I)
         /// </summary>
-        public char Category { get; set; }
+        [Required]
+        public char? Category { get; set; }
     }
 }

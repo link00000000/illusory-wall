@@ -3,14 +3,16 @@ using System;
 using IllusoryWall.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IllusoryWall.Migrations
 {
     [DbContext(typeof(IllusoryWallContext))]
-    partial class IllusoryWallContextModelSnapshot : ModelSnapshot
+    [Migration("20201023020458_MakeModelValuesNull")]
+    partial class MakeModelValuesNull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,24 +129,21 @@ namespace IllusoryWall.Migrations
                 {
                     b.HasOne("IllusoryWall.Models.Enemy", "Enemy")
                         .WithMany("Damages")
-                        .HasForeignKey("EnemyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EnemyId");
                 });
 
             modelBuilder.Entity("IllusoryWall.Models.Drop", b =>
                 {
                     b.HasOne("IllusoryWall.Models.Enemy", "Enemy")
                         .WithMany("Drops")
-                        .HasForeignKey("EnemyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EnemyId");
                 });
 
             modelBuilder.Entity("IllusoryWall.Models.Location", b =>
                 {
                     b.HasOne("IllusoryWall.Models.Enemy", "Enemy")
                         .WithMany("Locations")
-                        .HasForeignKey("EnemyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EnemyId");
                 });
 #pragma warning restore 612, 618
         }
