@@ -81,8 +81,9 @@ export class DropFormModal extends Component<IProps, IState> {
 
                     <Form.Item label='Rate' name='rate'>
                         <InputNumber
-                            min={0}
+                            min={0.01}
                             max={100}
+                            precision={2}
                             formatter={(value) => `${value}%`}
                             parser={(value) =>
                                 value?.replace('%', '') as React.Key
