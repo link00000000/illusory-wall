@@ -127,9 +127,9 @@ namespace IllusoryWall.Controllers
         /// <returns>Status of resulting request</returns>
         [HttpPost]
         [Route("Update/{id}")]
-        public IActionResult ModifyEnemy(Enemy newEnemy, int id)
+        public IActionResult UpdateEnemy(Enemy newEnemy, int id)
         {
-            // get outdate enemy entry
+            // get outdated enemy entry
             Enemy enemy = _context.Enemies.Find(id);
 
             // add the old enemy id to the new one
