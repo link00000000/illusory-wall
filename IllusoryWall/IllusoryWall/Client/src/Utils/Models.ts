@@ -26,5 +26,5 @@ export type IWDrop = {
 
 export type IWDamage = {
     damageType: DamageType
-    category?: DamageCategory
+    category: DamageCategory
 }
