@@ -79,7 +79,7 @@ export class LocationFormModal extends Component<IProps, IState> {
                     </Form.Item>
 
                     <Form.Item label='HP' name='hp'>
-                        <InputNumber min={0} precision={0} />
+                        <InputNumber min={1} precision={0} />
                     </Form.Item>
 
                     <Form.Item label='Souls' name='souls'>
