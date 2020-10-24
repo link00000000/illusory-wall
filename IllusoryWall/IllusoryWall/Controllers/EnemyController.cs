@@ -43,7 +43,7 @@ namespace IllusoryWall.Controllers
             Enemy enemy = _context.Enemies.Find(id);
 
             // if no results return with 404
-            if(enemy == null)
+            if (enemy == null)
                 return NotFound();
 
             // if results return json with 200
@@ -64,19 +64,19 @@ namespace IllusoryWall.Controllers
             _context.Enemies.Add(enemy);
 
             int count;
-            
+
             try
             {
                 count = _context.SaveChanges();
             }
             catch (System.Exception oops)
-            {  
+            {
                 Console.Write("\n" + oops.ToString() + "\n\n");
                 return StatusCode(500);
             }
-            
+
             // if changes occurred it worked, else something went wrong
-            if(count > 0)
+            if (count > 0)
                 return Ok();
 
             return StatusCode(500);
@@ -87,32 +87,32 @@ namespace IllusoryWall.Controllers
         /// </summary>
         /// <param name="id">id of the enemy to remove</param>
         /// <returns>Status code for the state of the transaction</returns>
-        [HttpGet]
+        [HttpDelete]
         [Route("Remove/{id}")]
         public IActionResult RemoveEnemy(int id)
         {
             // add enemy and save changes
             Enemy enemy = _context.Enemies.Find(id);
 
-            if(enemy == null)
+            if (enemy == null)
                 return StatusCode(404);
 
             _context.Enemies.Remove(enemy);
 
             int count;
-            
+
             try
             {
                 count = _context.SaveChanges();
             }
             catch (System.Exception oops)
-            {  
+            {
                 Console.Write("\n" + oops.ToString() + "\n\n");
                 return StatusCode(500);
             }
-            
+
             // if changes occurred it worked, else something went wrong
-            if(count > 0)
+            if (count > 0)
                 return Ok();
 
             return StatusCode(500);
@@ -139,13 +139,13 @@ namespace IllusoryWall.Controllers
             _context.Enemies.Remove(enemy);
 
             int count;
-            
+
             try
             {
                 count = _context.SaveChanges();
             }
             catch (System.Exception oops)
-            {  
+            {
                 Console.Write("\n" + oops.ToString() + "\n\n");
                 return StatusCode(500);
             }
@@ -159,13 +159,13 @@ namespace IllusoryWall.Controllers
                 count = _context.SaveChanges();
             }
             catch (System.Exception oops)
-            {  
+            {
                 Console.Write("\n" + oops.ToString() + "\n\n");
                 return StatusCode(500);
             }
-            
+
             // if changes occurred it worked, else something went wrong
-            if(count > 0)
+            if (count > 0)
                 return Ok();
 
             return StatusCode(500);
