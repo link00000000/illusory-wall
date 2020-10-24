@@ -73,6 +73,15 @@ export class EnemyForm extends Component<IProps, IState> {
             this.initialValues = EnemyForm.IWEnemyToForm(
                 this.props.initialValues
             )
+
+            this.state = {
+                locations: this.props.initialValues.locations ?? [],
+                drops: this.props.initialValues.drops ?? [],
+                damages: this.props.initialValues.damages ?? [],
+                showLocationsModal: false,
+                showDropsModal: false,
+                showDamageModal: false
+            }
         }
     }
 
