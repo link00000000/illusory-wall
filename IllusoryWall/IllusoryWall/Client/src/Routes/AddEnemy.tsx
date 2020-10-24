@@ -1,7 +1,7 @@
 import { message } from 'antd'
 import { MessageType } from 'antd/lib/message'
 import React, { Component } from 'react'
-import * as AddEnemeyAPI from '../API/AddEnemy'
+import * as AddEnemyAPI from '../API/AddEnemy'
 import { EnemyForm } from '../Components/EnemyForm'
 import { AddEnemyLayout as Layout } from '../Layouts/AddEnemyLayout'
 import { IWEnemy } from '../Utils/Models'
@@ -27,12 +27,14 @@ export class AddEnemy extends Component<IProps, IState> {
         this.showLoading = this.showLoading.bind(this)
     }
 
+    /**
+     * Add enemy to database
+     * @param model Enemy model
+     */
     private async handleSubmit(model: IWEnemy): Promise<void> {
-        console.log(model)
-
         this.showLoading()
 
-        const error = await AddEnemeyAPI.commit(model)
+        const error = await AddEnemyAPI.commit(model)
         if (error) {
             this.showError(error)
             return
@@ -71,7 +73,10 @@ export class AddEnemy extends Component<IProps, IState> {
             this.setState({ loader: undefined })
         }
 
-        message.success('Created new enemy.', this._messageDuration)
+        message.success(
+            'Created new enemy successfully.',
+            this._messageDuration
+        )
     }
 
     /**
