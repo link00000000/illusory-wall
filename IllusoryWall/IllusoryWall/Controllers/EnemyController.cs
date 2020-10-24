@@ -125,7 +125,7 @@ namespace IllusoryWall.Controllers
         /// <param name="newEnemy">Enemy filled with the updates</param>
         /// <param name="id">id of enemy to update</param>
         /// <returns>Status of resulting request</returns>
-        [HttpPost]
+        [HttpPut]
         [Route("Update/{id}")]
         public IActionResult UpdateEnemy(Enemy newEnemy, int id)
         {
