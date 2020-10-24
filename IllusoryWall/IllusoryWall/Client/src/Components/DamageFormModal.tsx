@@ -79,11 +79,16 @@ export class DamageFormModal extends Component<IProps, IState> {
                         rules={[{ required: true }]}
                     >
                         <Select showSearch>
-                            {Object.values(DamageType).map((damageTypeName) => (
-                                <Select.Option value={damageTypeName}>
-                                    {DamageTypeDisplayNames[damageTypeName]}
-                                </Select.Option>
-                            ))}
+                            {Object.values(DamageType).map(
+                                (damageTypeName, index) => (
+                                    <Select.Option
+                                        value={damageTypeName}
+                                        key={index}
+                                    >
+                                        {DamageTypeDisplayNames[damageTypeName]}
+                                    </Select.Option>
+                                )
+                            )}
                         </Select>
                     </Form.Item>
 
@@ -94,8 +99,11 @@ export class DamageFormModal extends Component<IProps, IState> {
                     >
                         <Select showSearch>
                             {Object.values(DamageCategory).map(
-                                (damageCategoryName) => (
-                                    <Select.Option value={damageCategoryName}>
+                                (damageCategoryName, index) => (
+                                    <Select.Option
+                                        value={damageCategoryName}
+                                        key={index}
+                                    >
                                         {
                                             DamageCategoryDisplayNames[
                                                 damageCategoryName
