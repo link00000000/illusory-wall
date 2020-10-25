@@ -1,6 +1,7 @@
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Form, Input, Radio, Select, Table } from 'antd'
 import { FormInstance } from 'antd/lib/form'
+import { Store } from 'antd/lib/form/interface'
 import TextArea from 'antd/lib/input/TextArea'
 import React, { Component } from 'react'
 import DamageCategoryDisplayNames from '../Utils/DamageCategoryDisplayNames'
@@ -16,6 +17,7 @@ import { LocationFormModal } from './LocationFormModal'
 type IProps = {
     onSubmit?: (model: IWEnemy) => void
     submitText?: string
+    initialValues?: IWEnemy
 }
 type IState = {
     locations: IWLocation[]
@@ -36,6 +38,10 @@ export class EnemyForm extends Component<IProps, IState> {
     private readonly _formOffset = 8
 
     private _formRef = React.createRef<FormInstance>()
+
+    private initialValues: Partial<IWEnemy> | any = {
+        respawns: -1
+    }
 
     constructor(props: IProps) {
         super(props)
@@ -62,6 +68,45 @@ export class EnemyForm extends Component<IProps, IState> {
             showDropsModal: false,
             showDamageModal: false
         }
+
+        if (this.props.initialValues) {
+            this.initialValues = EnemyForm.IWEnemyToForm(
+                this.props.initialValues
+            )
+
+            this.state = {
+                locations: this.props.initialValues.locations ?? [],
+                drops: this.props.initialValues.drops ?? [],
+                damages: this.props.initialValues.damages ?? [],
+                showLocationsModal: false,
+                showDropsModal: false,
+                showDamageModal: false
+            }
+        }
+    }
+
+    /**
+     * Convert enemy model to Form Store
+     * @param enemyModel Enemy model
+     */
+    private static IWEnemyToForm(enemyModel: IWEnemy): Store {
+        let store: Store = enemyModel
+
+        if (store.respawns === null) {
+            store.respawns = 'null'
+        }
+
+        return store
+    }
+
+    private static FormToIWEnemy(form: Store): IWEnemy {
+        let model: IWEnemy = form as IWEnemy
+
+        if (form.respawns === 'null') {
+            model.respawns = undefined
+        }
+
+        return model
     }
 
     /**
@@ -69,14 +114,8 @@ export class EnemyForm extends Component<IProps, IState> {
      * @param formData Data entered into the form
      */
     private async handleSubmit(formData: any): Promise<void> {
-
-        if (formData.respawns !== undefined) {
-            // Convert integer value to boolean
-            formData.respawns = !!formData.respawns
-        }
-
         // Bind data to model
-        const model = formData as IWEnemy
+        const model = EnemyForm.FormToIWEnemy(formData)
         model.locations = this.state.locations
         model.drops = this.state.drops
         model.damages = this.state.damages
@@ -307,6 +346,7 @@ export class EnemyForm extends Component<IProps, IState> {
                 ref={this._formRef}
                 labelCol={{ span: this._formOffset }}
                 wrapperCol={{ span: this._formOffset }}
+                initialValues={this.initialValues}
             >
                 <Form.Item
                     label='Name'
@@ -323,20 +363,19 @@ export class EnemyForm extends Component<IProps, IState> {
                 <Form.Item label='Respawns' name='respawns'>
                     <Radio.Group
                         options={[
-                            { label: 'Respawns', value: 1 },
-                            { label: "Doesn't Respawn", value: 0 },
-                            { label: 'Disabled', value: -1 } // Sets value to undefined
+                            { label: 'Respawns', value: true },
+                            { label: "Doesn't Respawn", value: false },
+                            { label: 'Disabled', value: 'null' } // Sets value to undefined
                         ]}
                         optionType='button'
-                        defaultValue={-1}
                         size='small'
                     />
                 </Form.Item>
 
                 <Form.Item label='Class' name='class'>
                     <Select showSearch>
-                        {Object.values(EnemyClass).map((className) => (
-                            <Select.Option value={className}>
+                        {Object.values(EnemyClass).map((className, index) => (
+                            <Select.Option value={className} key={index}>
                                 {EnemyClassDisplayNames[className]}
                             </Select.Option>
                         ))}
