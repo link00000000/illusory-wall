@@ -3,9 +3,6 @@ using System.Text.Json.Serialization;
 
 namespace IllusoryWall.Models
 {
-    /// <summary>
-    ///     Model class for the Damages table
-    /// </summary>
     public class Damage
     {
         /// <summary>
