@@ -28,3 +28,8 @@ export type IWDamage = {
     damageType: DamageType
     category: DamageCategory
 }
+
+export type EnemyEntry = {
+    name: string
+    id: number
+}

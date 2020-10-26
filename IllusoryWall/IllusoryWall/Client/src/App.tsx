@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router'
 import { _404 } from './Routes/404'
 import { AddEnemy } from './Routes/AddEnemy'
 import { ModifyEnemy } from './Routes/ModifyEnemy'
+import { RemoveEnemy } from './Routes/RemoveEnemy'
 
 function App() {
     return (
@@ -11,6 +12,7 @@ function App() {
             <Switch>
                 <Route path='/add' component={AddEnemy} />
                 <Route path='/update/:id' component={ModifyEnemy} />
+                <Route path='/remove' component={RemoveEnemy} />
                 <Route path='*' component={_404} />
             </Switch>
         </div>
