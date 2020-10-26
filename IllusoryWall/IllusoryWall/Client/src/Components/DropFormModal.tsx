@@ -69,7 +69,7 @@ export class DropFormModal extends Component<IProps, IState> {
                     ref={this._formRef}
                     labelCol={{ span: 4 }}
                     wrapperCol={{ span: 16 }}
-                    initialValues={{ rate: 0 }}
+                    initialValues={{ rate: 0.01 }}
                 >
                     <Form.Item
                         label='Name'
