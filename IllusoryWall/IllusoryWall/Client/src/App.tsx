@@ -10,9 +10,9 @@ function App() {
     return (
         <div className='App'>
             <Switch>
-                <Route path='/add' component={AddEnemy} />
-                <Route path='/update/:id' component={ModifyEnemy} />
-                <Route path='/' component={ViewEnemy} />
+                <Route exact path='/' component={ViewEnemy} />
+                <Route exact path='/add' component={AddEnemy} />
+                <Route exact path='/update/:id' component={ModifyEnemy} />
                 <Route path='*' component={_404} />
             </Switch>
         </div>
