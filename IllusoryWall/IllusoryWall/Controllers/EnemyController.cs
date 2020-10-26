@@ -170,5 +170,18 @@ namespace IllusoryWall.Controllers
 
             return StatusCode(500);
         }
+
+        [HttpGet]
+        [Route("All")]
+        public EnemyEntry[] GetAllEnemyAsEntries()
+        {
+            return _context.Enemies
+                .Select(enemy => new EnemyEntry()
+                {
+                    Name = enemy.Name,
+                    Id = enemy.Id
+                })
+                .ToArray();
+        }
     }
 }
