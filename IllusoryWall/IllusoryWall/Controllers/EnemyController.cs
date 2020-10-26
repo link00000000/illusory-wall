@@ -11,30 +11,15 @@ namespace IllusoryWall.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-
-    /// <summary>
-    ///     Controller class to handle requests to Enemy
-    /// </summary>
     public class EnemyController : ControllerBase
     {
-        /// <summary>
-        ///     IllusoryWallContext object for reuse throughout API
-        /// </summary>
         private readonly IllusoryWallContext _context;
 
-        /// <summary>
-        ///     Constructor
-        /// </summary>
         public EnemyController()
         {
             _context = new IllusoryWallContext();
         }
 
-        /// <summary>
-        ///     Endpoint to  retrieve enemies from the database  given its id
-        /// </summary>
-        /// <param name="id">id of the enemy to search for</param>
-        /// <returns>The results of the query with response code</returns>
         [HttpGet]
         [Route("{id}")]
         public IActionResult GetEnemy(int id)
@@ -50,11 +35,6 @@ namespace IllusoryWall.Controllers
             return Ok(enemy);
         }
 
-        /// <summary>
-        ///     Endpoint to insert new enemies into the database
-        /// </summary>
-        /// <param name="enemy">Enemy model object to insert into database</param>
-        /// <returns>The status code for the state of the transaction</returns>
         [HttpPost]
         [Route("Add")]
         public IActionResult AddEnemy(Enemy enemy)
@@ -82,11 +62,6 @@ namespace IllusoryWall.Controllers
             return StatusCode(500);
         }
 
-        /// <summary>
-        ///     Endpoint to remove an enemy by using the id
-        /// </summary>
-        /// <param name="id">id of the enemy to remove</param>
-        /// <returns>Status code for the state of the transaction</returns>
         [HttpDelete]
         [Route("Remove/{id}")]
         public IActionResult RemoveEnemy(int id)
@@ -118,13 +93,6 @@ namespace IllusoryWall.Controllers
             return StatusCode(500);
         }
 
-        /// <summary>
-        ///     Endpoint to modify an enemy (more like delete old entry and reinsert new entry). The Drops, Damages, and Locations ids
-        ///     must be set by the client's logic if the ids to stay the same
-        /// </summary>
-        /// <param name="newEnemy">Enemy filled with the updates</param>
-        /// <param name="id">id of enemy to update</param>
-        /// <returns>Status of resulting request</returns>
         [HttpPut]
         [Route("Update/{id}")]
         public IActionResult UpdateEnemy(Enemy newEnemy, int id)

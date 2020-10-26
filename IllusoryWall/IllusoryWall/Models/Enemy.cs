@@ -4,9 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IllusoryWall.Models
 {
-    /// <summary>
-    ///     Model class for the Enemies table
-    /// </summary>
     public class Enemy
     {
         /// <summary>

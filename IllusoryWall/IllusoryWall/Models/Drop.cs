@@ -3,9 +3,6 @@ using System.Text.Json.Serialization;
 
 namespace IllusoryWall.Models
 {
-    /// <summary>
-    ///     Model class for the Drops table
-    /// </summary>
     public class Drop
     {
         /// <summary>
