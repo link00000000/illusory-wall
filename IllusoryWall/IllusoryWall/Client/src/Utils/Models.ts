@@ -4,7 +4,7 @@ import { DamageCategory, DamageType, EnemyClass } from './Types'
 export type IWEnemy = {
     name: string
     description?: string
-    respawns?: boolean
+    respawns?: boolean | null
     class?: EnemyClass
     imagePath?: string
     locations?: IWLocation[]
