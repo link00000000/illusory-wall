@@ -40,7 +40,7 @@ export class EnemyForm extends Component<IProps, IState> {
     private _formRef = React.createRef<FormInstance>()
 
     private initialValues: Partial<IWEnemy> | any = {
-        respawns: -1
+        respawns: 'null'
     }
 
     constructor(props: IProps) {
