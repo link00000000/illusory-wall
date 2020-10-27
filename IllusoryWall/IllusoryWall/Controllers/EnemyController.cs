@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.DynamicLinq;
 using System.Net;
 using IllusoryWall.Data;
 using IllusoryWall.Models;
@@ -158,117 +156,187 @@ namespace IllusoryWall.Controllers
         [Route("Search")]
         public IActionResult SearchEnemy
         (
-            [FromQuery] List<string> att = null, 
-            [FromQuery] string keyword = null, 
-            [FromQuery] Nullable<bool> respawns = null, 
-            [FromQuery] string type = null
+            [FromQuery] string name = null,
+            [FromQuery(Name = "use_respawns")] bool useRespawns = false,
+            [FromQuery] bool? respawns = null, 
+            [FromQuery(Name = "use_class")] bool useClass = false,
+            [FromQuery] string classification = null,
+            [FromQuery(Name = "hp_null")] bool HpNull = false,
+            [FromQuery] int? hplt = null,
+            [FromQuery] int? hpgt = null,
+            [FromQuery] string locname = null,
+            [FromQuery(Name = "souls_null")] bool SoulsNull = false,
+            [FromQuery] int? soulslt = null,
+            [FromQuery] int? soulsgt = null,
+            [FromQuery] string dropname = null,
+            [FromQuery] string droploc = null,
+            [FromQuery(Name = "rate_null")] bool RateNull = false,
+            [FromQuery] double? ratelt = null,
+            [FromQuery] double? rategt = null,
+            [FromQuery] string damagetype = null,
+            [FromQuery] char? category = null
         )
         {
-            /*
-                att:
-                    is the attribute for the condition to be placed (Name, Class, Respawns)
-                        - They should be all lowercase but will be converted to all lower case either way
-                        - if any of the att is not on of the expect it will return a bad request status
+            bool send = false;
 
-                keyword:
-                    is for the attibute Name where the keyword will be pattern matched to case insensitive and substring search
-                        - There is only one at a time as this only allows one name search in a query
-                        - leaving the value null when there is a name att will return a bad request satus
+            var response = _context.Enemies.AsQueryable();
 
-                respawns:
-                    is a nullable bool used to search for Enemies Respawns
-                        - it can be left null when there is an respawns att and this will just search for values of null
-                        - there is only one since there should be only one of these per query
-
-                type:
-                    is for the attribute Class to search for a specific type of Enemies
-                        - can be left blank to search for nulls
-                        - should only be one per query
-
-                USE EXAMPLES:
-                    returns Enemies with "oll" in there name and Respawns are NULL
-                        /Search?att=name&keyword=oll&att=respawns 
-                
-            */
-            
-            //Locations: Names, HP, Souls
-            //Drops:     Name, Rate, Location
-            //Damages:   DamageType, Category
-
-            string WhereClause = "";
-
-            int Size = att.Count();
-
-            for(int i = 0; i < Size; ++i)
+            // Enemies.Name
+            if(name != null && name.Length > 0)
             {
-                switch (att[i].ToLower())
+                response = response.Where(e => e.Name.Contains(name));
+                send = true;
+            }
+            
+            // Enemies.Respawns
+            if(useRespawns)
+            {
+                response = response.Where(e => e.Respawns == respawns);
+                send = true;
+            }
+
+            // Enemies.Class
+            if(useClass)
+            {
+                if(classification == "generic" || classification == "boss" || classification == "npc" || classification == "invader" || classification == null)
                 {
-                    
-                    case "name":
-                        if(keyword == null)
-                        {
-                            Console.Write("ERROR: keyword can't be null in a name search! \n");
-                            return BadRequest();
-                        }
-
-                        if(i < Size - 1 && Size != 1)
-                            WhereClause += "Name.Contains(\"" + keyword + "\") AND ";
-                        else
-                            WhereClause += "Name.Contains(\"" + keyword + "\")";
-                        break;
-                    case "respawns":
-
-                        if(i < Size - 1 && Size != 1)
-                        {
-                            if(respawns == null)
-                                WhereClause += "Respawns == null AND ";
-                            else
-                                WhereClause += "Respawns == " + respawns + " AND ";
-                        }
-                        else
-                        {
-                            if(respawns == null)
-                                WhereClause += "Respawns == null";
-                            else
-                                WhereClause += "Respawns == " + respawns;
-                        }
-                        break;
-                    case "class":
-                        if(type == "npc" || type == "generic" || type == "boss" || type == "invader" || type == null)
-                        {
-                            if(i < Size - 1 && Size != 1)
-                            {
-                                if(type == null)
-                                    WhereClause += "Class == null AND ";
-                                else
-                                    WhereClause += "Class == \"" + type + "\" AND "; 
-                            }
-                            else
-                            {
-                                if(type == null)
-                                    WhereClause += "Class == null";
-                                else
-                                    WhereClause += "Class == \"" + type + "\""; 
-                            }
-                        }
-                        else
-                        {
-                            return BadRequest();
-                        }
-                        break;
-                    default:
-                        return BadRequest();
+                    response = response.Where(e => e.Class == classification);
+                    send = true;
+                }
+                else
+                {
+                    Console.Write("WARNING: classification for search was ignored due to bad value!\n");
                 }
             }
 
-            //return Ok();
-            Console.Write(WhereClause);
-            return Ok(_context.Enemies.Where(WhereClause)
-                        .Select(e => new EnemyEntry()
-                        {
-                            Id = e.Id,
-                            Name = e.Name
-                        }));
+            // Enemies.Locations.Name
+            if(locname != null)
+            {
+                response = response.Where(e => e.Locations.Any(l => l.Name.Contains(locname)));
+                send = true;
+            }
+
+            // Enemies.Locations.HP
+            // All varitons of HP can be achieved with these ranges (such as ==, !=, >, and <)
+            if(!HpNull && (hplt != null || hpgt != null))
+            {
+                if(hplt != null)
+                {
+                    response = response.Where(e => e.Locations.Any(l => l.HP <= hplt));
+                    send = true;
+                }
+                if(hpgt != null)
+                {
+                    response = response.Where(e => e.Locations.Any(l => l.HP >= hpgt));
+                    send = true;
+                }
+            }
+            else if(HpNull)
+            {
+                response = response.Where(e => e.Locations.Any(l => l.HP == null));
+                send = true;
+            }
+
+            // Enemies.Locations.Souls
+            // All varitons of Souls can be achieved with these ranges (such as ==, !=, >, and <)
+            if(!SoulsNull && (soulslt != null || soulsgt != null))
+            {
+                if(soulslt != null)
+                {
+                    response = response.Where(e => e.Locations.Any(l => l.Souls <= soulslt));
+                    send = true;
+                }
+                if(soulsgt != null)
+                {
+                    response = response.Where(e => e.Locations.Any(l => l.Souls >= soulsgt));
+                    send = true;
+                }
+            }
+            else if(SoulsNull)
+            {
+                response = response.Where(e => e.Locations.Any(l => l.Souls == null));
+                send = true;
+            }
+
+            // Enemies.Drops.Name
+            if(dropname != null)
+            {
+                response = response.Where(e => e.Drops.Any(d => d.Name.Contains(dropname)));
+                send = true;
+            }
+
+            // Enemies.Drops.Location
+            if(droploc != null)
+            {
+                response = response.Where(e => e.Drops.Any(d => d.Location.Contains(droploc)));
+                send = true;
+            }
+
+            // Enemies.Drops.Rate
+            // All varitons of Souls can be achieved with these ranges (such as ==, !=, >, and <)
+            if(!RateNull && (ratelt != null || rategt != null))
+            {
+                if(ratelt != null)
+                {
+                    response = response.Where(e => e.Drops.Any(d => d.Rate <= ratelt));
+                    send = true;
+                }
+                if(rategt != null)
+                {
+                    response = response.Where(e => e.Drops.Any(d => d.Rate >= rategt));
+                    send = true;
+                }
+            }
+            else if(RateNull)
+            {
+                response = response.Where(e => e.Drops.Any(d => d.Rate == null));
+                send = true;
+            }
+            
+            // Enemies.Damages.DamageType
+            if(damagetype != null)
+            {
+                if(damagetype == "lightning" || damagetype == "poison" || damagetype == "frost" || damagetype == "bleed" 
+                    || damagetype == "physical" || damagetype == "fire" || damagetype == "magic" || damagetype == "thrust"
+                    || damagetype == "slash" || damagetype == "strike")
+                {
+                    response = response.Where(e => e.Damages.Any(d => d.DamageType == damagetype));
+                    send = true;
+                }
+                else
+                {
+                    Console.Write("WARNING: damagetype was ignored due to a bad value!\n");
+                }
+            }
+
+            // Enemies.Damages.Category
+            if(category != null)
+            {
+                if(category == 'i' || category == 'r' || category == 'w')
+                {
+                    response = response.Where(e => e.Damages.Any(d => d.Category == category));
+                    send = true;
+                }
+                else
+                {
+                    Console.Write("WARNING: category was ignored due to a bad value!\n");
+                }
+            }
+
+        
+            if(send)
+            {
+                return Ok(response
+                    .Select(e => new EnemyEntry()
+                    {
+                        Id = e.Id,
+                        Name = e.Name
+                    }));
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }
