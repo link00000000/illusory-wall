@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 using IllusoryWall.Data;
 using IllusoryWall.Models;
@@ -150,6 +151,59 @@ namespace IllusoryWall.Controllers
                     Id = enemy.Id
                 })
                 .ToArray();
+        }
+
+        [HttpGet]
+        [Route("Search/Enemy")]
+        public IActionResult SearchEnemy([FromQuery] string att = null, [FromQuery] string keyword = null, [FromQuery] Nullable<bool> respawns = null, [FromQuery] string type = null)
+        {
+            //Enemies:   Respawns, Class
+            //Locations: Names, HP, Souls
+            //Drops:     Name, Rate, Location
+            //Damages:   DamageType, Category
+
+            if(att != null)
+                att = att.ToLower();
+            if(type != null)
+                type = type.ToLower();
+
+            switch (att)
+            {
+                
+                case "name":
+                    if(keyword == null)
+                    {
+                        Console.Write("ERROR: keyword can't be null in a name search! \n");
+                        return BadRequest();
+                    }
+
+                    return Ok(_context.Enemies.Where(e => EF.Functions.Like(e.Name, $"%{keyword}%"))
+                        .Select(e => new EnemyEntry()
+                        {
+                            Id = e.Id,
+                            Name = e.Name
+                        }));
+                case "respawns":
+                    return Ok(_context.Enemies.Where(e => e.Respawns == respawns)
+                        .Select(e => new EnemyEntry()
+                        {
+                            Id = e.Id,
+                            Name = e.Name
+                        }));
+                case "class":
+                    if(type == "npc" || type == "generic" || type == "boss" || type == "invader" || type == null)
+                    {
+                        return Ok(_context.Enemies.Where(e => e.Class == type)
+                            .Select(e => new EnemyEntry()
+                            {
+                                Id = e.Id,
+                                Name = e.Name
+                            }));
+                    }
+                    return BadRequest();
+            }
+
+            return Ok();
         }
     }
 }
