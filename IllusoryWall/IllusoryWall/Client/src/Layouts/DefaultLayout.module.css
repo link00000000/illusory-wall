@@ -1,7 +1,11 @@
 .layout {
     min-height: 100vh;
+    margin-left: 200px;
 }
 
 .layout-sider {
-    min-height: 100vh;
+    height: 100vh;
+    position: fixed;
+    overflow: auto;
+    left: 0;
 }
