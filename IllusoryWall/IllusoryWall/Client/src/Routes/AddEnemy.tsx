@@ -1,5 +1,5 @@
-import { message } from 'antd'
-import { MessageType } from 'antd/lib/message'
+import { notification } from 'antd'
+import { ArgsProps } from 'antd/lib/notification'
 import React, { Component } from 'react'
 import * as AddEnemyAPI from '../API/AddEnemy'
 import { EnemyForm } from '../Components/EnemyForm'
@@ -7,7 +7,7 @@ import { IWEnemy } from '../Utils/Models'
 
 type IProps = {}
 type IState = {
-    loader?: MessageType
+    loading: boolean
 }
 
 /**
@@ -23,7 +23,10 @@ export class AddEnemy extends Component<IProps, IState> {
         this.handleSubmit = this.handleSubmit.bind(this)
         this.showError = this.showError.bind(this)
         this.showSuccess = this.showSuccess.bind(this)
-        this.showLoading = this.showLoading.bind(this)
+
+        this.state = {
+            loading: false
+        }
     }
 
     /**
@@ -31,7 +34,7 @@ export class AddEnemy extends Component<IProps, IState> {
      * @param model Enemy model
      */
     private async handleSubmit(model: IWEnemy): Promise<void> {
-        this.showLoading()
+        this.setState({ loading: true })
 
         const error = await AddEnemyAPI.commit(model)
         if (error) {
@@ -48,18 +51,19 @@ export class AddEnemy extends Component<IProps, IState> {
      * @param error Error when submitting AddEnemyForm
      */
     private showError(error?: Error): void {
-        if (this.state.loader) {
-            this.state.loader()
-            this.setState({ loader: undefined })
+        this.setState({ loading: false })
+
+        const notificationArgs: ArgsProps = {
+            message: 'Failed to create new enemy',
+            duration: this._messageDuration
         }
 
-        let text = 'Failed to create new enemy.'
         if (error) {
             error.name = ''
-            text += ' ' + error.toString() + '.'
+            notificationArgs['description'] = error.toString()
         }
 
-        message.error(text, this._messageDuration)
+        notification.error(notificationArgs)
     }
 
     /**
@@ -67,27 +71,23 @@ export class AddEnemy extends Component<IProps, IState> {
      * errors
      */
     private showSuccess(): void {
-        if (this.state.loader) {
-            this.state.loader()
-            this.setState({ loader: undefined })
+        this.setState({ loading: false })
+
+        const notificationArgs: ArgsProps = {
+            message: 'Created new enemy successfully',
+            duration: this._messageDuration
         }
 
-        message.success(
-            'Created new enemy successfully.',
-            this._messageDuration
-        )
-    }
-
-    /**
-     * Shows loader while the submission from AddEnemyFrom is being
-     * requested
-     */
-    private showLoading(): void {
-        const loadingDismiss = message.loading('Adding enemy..', 0)
-        this.setState({ loader: loadingDismiss })
+        notification.success(notificationArgs)
     }
 
     render() {
-        return <EnemyForm submitText='Add Enemy' onSubmit={this.handleSubmit} />
+        return (
+            <EnemyForm
+                submitText='Add Enemy'
+                onSubmit={this.handleSubmit}
+                loading={this.state.loading}
+            />
+        )
     }
 }
