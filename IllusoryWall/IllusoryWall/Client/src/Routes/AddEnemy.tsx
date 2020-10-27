@@ -3,7 +3,6 @@ import { MessageType } from 'antd/lib/message'
 import React, { Component } from 'react'
 import * as AddEnemyAPI from '../API/AddEnemy'
 import { EnemyForm } from '../Components/EnemyForm'
-import { AddEnemyLayout as Layout } from '../Layouts/AddEnemyLayout'
 import { IWEnemy } from '../Utils/Models'
 
 type IProps = {}
@@ -89,13 +88,6 @@ export class AddEnemy extends Component<IProps, IState> {
     }
 
     render() {
-        return (
-            <Layout>
-                <EnemyForm
-                    submitText='Add Enemy'
-                    onSubmit={this.handleSubmit}
-                />
-            </Layout>
-        )
+        return <EnemyForm submitText='Add Enemy' onSubmit={this.handleSubmit} />
     }
 }
