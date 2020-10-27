@@ -4,7 +4,6 @@ import { RouteComponentProps } from 'react-router-dom'
 import * as FetchEnemyAPI from '../API/FetchEnemy'
 import { EnemyCard } from '../Components/EnemyCard'
 import { EnemyCardSkeleton } from '../Components/EnemyCardSkeleton'
-import { ViewEnemyLayout as Layout } from '../Layouts/ViewEnemyLayout'
 import { IWEnemy } from '../Utils/Models'
 
 interface enemyState {
@@ -68,22 +67,20 @@ export class ViewEnemy extends Component<IProps, IState> {
         }
 
         return (
-            <Layout>
-                <Row
-                    gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-                    justify='space-around'
-                >
-                    {Object.entries(this.state.enemies).map(([id, model]) => (
-                        <Col xs={24} sm={24} md={12} lg={12} xl={8} key={id}>
-                            {model ? (
-                                <EnemyCard model={model} />
-                            ) : (
-                                <EnemyCardSkeleton />
-                            )}
-                        </Col>
-                    ))}
-                </Row>
-            </Layout>
+            <Row
+                gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+                justify='space-around'
+            >
+                {Object.entries(this.state.enemies).map(([id, model]) => (
+                    <Col xs={24} sm={24} md={12} lg={12} xl={8} key={id}>
+                        {model ? (
+                            <EnemyCard model={model} />
+                        ) : (
+                            <EnemyCardSkeleton />
+                        )}
+                    </Col>
+                ))}
+            </Row>
         )
     }
 }
