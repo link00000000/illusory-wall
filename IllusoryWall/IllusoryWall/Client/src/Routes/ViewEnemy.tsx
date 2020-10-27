@@ -5,6 +5,7 @@ import * as FetchEnemyAPI from '../API/FetchEnemy'
 import { EnemyCard } from '../Components/EnemyCard'
 import { EnemyCardSkeleton } from '../Components/EnemyCardSkeleton'
 import { IWEnemy } from '../Utils/Models'
+import styles from './ViewEnemy.module.css'
 
 interface enemyState {
     [id: number]: IWEnemy | null
@@ -67,12 +68,18 @@ export class ViewEnemy extends Component<IProps, IState> {
         }
 
         return (
-            <Row
-                gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-                justify='space-around'
-            >
+            <Row gutter={32} justify='space-around'>
                 {Object.entries(this.state.enemies).map(([id, model]) => (
-                    <Col xs={24} sm={24} md={12} lg={12} xl={8} key={id}>
+                    <Col
+                        xs={24}
+                        sm={24}
+                        md={24}
+                        lg={24}
+                        xl={12}
+                        xxl={8}
+                        key={id}
+                        className={styles['column']}
+                    >
                         {model ? (
                             <EnemyCard model={model} />
                         ) : (
