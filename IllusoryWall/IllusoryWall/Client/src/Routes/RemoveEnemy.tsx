@@ -16,8 +16,8 @@ export class RemoveEnemy extends Component<IProps, IState> {
 
     render() {
         return (
-            <Row>
-                <Col span={8} offset={8}>
+            <Row justify='center'>
+                <Col sm={24} md={24} lg={12} xl={12} xxl={8}>
                     <RemoveEnemyInput />
                 </Col>
             </Row>
