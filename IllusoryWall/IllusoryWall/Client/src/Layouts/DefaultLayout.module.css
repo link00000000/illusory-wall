@@ -1,10 +1,19 @@
+/* Do not change these values,
+ * treat them as readonly
+ */
+
+:root {
+    --sider-width: 200px;
+    --header-height: 64px;
+}
+
 .layout {
     min-height: 100vh;
-    margin-left: 200px;
+    margin-left: var(--sider-width);
 }
 
 .layout-header {
-    width: calc(100% - 200px);
+    width: calc(100% - var(--sider-width));
     position: fixed;
     z-index: 1;
     padding-left: 0;
@@ -18,4 +27,8 @@
     overflow: auto;
     left: 0;
     z-index: 1;
+}
+
+.layout-content {
+    padding: calc(var(--header-height) + 50px);
 }
