@@ -1,5 +1,6 @@
-import { Layout } from 'antd'
+import { Col, Layout, Row } from 'antd'
 import React, { Component } from 'react'
+import { EnemySearch } from '../Components/EnemySearch'
 import { NavigationMenu } from '../Components/NavigationMenu'
 import styles from './DefaultLayout.module.css'
 
@@ -13,6 +14,13 @@ export class DefaultLayout extends Component<IProps, IState> {
         return (
             <div>
                 <Layout className={styles['layout']}>
+                    <Layout.Header className={styles['layout-header']}>
+                        <Row>
+                            <Col span={12} offset={6}>
+                                <EnemySearch />
+                            </Col>
+                        </Row>
+                    </Layout.Header>
                     <Layout.Sider className={styles['layout-sider']}>
                         <NavigationMenu />
                     </Layout.Sider>
