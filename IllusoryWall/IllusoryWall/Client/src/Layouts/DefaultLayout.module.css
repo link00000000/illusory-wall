@@ -15,7 +15,7 @@
 .layout-header {
     width: calc(100% - var(--sider-width));
     position: fixed;
-    z-index: 1;
+    z-index: 999;
     padding-left: 0;
     padding-right: 0;
     background-color: #ffffff;
@@ -26,7 +26,7 @@
     position: fixed;
     overflow: auto;
     left: 0;
-    z-index: 1;
+    z-index: 999;
 }
 
 .layout-content {
