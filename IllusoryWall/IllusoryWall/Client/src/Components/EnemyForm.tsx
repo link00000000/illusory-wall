@@ -26,6 +26,7 @@ type IState = {
     showLocationsModal: boolean
     showDropsModal: boolean
     showDamageModal: boolean
+    useVerticalForm: boolean
 }
 
 /**
@@ -34,8 +35,35 @@ type IState = {
 export class EnemyForm extends Component<IProps, IState> {
     static displayName = EnemyForm.name
 
-    private readonly _formSpan = 8
-    private readonly _formOffset = 8
+    private static readonly _formSpan: { [key: string]: number } = {
+        sm: 24,
+        md: 24,
+        lg: 12,
+        xl: 12,
+        xxl: 8
+    }
+
+    private static get _formOffset(): { [key: string]: number } {
+        const max = 24
+        const obj: { [key: string]: number } = {}
+        Object.keys(EnemyForm._formSpan).forEach((key) => {
+            obj[key] = Math.floor((max - EnemyForm._formSpan[key]) / 2)
+        })
+
+        return obj
+    }
+
+    private static get _formCombined(): { [key: string]: {} } {
+        const obj: { [key: string]: {} } = {}
+        Object.keys(EnemyForm._formSpan).forEach((key) => {
+            obj[key] = {
+                span: EnemyForm._formSpan[key],
+                offset: EnemyForm._formOffset[key]
+            }
+        })
+
+        return obj
+    }
 
     private _formRef = React.createRef<FormInstance>()
 
@@ -66,7 +94,8 @@ export class EnemyForm extends Component<IProps, IState> {
             damages: [],
             showLocationsModal: false,
             showDropsModal: false,
-            showDamageModal: false
+            showDamageModal: false,
+            useVerticalForm: false
         }
 
         if (this.props.initialValues) {
@@ -80,7 +109,8 @@ export class EnemyForm extends Component<IProps, IState> {
                 damages: this.props.initialValues.damages ?? [],
                 showLocationsModal: false,
                 showDropsModal: false,
-                showDamageModal: false
+                showDamageModal: false,
+                useVerticalForm: false
             }
         }
     }
@@ -107,6 +137,11 @@ export class EnemyForm extends Component<IProps, IState> {
         }
 
         return model
+    }
+
+    private static useVerticalForm(width: number): boolean {
+        const lgBreakpoint = 992
+        return width < lgBreakpoint
     }
 
     /**
@@ -338,14 +373,25 @@ export class EnemyForm extends Component<IProps, IState> {
         this.setState({ damages: newDamageState })
     }
 
+    componentDidMount() {
+        const handler = (_e: any) => {
+            this.setState({
+                useVerticalForm: EnemyForm.useVerticalForm(window.innerWidth)
+            })
+        }
+
+        window.addEventListener('resize', handler)
+        handler(null)
+    }
+
     render() {
         return (
             <Form
                 onFinish={this.handleSubmit}
-                layout='horizontal'
+                layout={this.state.useVerticalForm ? 'vertical' : 'horizontal'}
                 ref={this._formRef}
-                labelCol={{ span: this._formOffset }}
-                wrapperCol={{ span: this._formOffset }}
+                labelCol={EnemyForm._formOffset}
+                wrapperCol={EnemyForm._formSpan}
                 initialValues={this.initialValues}
             >
                 <Form.Item
@@ -386,12 +432,7 @@ export class EnemyForm extends Component<IProps, IState> {
                     <Input />
                 </Form.Item>
 
-                <Form.Item
-                    wrapperCol={{
-                        span: this._formSpan,
-                        offset: this._formOffset
-                    }}
-                >
+                <Form.Item wrapperCol={EnemyForm._formCombined}>
                     {this.locationsList()}
                     <LocationFormModal
                         visible={this.state.showLocationsModal}
@@ -405,12 +446,7 @@ export class EnemyForm extends Component<IProps, IState> {
                     />
                 </Form.Item>
 
-                <Form.Item
-                    wrapperCol={{
-                        span: this._formSpan,
-                        offset: this._formOffset
-                    }}
-                >
+                <Form.Item wrapperCol={EnemyForm._formCombined}>
                     {this.dropsList()}
                     <DropFormModal
                         visible={this.state.showDropsModal}
@@ -424,12 +460,7 @@ export class EnemyForm extends Component<IProps, IState> {
                     />
                 </Form.Item>
 
-                <Form.Item
-                    wrapperCol={{
-                        span: this._formSpan,
-                        offset: this._formOffset
-                    }}
-                >
+                <Form.Item wrapperCol={EnemyForm._formCombined}>
                     {this.damageList()}
                     <DamageFormModal
                         visible={this.state.showDamageModal}
@@ -443,12 +474,7 @@ export class EnemyForm extends Component<IProps, IState> {
                     />
                 </Form.Item>
 
-                <Form.Item
-                    wrapperCol={{
-                        span: this._formSpan,
-                        offset: this._formOffset
-                    }}
-                >
+                <Form.Item wrapperCol={EnemyForm._formCombined}>
                     <Button
                         type='primary'
                         htmlType='submit'
