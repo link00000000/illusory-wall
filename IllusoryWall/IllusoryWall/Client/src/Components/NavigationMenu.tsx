@@ -11,7 +11,7 @@ class _NavigationMenu extends Component<IProps, IState> {
     private static readonly navigationItems: { [key: string]: string } = {
         Home: '/',
         Add: '/add',
-        Update: '/update',
+        Edit: '/update',
         Remove: '/remove'
     }
 
