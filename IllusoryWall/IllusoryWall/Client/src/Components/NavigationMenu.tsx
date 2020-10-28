@@ -1,3 +1,9 @@
+import {
+    DeleteOutlined,
+    EditOutlined,
+    HomeOutlined,
+    PlusOutlined
+} from '@ant-design/icons'
 import { Menu } from 'antd'
 import React, { Component } from 'react'
 import { NavLink, RouteComponentProps, withRouter } from 'react-router-dom'
@@ -8,11 +14,13 @@ type IState = {}
 class _NavigationMenu extends Component<IProps, IState> {
     static displayName = _NavigationMenu.name
 
-    private static readonly navigationItems: { [key: string]: string } = {
-        Home: '/',
-        Add: '/add',
-        Edit: '/update',
-        Remove: '/remove'
+    private static readonly navigationItems: {
+        [key: string]: { route: string; icon: JSX.Element }
+    } = {
+        Home: { route: '/', icon: <HomeOutlined /> },
+        Add: { route: '/add', icon: <PlusOutlined /> },
+        Edit: { route: '/update', icon: <EditOutlined /> },
+        Remove: { route: '/remove', icon: <DeleteOutlined /> }
     }
 
     private get basePath(): string {
@@ -40,8 +48,8 @@ class _NavigationMenu extends Component<IProps, IState> {
                     selectedKeys={[this.basePath]}
                 >
                     {Object.entries(_NavigationMenu.navigationItems).map(
-                        ([displayName, route]) => (
-                            <Menu.Item key={route}>
+                        ([displayName, { route, icon }]) => (
+                            <Menu.Item key={route} icon={icon}>
                                 <NavLink to={route}>{displayName}</NavLink>
                             </Menu.Item>
                         )
