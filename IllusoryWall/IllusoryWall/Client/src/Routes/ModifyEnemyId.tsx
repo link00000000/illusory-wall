@@ -1,7 +1,7 @@
-import { message } from 'antd'
+import { Breadcrumb, Layout, message } from 'antd'
 import { MessageType } from 'antd/lib/message'
 import React, { Component } from 'react'
-import { RouteComponentProps } from 'react-router-dom'
+import { Link, RouteComponentProps } from 'react-router-dom'
 import * as FetchEnemyAPI from '../API/FetchEnemy'
 import * as ModifyEnemyAPI from '../API/ModifyEnemy'
 import { EnemyForm } from '../Components/EnemyForm'
@@ -123,11 +123,26 @@ export class ModifyEnemyId extends Component<IProps, IState> {
     render() {
         if (this.state.model) {
             return (
-                <EnemyForm
-                    submitText='Update Enemy'
-                    onSubmit={this.handleSubmit}
-                    initialValues={this.state.model}
-                />
+                <>
+                    <Breadcrumb>
+                        <Breadcrumb.Item>
+                            <Link to='/update'>Update</Link>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item>
+                            {this.state.model.name}
+                        </Breadcrumb.Item>
+                    </Breadcrumb>
+
+                    <Layout>
+                        <Layout.Content>
+                            <EnemyForm
+                                submitText='Update Enemy'
+                                onSubmit={this.handleSubmit}
+                                initialValues={this.state.model}
+                            />
+                        </Layout.Content>
+                    </Layout>
+                </>
             )
         }
         return <></>
