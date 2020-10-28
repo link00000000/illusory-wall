@@ -1,7 +1,7 @@
-import { Breadcrumb, Layout, message } from 'antd'
-import { MessageType } from 'antd/lib/message'
+import { Layout, notification } from 'antd'
+import { ArgsProps } from 'antd/lib/notification'
 import React, { Component } from 'react'
-import { Link, RouteComponentProps } from 'react-router-dom'
+import { RouteComponentProps } from 'react-router-dom'
 import * as FetchEnemyAPI from '../API/FetchEnemy'
 import * as ModifyEnemyAPI from '../API/ModifyEnemy'
 import { EnemyForm } from '../Components/EnemyForm'
@@ -12,7 +12,7 @@ interface IMatchParams {
 }
 interface IProps extends RouteComponentProps<IMatchParams> {}
 type IState = {
-    loader?: MessageType
+    loading: boolean
     id: number
     model?: IWEnemy
 }
@@ -27,9 +27,9 @@ export class ModifyEnemyId extends Component<IProps, IState> {
         this.handleSubmit = this.handleSubmit.bind(this)
         this.showError = this.showError.bind(this)
         this.showSuccess = this.showSuccess.bind(this)
-        this.showLoading = this.showLoading.bind(this)
 
         this.state = {
+            loading: false,
             id: -1
         }
     }
@@ -67,7 +67,7 @@ export class ModifyEnemyId extends Component<IProps, IState> {
      * @param model Enemy model
      */
     private async handleSubmit(model: IWEnemy): Promise<void> {
-        this.showLoading()
+        this.setState({ loading: true })
 
         const error = await ModifyEnemyAPI.commit(this.state.id, model)
         if (error) {
@@ -84,18 +84,19 @@ export class ModifyEnemyId extends Component<IProps, IState> {
      * @param error Error when submitting AddEnemyForm
      */
     private showError(error?: Error): void {
-        if (this.state.loader) {
-            this.state.loader()
-            this.setState({ loader: undefined })
+        this.setState({ loading: false })
+
+        const notificationArgs: ArgsProps = {
+            message: 'Failed to modify enemy',
+            duration: this._messageDuration
         }
 
-        let text = 'Failed to create new enemy.'
         if (error) {
             error.name = ''
-            text += ' ' + error.toString() + '.'
+            notificationArgs['description'] = error.toString()
         }
 
-        message.error(text, this._messageDuration)
+        notification.error(notificationArgs)
     }
 
     /**
@@ -103,42 +104,27 @@ export class ModifyEnemyId extends Component<IProps, IState> {
      * errors
      */
     private showSuccess(): void {
-        if (this.state.loader) {
-            this.state.loader()
-            this.setState({ loader: undefined })
+        this.setState({ loading: false })
+
+        const notificationArgs: ArgsProps = {
+            message: 'Modified enemy successfully',
+            duration: this._messageDuration
         }
 
-        message.success('Updated enemy successfully.', this._messageDuration)
-    }
-
-    /**
-     * Shows loader while the submission from AddEnemyFrom is being
-     * requested
-     */
-    private showLoading(): void {
-        const loadingDismiss = message.loading('Updating enemy..', 0)
-        this.setState({ loader: loadingDismiss })
+        notification.success(notificationArgs)
     }
 
     render() {
         if (this.state.model) {
             return (
                 <>
-                    <Breadcrumb>
-                        <Breadcrumb.Item>
-                            <Link to='/update'>Update</Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Item>
-                            {this.state.model.name}
-                        </Breadcrumb.Item>
-                    </Breadcrumb>
-
                     <Layout>
                         <Layout.Content>
                             <EnemyForm
                                 submitText='Update Enemy'
                                 onSubmit={this.handleSubmit}
                                 initialValues={this.state.model}
+                                loading={this.state.loading}
                             />
                         </Layout.Content>
                     </Layout>
