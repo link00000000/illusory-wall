@@ -18,6 +18,7 @@ type IProps = {
     onSubmit?: (model: IWEnemy) => void
     submitText?: string
     initialValues?: IWEnemy
+    loading?: boolean
 }
 type IState = {
     locations: IWLocation[]
@@ -26,6 +27,7 @@ type IState = {
     showLocationsModal: boolean
     showDropsModal: boolean
     showDamageModal: boolean
+    useVerticalForm: boolean
 }
 
 /**
@@ -34,8 +36,35 @@ type IState = {
 export class EnemyForm extends Component<IProps, IState> {
     static displayName = EnemyForm.name
 
-    private readonly _formSpan = 8
-    private readonly _formOffset = 8
+    private static readonly _formSpan: { [key: string]: number } = {
+        sm: 24,
+        md: 24,
+        lg: 12,
+        xl: 12,
+        xxl: 8
+    }
+
+    private static get _formOffset(): { [key: string]: number } {
+        const max = 24
+        const obj: { [key: string]: number } = {}
+        Object.keys(EnemyForm._formSpan).forEach((key) => {
+            obj[key] = Math.floor((max - EnemyForm._formSpan[key]) / 2)
+        })
+
+        return obj
+    }
+
+    private static get _formCombined(): { [key: string]: {} } {
+        const obj: { [key: string]: {} } = {}
+        Object.keys(EnemyForm._formSpan).forEach((key) => {
+            obj[key] = {
+                span: EnemyForm._formSpan[key],
+                offset: EnemyForm._formOffset[key]
+            }
+        })
+
+        return obj
+    }
 
     private _formRef = React.createRef<FormInstance>()
 
@@ -66,7 +95,8 @@ export class EnemyForm extends Component<IProps, IState> {
             damages: [],
             showLocationsModal: false,
             showDropsModal: false,
-            showDamageModal: false
+            showDamageModal: false,
+            useVerticalForm: false
         }
 
         if (this.props.initialValues) {
@@ -80,7 +110,8 @@ export class EnemyForm extends Component<IProps, IState> {
                 damages: this.props.initialValues.damages ?? [],
                 showLocationsModal: false,
                 showDropsModal: false,
-                showDamageModal: false
+                showDamageModal: false,
+                useVerticalForm: false
             }
         }
     }
@@ -109,6 +140,11 @@ export class EnemyForm extends Component<IProps, IState> {
         return model
     }
 
+    private static useVerticalForm(width: number): boolean {
+        const lgBreakpoint = 992
+        return width < lgBreakpoint
+    }
+
     /**
      * Bind form data to model and invoke callback
      * @param formData Data entered into the form
@@ -126,9 +162,10 @@ export class EnemyForm extends Component<IProps, IState> {
     /**
      * Generate a table containing all locations for the enemy
      */
-    private locationsList(): JSX.Element {
+    private locationsList(disabled?: boolean): JSX.Element {
         const addLocationButton = (
             <Button
+                disabled={disabled}
                 block
                 type='dashed'
                 onClick={() => {
@@ -196,9 +233,10 @@ export class EnemyForm extends Component<IProps, IState> {
     /**
      * Generate a table containing all drops for the enemy
      */
-    private dropsList(): JSX.Element {
+    private dropsList(disabled?: boolean): JSX.Element {
         const addDropsButton = (
             <Button
+                disabled={disabled}
                 block
                 type='dashed'
                 className={styles['add-location-button']}
@@ -265,7 +303,7 @@ export class EnemyForm extends Component<IProps, IState> {
     /**
      * Generate a table containing all damage for the enemy
      */
-    private damageList(): JSX.Element {
+    private damageList(disabled?: boolean): JSX.Element {
         const addDamageButton = (
             <Button
                 block
@@ -274,6 +312,7 @@ export class EnemyForm extends Component<IProps, IState> {
                 onClick={() => {
                     this.setState({ showDamageModal: true })
                 }}
+                disabled={disabled}
             >
                 <PlusCircleOutlined />
                 Add Damage Type
@@ -338,14 +377,25 @@ export class EnemyForm extends Component<IProps, IState> {
         this.setState({ damages: newDamageState })
     }
 
+    componentDidMount() {
+        const handler = (_e: any) => {
+            this.setState({
+                useVerticalForm: EnemyForm.useVerticalForm(window.innerWidth)
+            })
+        }
+
+        window.addEventListener('resize', handler)
+        handler(null)
+    }
+
     render() {
         return (
             <Form
                 onFinish={this.handleSubmit}
-                layout='horizontal'
+                layout={this.state.useVerticalForm ? 'vertical' : 'horizontal'}
                 ref={this._formRef}
-                labelCol={{ span: this._formOffset }}
-                wrapperCol={{ span: this._formOffset }}
+                labelCol={EnemyForm._formOffset}
+                wrapperCol={EnemyForm._formSpan}
                 initialValues={this.initialValues}
             >
                 <Form.Item
@@ -353,11 +403,11 @@ export class EnemyForm extends Component<IProps, IState> {
                     name='name'
                     rules={[{ required: true }]}
                 >
-                    <Input />
+                    <Input disabled={this.props.loading} />
                 </Form.Item>
 
                 <Form.Item label='Description' name='description'>
-                    <TextArea />
+                    <TextArea disabled={this.props.loading} />
                 </Form.Item>
 
                 <Form.Item label='Respawns' name='respawns'>
@@ -369,11 +419,12 @@ export class EnemyForm extends Component<IProps, IState> {
                         ]}
                         optionType='button'
                         size='small'
+                        disabled={this.props.loading}
                     />
                 </Form.Item>
 
                 <Form.Item label='Class' name='class'>
-                    <Select showSearch>
+                    <Select showSearch disabled={this.props.loading}>
                         {Object.values(EnemyClass).map((className, index) => (
                             <Select.Option value={className} key={index}>
                                 {EnemyClassDisplayNames[className]}
@@ -383,16 +434,11 @@ export class EnemyForm extends Component<IProps, IState> {
                 </Form.Item>
 
                 <Form.Item label='Image' name='imagePath'>
-                    <Input />
+                    <Input disabled={this.props.loading} />
                 </Form.Item>
 
-                <Form.Item
-                    wrapperCol={{
-                        span: this._formSpan,
-                        offset: this._formOffset
-                    }}
-                >
-                    {this.locationsList()}
+                <Form.Item wrapperCol={EnemyForm._formCombined}>
+                    {this.locationsList(this.props.loading)}
                     <LocationFormModal
                         visible={this.state.showLocationsModal}
                         onCancel={() => {
@@ -405,13 +451,8 @@ export class EnemyForm extends Component<IProps, IState> {
                     />
                 </Form.Item>
 
-                <Form.Item
-                    wrapperCol={{
-                        span: this._formSpan,
-                        offset: this._formOffset
-                    }}
-                >
-                    {this.dropsList()}
+                <Form.Item wrapperCol={EnemyForm._formCombined}>
+                    {this.dropsList(this.props.loading)}
                     <DropFormModal
                         visible={this.state.showDropsModal}
                         onCancel={() => {
@@ -424,13 +465,8 @@ export class EnemyForm extends Component<IProps, IState> {
                     />
                 </Form.Item>
 
-                <Form.Item
-                    wrapperCol={{
-                        span: this._formSpan,
-                        offset: this._formOffset
-                    }}
-                >
-                    {this.damageList()}
+                <Form.Item wrapperCol={EnemyForm._formCombined}>
+                    {this.damageList(this.props.loading)}
                     <DamageFormModal
                         visible={this.state.showDamageModal}
                         onCancel={() => {
@@ -443,16 +479,12 @@ export class EnemyForm extends Component<IProps, IState> {
                     />
                 </Form.Item>
 
-                <Form.Item
-                    wrapperCol={{
-                        span: this._formSpan,
-                        offset: this._formOffset
-                    }}
-                >
+                <Form.Item wrapperCol={EnemyForm._formCombined}>
                     <Button
                         type='primary'
                         htmlType='submit'
                         className={styles['tail-button']}
+                        loading={this.props.loading}
                     >
                         {this.props.submitText || 'Submit'}
                     </Button>
