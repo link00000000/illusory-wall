@@ -3,6 +3,7 @@
  */
 
 :root {
+    --sider-width-collapsed: 80px;
     --sider-width: 200px;
     --header-height: 64px;
 }
@@ -14,6 +15,15 @@
 
 .layout-header {
     width: calc(100% - var(--sider-width));
+    position: fixed;
+    z-index: 999;
+    padding-left: 0;
+    padding-right: 0;
+    background-color: #ffffff;
+}
+
+.layout-header-collapsed {
+    width: calc(100% - var(--sider-width-collapsed));
     position: fixed;
     z-index: 999;
     padding-left: 0;
