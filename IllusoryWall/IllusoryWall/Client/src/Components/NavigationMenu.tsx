@@ -7,8 +7,11 @@ import {
 import { Menu } from 'antd'
 import React, { Component } from 'react'
 import { NavLink, RouteComponentProps, withRouter } from 'react-router-dom'
+import { Logo } from './Logo'
 
-interface IProps extends RouteComponentProps {}
+interface IProps extends RouteComponentProps {
+    collapsed?: boolean
+}
 type IState = {}
 
 class _NavigationMenu extends Component<IProps, IState> {
@@ -47,6 +50,7 @@ class _NavigationMenu extends Component<IProps, IState> {
                     theme='dark'
                     selectedKeys={[this.basePath]}
                 >
+                    <Logo small={this.props.collapsed} />
                     {Object.entries(_NavigationMenu.navigationItems).map(
                         ([displayName, { route, icon }]) => (
                             <Menu.Item key={route} icon={icon}>

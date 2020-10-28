@@ -39,7 +39,7 @@ export class DefaultLayout extends Component<IProps, IState> {
                         collapsed={this.state.collapsed}
                         onCollapse={this.handleCollapse}
                     >
-                        <NavigationMenu />
+                        <NavigationMenu collapsed={this.state.collapsed} />
                     </Layout.Sider>
                     <Layout.Header
                         className={
