@@ -42,7 +42,6 @@ export class EnemySearch extends Component<IProps, IState> {
                     placeholder='Type to search for enemy by name'
                     allowClear
                     onChange={this.handleChange}
-                    onSubmit={this.handleSubmit}
                     value={this.state.name}
                     className={styles['search-bar']}
                 />
@@ -51,6 +50,7 @@ export class EnemySearch extends Component<IProps, IState> {
                     className={styles['submit']}
                     icon={<PlusOutlined />}
                     loading={this.state.loading}
+                    onClick={this.handleSubmit}
                 >
                     Add
                 </Button>
