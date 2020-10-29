@@ -4,7 +4,9 @@ import { EnemySearch } from '../Components/EnemySearch'
 import { NavigationMenu } from '../Components/NavigationMenu'
 import styles from './DefaultLayout.module.css'
 
-type IProps = {}
+type IProps = {
+    disableSearch?: boolean
+}
 type IState = {
     collapsed: boolean
 }
@@ -50,7 +52,9 @@ export class DefaultLayout extends Component<IProps, IState> {
                     >
                         <Row>
                             <Col span={12} offset={6}>
-                                <EnemySearch />
+                                <EnemySearch
+                                    disabled={this.props.disableSearch}
+                                />
                             </Col>
                         </Row>
                     </Layout.Header>

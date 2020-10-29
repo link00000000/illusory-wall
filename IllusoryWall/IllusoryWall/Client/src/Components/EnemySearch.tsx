@@ -1,7 +1,9 @@
 import { Input } from 'antd'
 import React, { Component } from 'react'
 
-type IProps = {}
+type IProps = {
+    disabled?: boolean
+}
 type IState = {}
 
 export class EnemySearch extends Component<IProps, IState> {
@@ -16,7 +18,10 @@ export class EnemySearch extends Component<IProps, IState> {
     render() {
         return (
             <div>
-                <Input placeholder='Type to search' />
+                <Input
+                    disabled={this.props.disabled}
+                    placeholder='Type to search for enemy by name'
+                />
             </div>
         )
     }
