@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using IllusoryWall.Data;
+using Pomelo.EntityFrameworkCore.MySql;
+using Microsoft.EntityFrameworkCore;
 
 namespace IllusoryWall
 {
@@ -27,6 +30,13 @@ namespace IllusoryWall
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "Client/build";
+            });
+
+            services.AddDbContext<IllusoryWallContext>(optionsBuilder =>
+            {
+                optionsBuilder.UseLazyLoadingProxies()
+                .UseMySql(Configuration.GetConnectionString("DefaultConnection"),
+                            builder => builder.EnableRetryOnFailure());
             });
         }
 

@@ -11,6 +11,9 @@ namespace IllusoryWall.Data
     /// </summary>
     public class IllusoryWallContext : DbContext
     {
+        public IllusoryWallContext(DbContextOptions<IllusoryWallContext> options) : base(options)
+        { }
+
         /// <summary>
         ///     Create Enemies table using Enemy Model class
         /// </summary>
@@ -30,19 +33,6 @@ namespace IllusoryWall.Data
         ///     Create Drops table using Drop Model class
         /// </summary>
         public DbSet<Drop> Drops { get; set; }
-
-        /// <summary>
-        ///     Called when configuring to set some options which specify the ability to lazy load, user a MySql database, and
-        ///     allow a certain amount of retries to connect to the database
-        /// </summary>
-        /// <param name="optionsBuilder">Object used to set options for the database context to be built with</param>
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseLazyLoadingProxies()
-            .UseMySql("server=127.0.0.1;port=3306;user=user;password=user;database=illusory_wall", 
-                        builder => builder.EnableRetryOnFailure());
-
-        }
 
         /// <summary>
         ///     Calls when creating the models to fine tune some of the options

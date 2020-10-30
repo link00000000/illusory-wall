@@ -15,9 +15,9 @@ namespace IllusoryWall.Controllers
     {
         private readonly IllusoryWallContext _context;
 
-        public EnemyController()
+        public EnemyController(IllusoryWallContext context)
         {
-            _context = new IllusoryWallContext();
+            _context = context;
         }
 
         [HttpGet]
