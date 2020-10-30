@@ -76,6 +76,15 @@ namespace IllusoryWall
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
+            // Migrate the database automatically when run instead of using ef commandline tool
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<IllusoryWallContext>())
+                {
+                    context.Database.Migrate();
+                }
+            }
         }
     }
 }

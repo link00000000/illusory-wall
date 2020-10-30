@@ -6,18 +6,5 @@ services:
         restart: 'no'
 
     phpmyadmin:
-        image: phpmyadmin/phpmyadmin:latest
-        container_name: phpmyadmin
-        links:
-            - db
-        depends_on:
-            - db
-        environment:
-            PMA_HOST: db
-            PMA_PORT: 3306
-            PMA_USER: user
-            PMA_PASSWORD: user
-            PMA_ARBIRARY: 1
         ports:
             - 8080:80
-        restart: 'no'
