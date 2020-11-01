@@ -1,60 +1,43 @@
 import { PlusOutlined } from '@ant-design/icons'
 import { Button, Input } from 'antd'
-import React, { Component } from 'react'
+import React, { FunctionComponent } from 'react'
 import styles from './EnemySearch.module.css'
 
 type IProps = {
     disabled?: boolean
 }
-type IState = {
-    name: string
-    loading: boolean
-}
 
-export class EnemySearch extends Component<IProps, IState> {
-    static displayName = EnemySearch.name
+export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
+    EnemySearch.displayName = EnemySearch.name
 
-    constructor(props: IProps) {
-        super(props)
+    const [name, setName] = React.useState<string>('')
 
-        this.handleChange = this.handleChange.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
-
-        this.state = {
-            name: '',
-            loading: false
-        }
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        setName(event.currentTarget.value)
     }
 
-    private handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        this.setState({ name: event.currentTarget.value })
+    const handleSubmit = (_event: any): void => {
+        console.log(name)
     }
 
-    private handleSubmit(_event: any): void {
-        console.log(this.state.name)
-    }
-
-    render() {
-        return (
-            <div className={styles['search']}>
-                <Input
-                    disabled={this.props.disabled}
-                    placeholder='Type to search for enemy by name'
-                    allowClear
-                    onChange={this.handleChange}
-                    value={this.state.name}
-                    className={styles['search-bar']}
-                />
-                <Button
-                    type='primary'
-                    className={styles['submit']}
-                    icon={<PlusOutlined />}
-                    loading={this.state.loading}
-                    onClick={this.handleSubmit}
-                >
-                    Add
-                </Button>
-            </div>
-        )
-    }
+    return (
+        <div className={styles['search']}>
+            <Input
+                disabled={props.disabled}
+                placeholder='Type to search for enemy by name'
+                allowClear
+                onChange={handleChange}
+                value={name}
+                className={styles['search-bar']}
+            />
+            <Button
+                type='primary'
+                className={styles['submit']}
+                icon={<PlusOutlined />}
+                onClick={handleSubmit}
+            >
+                Add
+            </Button>
+        </div>
+    )
 }
