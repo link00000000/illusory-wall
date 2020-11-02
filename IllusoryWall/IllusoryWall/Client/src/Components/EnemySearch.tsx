@@ -2,7 +2,9 @@ import { PlusOutlined } from '@ant-design/icons'
 import { Button, Input } from 'antd'
 import React, { FunctionComponent } from 'react'
 import { fetch } from '../API/FetchEnemy'
+import { search } from '../API/SearchEnemies'
 import { ViewEnemiesStore } from '../Store/ViewEnemiesStore'
+import { EnemyEntry } from '../Utils/Models'
 import styles from './EnemySearch.module.css'
 
 type IProps = {
@@ -19,12 +21,40 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
     }
 
     const handleSubmit = async (_event: any): Promise<void> => {
-        const id = parseInt(name)
-        const enemy = await fetch(id)
+        let enemyEntries: EnemyEntry[] = []
+        try {
+            enemyEntries = await search(name)
+        } catch (error) {
+            console.error(error)
+        }
 
-        ViewEnemiesStore.update((s) => {
-            s.enemies[id] = enemy
+        console.log(enemyEntries)
+
+        if (enemyEntries.length === 0) {
+            // @TODO Handle no responses
+            console.error(new Error('No enemies found with matching criteria'))
+            return
+        }
+
+        enemyEntries.forEach((entry) => {
+            ViewEnemiesStore.update((s) => {
+                const keys = Object.keys(s.enemies)
+
+                if (keys.includes(entry.id.toString())) return
+                s.enemies[entry.id] = null
+            })
         })
+
+        for await (const { id } of enemyEntries) {
+            try {
+                const enemy = await fetch(id)
+                ViewEnemiesStore.update((s) => {
+                    s.enemies[id] = enemy
+                })
+            } catch (error) {
+                console.error(error)
+            }
+        }
     }
 
     return (
