@@ -4,19 +4,14 @@ import { RouteComponentProps } from 'react-router-dom'
 import * as FetchEnemyAPI from '../API/FetchEnemy'
 import { EnemyCard } from '../Components/EnemyCard'
 import { EnemyCardSkeleton } from '../Components/EnemyCardSkeleton'
+import { ViewEnemiesStore } from '../Store/ViewEnemiesStore'
 import { IWEnemy } from '../Utils/Models'
 import styles from './ViewEnemy.module.css'
-
-interface EnemyState {
-    [id: number]: IWEnemy | null
-}
 
 interface IProps extends RouteComponentProps {}
 
 export const ViewEnemy: FunctionComponent<IProps> = (props: IProps) => {
     ViewEnemy.displayName = ViewEnemy.name
-
-    const [enemies, setEnemies] = React.useState<EnemyState>({})
 
     const query = new URLSearchParams(props.location.search)
 
@@ -35,16 +30,18 @@ export const ViewEnemy: FunctionComponent<IProps> = (props: IProps) => {
             .map((id) => parseInt(id))
             .filter((id) => !Number.isNaN(id))
 
-        const newEnemiesState = enemies
         ids.forEach((id) => {
             fetchEnemy(id).then((model) => {
                 if (model === null) return
 
-                newEnemiesState[id] = model
-                setEnemies({ ...newEnemiesState })
+                ViewEnemiesStore.update((s) => {
+                    s.enemies[id] = model
+                })
             })
         })
     }, [])
+
+    const enemies = ViewEnemiesStore.useState((s) => s.enemies)
 
     if (Object.entries(enemies).length === 0) {
         // @TODO Handle main search page
