@@ -63,6 +63,12 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
                 console.error(error)
             }
         }
+
+        clear()
+    }
+
+    const clear = () => {
+        setName('')
     }
 
     React.useEffect(() => {
