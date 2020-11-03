@@ -62,7 +62,7 @@ export const ViewEnemy: FunctionComponent<IProps> = (props: IProps) => {
                     className={styles['column']}
                 >
                     {model ? (
-                        <EnemyCard model={model} />
+                        <EnemyCard model={model} id={parseInt(id)} />
                     ) : (
                         <EnemyCardSkeleton />
                     )}

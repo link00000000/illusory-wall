@@ -1,0 +1,11 @@
+.close-button {
+    position: absolute;
+    font-size: 24px;
+    top: 16px;
+    right: 16px;
+    cursor: pointer;
+}
+
+.close-button * {
+    transition: fill 250ms;
+}
