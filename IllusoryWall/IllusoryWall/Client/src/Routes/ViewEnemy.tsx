@@ -1,21 +1,58 @@
 import { Col, Row } from 'antd'
-import React, { FunctionComponent } from 'react'
+import React, { Component } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import * as FetchEnemyAPI from '../API/FetchEnemy'
 import { EnemyCard } from '../Components/EnemyCard'
 import { EnemyCardSkeleton } from '../Components/EnemyCardSkeleton'
-import { ViewEnemiesStore } from '../Store/ViewEnemiesStore'
 import { IWEnemy } from '../Utils/Models'
 import styles from './ViewEnemy.module.css'
 
+interface enemyState {
+    [id: number]: IWEnemy | null
+}
+
 interface IProps extends RouteComponentProps {}
+type IState = {
+    enemies: enemyState
+}
 
-export const ViewEnemy: FunctionComponent<IProps> = (props: IProps) => {
-    ViewEnemy.displayName = ViewEnemy.name
+export class ViewEnemy extends Component<IProps, IState> {
+    static displayName = ViewEnemy.name
 
-    const query = new URLSearchParams(props.location.search)
+    private query: URLSearchParams
 
-    const fetchEnemy = async (id: number): Promise<IWEnemy | null> => {
+    constructor(props: IProps) {
+        super(props)
+
+        this.query = new URLSearchParams(this.props.location.search)
+
+        this.state = {
+            enemies: []
+        }
+    }
+
+    componentDidMount() {
+        const ids = this.query
+            .getAll('id')
+            .map((id) => parseInt(id))
+            .filter((id) => !Number.isNaN(id))
+
+        // Use one skeleton per id
+        let state: enemyState = {}
+        ids.forEach((id) => (state[id] = null))
+
+        // Fetch enemy models async
+        ids.forEach((id) => {
+            this.fetchEnemy(id).then((model) => {
+                let newEnemyState = this.state.enemies
+                newEnemyState[id] = model
+
+                this.setState({ enemies: newEnemyState })
+            })
+        })
+    }
+
+    private async fetchEnemy(id: number): Promise<IWEnemy | null> {
         try {
             return await FetchEnemyAPI.fetch(id)
         } catch (error) {
@@ -24,49 +61,33 @@ export const ViewEnemy: FunctionComponent<IProps> = (props: IProps) => {
         return null
     }
 
-    React.useEffect(() => {
-        const ids = query
-            .getAll('id')
-            .map((id) => parseInt(id))
-            .filter((id) => !Number.isNaN(id))
+    render() {
+        if (Object.entries(this.state.enemies).length === 0) {
+            // @TODO Handle main search page
+            return <p>/</p>
+        }
 
-        ids.forEach((id) => {
-            fetchEnemy(id).then((model) => {
-                if (model === null) return
-
-                ViewEnemiesStore.update((s) => {
-                    s.enemies[id] = model
-                })
-            })
-        })
-    }, [])
-
-    const enemies = ViewEnemiesStore.useState((s) => s.enemies)
-
-    if (Object.entries(enemies).length === 0) {
-        return <p>@TODO Homepage</p>
+        return (
+            <Row gutter={32} justify='space-around'>
+                {Object.entries(this.state.enemies).map(([id, model]) => (
+                    <Col
+                        xs={24}
+                        sm={24}
+                        md={24}
+                        lg={24}
+                        xl={12}
+                        xxl={8}
+                        key={id}
+                        className={styles['column']}
+                    >
+                        {model ? (
+                            <EnemyCard model={model} />
+                        ) : (
+                            <EnemyCardSkeleton />
+                        )}
+                    </Col>
+                ))}
+            </Row>
+        )
     }
-
-    return (
-        <Row gutter={32} justify='space-around'>
-            {Object.entries(enemies).map(([id, model]) => (
-                <Col
-                    xs={24}
-                    sm={24}
-                    md={24}
-                    lg={24}
-                    xl={12}
-                    xxl={8}
-                    key={id}
-                    className={styles['column']}
-                >
-                    {model ? (
-                        <EnemyCard model={model} id={parseInt(id)} />
-                    ) : (
-                        <EnemyCardSkeleton />
-                    )}
-                </Col>
-            ))}
-        </Row>
-    )
 }
