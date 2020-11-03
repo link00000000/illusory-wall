@@ -44,8 +44,7 @@ export const ViewEnemy: FunctionComponent<IProps> = (props: IProps) => {
     const enemies = ViewEnemiesStore.useState((s) => s.enemies)
 
     if (Object.entries(enemies).length === 0) {
-        // @TODO Handle main search page
-        return <p>/</p>
+        return <p>@TODO Homepage</p>
     }
 
     return (
