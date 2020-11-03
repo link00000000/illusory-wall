@@ -1,11 +1,17 @@
 import { PlusOutlined } from '@ant-design/icons'
-import { Button, Input } from 'antd'
+import { AutoComplete, Button } from 'antd'
 import React, { FunctionComponent } from 'react'
 import { fetch } from '../API/FetchEnemy'
+import { fetch as fetchAll } from '../API/FetchEntries'
 import { search } from '../API/SearchEnemies'
 import { ViewEnemiesStore } from '../Store/ViewEnemiesStore'
 import { EnemyEntry } from '../Utils/Models'
 import styles from './EnemySearch.module.css'
+
+interface AutoCompleteOption {
+    label: string
+    value: string
+}
 
 type IProps = {
     disabled?: boolean
@@ -15,12 +21,14 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
     EnemySearch.displayName = EnemySearch.name
 
     const [name, setName] = React.useState<string>('')
+    const [options, setOptions] = React.useState<AutoCompleteOption[]>([])
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        setName(event.currentTarget.value)
+    const handleChange = (value: string): void => {
+        setName(value)
     }
 
     const handleSubmit = async (_event: any): Promise<void> => {
+        console.log('submit')
         let enemyEntries: EnemyEntry[] = []
         try {
             enemyEntries = await search(name)
@@ -57,15 +65,33 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
         }
     }
 
+    React.useEffect(() => {
+        fetchAll().then((entries) => {
+            setOptions(
+                entries.map((entry) => ({
+                    label: entry.name,
+                    value: entry.name
+                }))
+            )
+        })
+    }, [])
+
     return (
         <div className={styles['search']}>
-            <Input
+            <AutoComplete
+                autoFocus
                 disabled={props.disabled}
-                placeholder='Type to search for enemy by name'
+                placeholder='Type to search for an enemy by name'
                 allowClear
                 onChange={handleChange}
                 value={name}
                 className={styles['search-bar']}
+                filterOption={(inputValue, option) =>
+                    option?.value
+                        .toUpperCase()
+                        .indexOf(inputValue.toUpperCase()) !== -1
+                }
+                options={options}
             />
             <Button
                 type='primary'
