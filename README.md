@@ -32,13 +32,13 @@ cd IllusoryWall && dotnet watch -p IllusoryWall run
 
 ### Requirements
 
--   Docker
+-   Docker and docker-compose
 
 ### Usage
 
 ```bash
 # Build application for production and start all containers
-docker-compose up -d -f docker-compose.yml db illusorywall
+docker-compose -f docker-compose.yml up -d
 ```
 
 ### Locations

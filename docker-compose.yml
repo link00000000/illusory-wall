@@ -23,3 +23,22 @@ services:
         ports:
             - 80:80
         restart: unless-stopped
+        environment:
+            'ConnectionStrings:DefaultConnection': 'server=db;port=3306;user=user;password=user;database=illusory_wall'
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        container_name: phpmyadmin
+        links:
+            - db
+        depends_on:
+            - db
+        environment:
+            PMA_HOST: db
+            PMA_PORT: 3306
+            PMA_USER: user
+            PMA_PASSWORD: user
+            PMA_ARBIRARY: 1
+        ports:
+            - 5002:80
+        restart: 'no'
