@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons'
-import { AutoComplete, Button } from 'antd'
+import { AutoComplete, Button, notification } from 'antd'
 import React, { FunctionComponent } from 'react'
 import { fetch } from '../API/FetchEnemy'
 import { fetch as fetchAll } from '../API/FetchEntries'
@@ -39,16 +39,21 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
         console.log(enemyEntries)
 
         if (enemyEntries.length === 0) {
-            // @TODO Handle no responses
-            console.error(new Error('No enemies found with matching criteria'))
+            notification.warning({
+                message: 'No enemies found with matching criteria',
+                duration: 3
+            })
+
             return
         }
 
+        let numChanges = 0
         enemyEntries.forEach((entry) => {
             ViewEnemiesStore.update((s) => {
                 const keys = Object.keys(s.enemies)
 
                 if (keys.includes(entry.id.toString())) return
+                ++numChanges
                 s.enemies[entry.id] = null
             })
         })
@@ -63,6 +68,11 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
                 console.error(error)
             }
         }
+
+        notification.info({
+            message: `${numChanges} enemies found and added to view`,
+            duration: 3
+        })
 
         clear()
     }
