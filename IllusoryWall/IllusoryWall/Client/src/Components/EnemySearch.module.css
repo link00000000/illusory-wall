@@ -1,8 +1,9 @@
 .search {
     display: grid;
-    grid-template-columns: auto max-content;
+    grid-template-columns: auto max-content max-content;
     align-items: center;
     height: 64px;
+    position: relative;
 }
 
 .search-bar {
@@ -13,4 +14,29 @@
 .submit {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+}
+
+.advanced-button {
+    margin-left: 8px;
+}
+
+.advanced {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    position: absolute;
+    left: 0;
+    padding: 24px;
+    background-color: #ffffff;
+    min-width: 760px;
+    margin-left: 50%;
+    transform: translate(-50%, calc(50% + 32px));
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 10px 15px -10px;
+}
+
+.advanced-upper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    line-height: 0px;
+    align-items: center;
+    grid-gap: 24px 16px;
 }

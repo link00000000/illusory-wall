@@ -1,11 +1,25 @@
-import { PlusOutlined } from '@ant-design/icons'
-import { AutoComplete, Button, notification } from 'antd'
+import {
+    AlignCenterOutlined,
+    CloseOutlined,
+    PlusOutlined
+} from '@ant-design/icons'
+import {
+    AutoComplete,
+    Button,
+    Form,
+    notification,
+    Radio,
+    Select,
+    Slider
+} from 'antd'
 import React, { FunctionComponent } from 'react'
 import { fetch } from '../API/FetchEnemy'
 import { fetch as fetchAll } from '../API/FetchEntries'
 import { search } from '../API/SearchEnemies'
 import { ViewEnemiesStore } from '../Store/ViewEnemiesStore'
+import EnemyClassDisplayNames from '../Utils/EnemyClassDisplayNames'
 import { EnemyEntry } from '../Utils/Models'
+import { EnemyClass } from '../Utils/Types'
 import styles from './EnemySearch.module.css'
 
 interface AutoCompleteOption {
@@ -17,11 +31,15 @@ type IProps = {
     disabled?: boolean
 }
 
+const maxSoulsSlider = 50000
+const maxHPSlider = 5000
+
 export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
     EnemySearch.displayName = EnemySearch.name
 
     const [name, setName] = React.useState<string>('')
     const [options, setOptions] = React.useState<AutoCompleteOption[]>([])
+    const [collpased, setCollapsed] = React.useState<boolean>(false)
 
     const handleChange = (value: string): void => {
         setName(value)
@@ -35,8 +53,6 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
         } catch (error) {
             console.error(error)
         }
-
-        console.log(enemyEntries)
 
         if (enemyEntries.length === 0) {
             notification.warning({
@@ -81,6 +97,10 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
         setName('')
     }
 
+    const toggleCollapse = () => {
+        setCollapsed(!collpased)
+    }
+
     React.useEffect(() => {
         fetchAll().then((entries) => {
             setOptions(
@@ -94,6 +114,7 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
 
     return (
         <div className={styles['search']}>
+            {/* Start Search Bar */}
             <AutoComplete
                 autoFocus
                 disabled={props.disabled}
@@ -117,6 +138,85 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
             >
                 Add
             </Button>
+            <Button
+                type='text'
+                className={styles['advanced-button']}
+                icon={<AlignCenterOutlined />}
+                onClick={toggleCollapse}
+            >
+                Advanced
+            </Button>
+
+            {/* Start advanced */}
+            <div
+                className={styles['advanced']}
+                style={{ display: collpased ? 'block' : 'none' }}
+            >
+                <div className={styles['advanced-upper']}>
+                    {/* Start first row of advanced */}
+                    <label>
+                        <p>Class:</p>
+                        <Select allowClear style={{ width: '100%' }}>
+                            {Object.values(EnemyClass).map(
+                                (className, index) => (
+                                    <Select.Option
+                                        value={className}
+                                        key={index}
+                                    >
+                                        {EnemyClassDisplayNames[className]}
+                                    </Select.Option>
+                                )
+                            )}
+                        </Select>
+                    </label>
+                    <label>
+                        <p>Respawns:</p>
+                        <Radio.Group
+                            options={[
+                                { label: 'Respawns', value: true },
+                                { label: "Doesn't Respawn", value: false },
+                                { label: 'Undefined', value: 'null' } // Sets value to undefined
+                            ]}
+                            optionType='button'
+                            size='small'
+                        />
+                        <Button
+                            type='dashed'
+                            size='small'
+                            shape='circle'
+                            style={{ marginLeft: '8px' }}
+                        >
+                            <CloseOutlined />
+                        </Button>
+                    </label>
+
+                    {/* Start second row of advanced */}
+                    <label>
+                        <p>Souls:</p>
+                        <Slider
+                            range
+                            marks={{ 0: '0', [maxSoulsSlider]: 'Infinite' }}
+                            max={maxSoulsSlider}
+                            defaultValue={[0, maxSoulsSlider]}
+                            tipFormatter={(value) =>
+                                value === maxSoulsSlider ? 'Infinite' : value
+                            }
+                        ></Slider>
+                    </label>
+                    <label>
+                        <p>HP:</p>
+                        <Slider
+                            range
+                            marks={{ 0: '0', [maxHPSlider]: 'Infinite' }}
+                            max={maxHPSlider}
+                            defaultValue={[0, maxHPSlider]}
+                            tipFormatter={(value) =>
+                                value === maxHPSlider ? 'Infinite' : value
+                            }
+                        ></Slider>
+                    </label>
+                </div>
+            </div>
         </div>
     )
 }
