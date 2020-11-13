@@ -40,6 +40,7 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
     const [name, setName] = React.useState<string>('')
     const [options, setOptions] = React.useState<AutoCompleteOption[]>([])
     const [collpased, setCollapsed] = React.useState<boolean>(false)
+    const [respawns, setRespawns] = React.useState<number>(-1)
 
     const handleChange = (value: string): void => {
         setName(value)
@@ -173,18 +174,25 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
                         <p>Respawns:</p>
                         <Radio.Group
                             options={[
-                                { label: 'Respawns', value: true },
-                                { label: "Doesn't Respawn", value: false },
-                                { label: 'Undefined', value: 'null' } // Sets value to undefined
+                                { label: 'Respawns', value: 0 },
+                                { label: "Doesn't Respawn", value: 1 },
+                                { label: 'Undefined', value: 2 }
                             ]}
                             optionType='button'
                             size='small'
+                            value={respawns}
+                            onChange={(e) => setRespawns(e.target.value)}
                         />
                         <Button
                             type='dashed'
                             size='small'
                             shape='circle'
-                            style={{ marginLeft: '8px' }}
+                            style={{
+                                marginLeft: '8px',
+                                display:
+                                    respawns === -1 ? 'none' : 'inline-block'
+                            }}
+                            onClick={() => setRespawns(-1)}
                         >
                             <CloseOutlined />
                         </Button>
