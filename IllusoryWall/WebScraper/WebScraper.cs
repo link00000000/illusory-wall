@@ -29,7 +29,8 @@ namespace WebScraper
                 Drops = _drops(infoBox),
                 HP = _hp(infoBox),
                 Souls = _souls(infoBox),
-                Damages = _damages(infoBox)
+                Damages = _damages(infoBox),
+                Description = _description(page)
             };
         }
 
@@ -151,6 +152,8 @@ namespace WebScraper
             return null;
         }
 
+        // Extract damages
+        // First character is considered the damage, if its -, it is replaced with null
         private static Damages _damages(HtmlNode infoBox)
         {
             var damages = infoBox.CssSelect(".pi-item")
@@ -199,6 +202,19 @@ namespace WebScraper
                     .FirstOrDefault()
                     ?.InnerText[0],
             };
+        }
+
+        // Extract all paragraphs (<p>) that are siblings of the h2 element that
+        // has a span child with id "Description" until next h2 element is
+        // reached
+        private static string _description(WebPage page)
+        {
+            var nodes = page.Html
+                .SelectNodes("//div[@class='mw-parser-output']//p[preceding-sibling::h2[1][span[@id='Description']]]")
+                .Select(n => n.InnerText.Trim())
+                .Where(n => n.Length > 0);
+
+            return string.Join("\n", nodes);
         }
     }
 }

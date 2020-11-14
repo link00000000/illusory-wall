@@ -12,8 +12,8 @@ namespace WebScraper
         public IEnumerable<string> Drops { get; set; }
         public int? HP { get; set; }
         public int? Souls { get; set; }
-
         public Damages Damages { get; set; }
+        public string Description { get; set; }
     }
 
     // List of damages

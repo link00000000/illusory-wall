@@ -134,6 +134,7 @@ namespace WebScraperDriver
                     Console.WriteLine("Unknown");
                 }
 
+                Console.Write($" - Description: {result.Description}");
                 Console.WriteLine();
             }
         }
