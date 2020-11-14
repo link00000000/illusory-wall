@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using ScrapySharp.Network;
 using ScrapySharp.Extensions;
 using System.Linq;
@@ -14,6 +14,7 @@ namespace WebScraper
         public string Name { get; set; }
         public Uri ImageUrl { get; set; }
         public IEnumerable<string> Locations { get; set; }
+        public IEnumerable<string> Drops { get; set; }
     }
 
     public static class Scraper
@@ -32,7 +33,8 @@ namespace WebScraper
             {
                 Name = _name(infoBox),
                 ImageUrl = _imageUrl(infoBox),
-                Locations = _locations(infoBox)
+                Locations = _locations(infoBox),
+                Drops = _drops(infoBox)
             };
         }
 
@@ -90,7 +92,14 @@ namespace WebScraper
                 .Where(l => l.Length > 0);
         }
 
-            return locations;
+        // Extract list of item drops
+        private static IEnumerable<string> _drops(HtmlNode infoBox)
+        {
+            return infoBox.CssSelect(".pi-item")
+                ?.ElementAtOrDefault(3)
+                ?.ChildNodes.ElementAtOrDefault(3)
+                ?.ChildNodes.Select(d => d.InnerText)
+                .Where(d => d.Length > 0);
         }
     }
 }
