@@ -16,8 +16,14 @@ export async function search(
     hp?: [number, number],
     souls?: [number, number]
 ): Promise<EnemyEntry[]> {
-    let options: { [key: string]: any } = {
-        name
+    if (name.length === 0) {
+        throw Error('Invalid search arguments')
+    }
+
+    let options: { [key: string]: any } = {}
+
+    if (name && name.length > 0) {
+        options['name'] = name
     }
 
     options['use_respawns'] = respawns !== undefined

@@ -3,7 +3,15 @@ import {
     CloseOutlined,
     PlusOutlined
 } from '@ant-design/icons'
-import { AutoComplete, Button, notification, Radio, Select, Slider } from 'antd'
+import {
+    AutoComplete,
+    Button,
+    notification,
+    Radio,
+    Select,
+    Slider,
+    Form
+} from 'antd'
 import React, { FunctionComponent } from 'react'
 import { fetch } from '../API/FetchEnemy'
 import { fetch as fetchAll } from '../API/FetchEntries'
@@ -47,8 +55,17 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
     }
 
     const handleSubmit = async (_event: any): Promise<void> => {
-        console.log('submit')
         let enemyEntries: EnemyEntry[] = []
+
+        // Ensure name field was entered
+        if (name.length === 0) {
+            notification.error({
+                message: 'An enemy name is required',
+                duration: 3
+            })
+            return
+        }
+
         try {
             // If collapsed, only use name to search
             if (collpased) {
