@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using ScrapySharp.Network;
 using ScrapySharp.Extensions;
 using System.Linq;
@@ -17,6 +17,7 @@ namespace WebScraper
         public IEnumerable<string> Locations { get; set; }
         public IEnumerable<string> Drops { get; set; }
         public int? HP { get; set; }
+        public int? Souls { get; set; }
     }
 
     public static class Scraper
@@ -37,7 +38,8 @@ namespace WebScraper
                 ImageUrl = _imageUrl(infoBox),
                 Locations = _locations(infoBox),
                 Drops = _drops(infoBox),
-                HP = _hp(infoBox)
+                HP = _hp(infoBox),
+                Souls = _souls(infoBox)
             };
         }
 
@@ -128,6 +130,33 @@ namespace WebScraper
             if (hp.Count() > 0)
             {
                 return hp.FirstOrDefault();
+            }
+            return null;
+        }
+
+        // Extract NG Souls
+        // Is able to parse values like: 3,333
+        // Is not able to parse values like: 3,3311,805 (Painting Guardian)
+        private static int? _souls(HtmlNode infoBox)
+        {
+            var souls = infoBox.CssSelect(".pi-item")
+                ?.ElementAtOrDefault(5)
+                ?.CssSelect("td[data-source=souls]")
+                ?.Select(s => s.InnerText)
+                .Where(s =>
+                {
+                    int x;
+                    return Int32.TryParse(
+                        s,
+                        NumberStyles.AllowThousands,
+                        new CultureInfo("en-US"),
+                        out x);
+                })
+                .Select(s => Int32.Parse(s, NumberStyles.AllowThousands));
+
+            if (souls.Count() > 0)
+            {
+                return souls.FirstOrDefault();
             }
             return null;
         }
