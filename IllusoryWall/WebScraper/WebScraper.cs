@@ -5,6 +5,7 @@ using System.Linq;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace WebScraper
 {
@@ -15,6 +16,7 @@ namespace WebScraper
         public Uri ImageUrl { get; set; }
         public IEnumerable<string> Locations { get; set; }
         public IEnumerable<string> Drops { get; set; }
+        public int? HP { get; set; }
     }
 
     public static class Scraper
@@ -34,7 +36,8 @@ namespace WebScraper
                 Name = _name(infoBox),
                 ImageUrl = _imageUrl(infoBox),
                 Locations = _locations(infoBox),
-                Drops = _drops(infoBox)
+                Drops = _drops(infoBox),
+                HP = _hp(infoBox)
             };
         }
 
@@ -100,6 +103,29 @@ namespace WebScraper
                 ?.ChildNodes.ElementAtOrDefault(3)
                 ?.ChildNodes.Select(d => d.InnerText)
                 .Where(d => d.Length > 0);
+        }
+
+        // Extract NG Health
+        // Is able to parse values like: 3,333
+        // Is not able to parse values like: 3,3311,805 (Painting Guardian)
+        private static int? _hp(HtmlNode infoBox)
+        {
+            var hp = infoBox.CssSelect(".pi-item")
+                ?.ElementAtOrDefault(4)
+                ?.CssSelect("td[data-source=hp]")
+                ?.Select(h => h.InnerText)
+                .Where(h =>
+                {
+                    int x;
+                    return Int32.TryParse(h, out x);
+                })
+                .Select(h => Int32.Parse(h));
+
+            if (hp.Count() > 0)
+            {
+                return hp.FirstOrDefault();
+            }
+            return null;
         }
     }
 }
