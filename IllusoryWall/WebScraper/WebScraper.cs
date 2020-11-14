@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using ScrapySharp.Network;
 using ScrapySharp.Extensions;
 using System.Linq;
@@ -28,7 +28,8 @@ namespace WebScraper
                 Locations = _locations(infoBox),
                 Drops = _drops(infoBox),
                 HP = _hp(infoBox),
-                Souls = _souls(infoBox)
+                Souls = _souls(infoBox),
+                Damages = _damages(infoBox)
             };
         }
 
@@ -148,6 +149,56 @@ namespace WebScraper
                 return souls.FirstOrDefault();
             }
             return null;
+        }
+
+        private static Damages _damages(HtmlNode infoBox)
+        {
+            var damages = infoBox.CssSelect(".pi-item")
+                ?.ElementAtOrDefault(6);
+
+            return new Damages
+            {
+                Physical = damages
+                    ?.CssSelect(".pi-data-value[data-source=phys-atk]")
+                    .Where(d => d.InnerText[0] != '-')
+                    .FirstOrDefault()
+                    ?.InnerText[0],
+                Magic = damages
+                    ?.CssSelect(".pi-data-value[data-source=mag-atk]")
+                    .Where(d => d.InnerText[0] != '-')
+                    .FirstOrDefault()
+                    ?.InnerText[0],
+                Fire = damages
+                    ?.CssSelect(".pi-data-value[data-source=fire-atk]")
+                    .Where(d => d.InnerText[0] != '-')
+                    .FirstOrDefault()
+                    ?.InnerText[0],
+                Lightning = damages
+                    ?.CssSelect(".pi-data-value[data-source=ltn-atk]")
+                    .Where(d => d.InnerText[0] != '-')
+                    .FirstOrDefault()
+                    ?.InnerText[0],
+                Dark = damages
+                    ?.CssSelect(".pi-data-value[data-source=dark-atk]")
+                    .Where(d => d.InnerText[0] != '-')
+                    .FirstOrDefault()
+                    ?.InnerText[0],
+                Bleed = damages
+                    ?.CssSelect(".pi-data-value[data-source=bld-atk]")
+                    .Where(d => d.InnerText[0] != '-')
+                    .FirstOrDefault()
+                    ?.InnerText[0],
+                Poison = damages
+                    ?.CssSelect(".pi-data-value[data-source=psn-atk]")
+                    .Where(d => d.InnerText[0] != '-')
+                    .FirstOrDefault()
+                    ?.InnerText[0],
+                Frost = damages
+                    ?.CssSelect(".pi-data-value[data-source=fst-atk]")
+                    .Where(d => d.InnerText[0] != '-')
+                    .FirstOrDefault()
+                    ?.InnerText[0],
+            };
         }
     }
 }

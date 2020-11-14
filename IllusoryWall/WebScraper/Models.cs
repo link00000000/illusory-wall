@@ -16,4 +16,16 @@ namespace WebScraper
         public Damages Damages { get; set; }
     }
 
+    // List of damages
+    public class Damages
+    {
+        public char? Physical { get; set; }
+        public char? Magic { get; set; }
+        public char? Fire { get; set; }
+        public char? Lightning { get; set; }
+        public char? Dark { get; set; }
+        public char? Bleed { get; set; }
+        public char? Poison { get; set; }
+        public char? Frost { get; set; }
+    }
 }
