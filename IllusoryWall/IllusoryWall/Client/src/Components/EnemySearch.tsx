@@ -39,7 +39,7 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
 
     const [name, setName] = React.useState<string>('')
     const [options, setOptions] = React.useState<AutoCompleteOption[]>([])
-    const [collpased, setCollapsed] = React.useState<boolean>(false)
+    const [showAdvanced, setShowAdvanced] = React.useState<boolean>(false)
     const [classification, setClassification] = React.useState<
         EnemyClass | undefined
     >(undefined)
@@ -67,8 +67,8 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
         }
 
         try {
-            // If collapsed, only use name to search
-            if (collpased) {
+            // If advanced menu is closed, only use name to search
+            if (!showAdvanced) {
                 enemyEntries = await search(name)
             } else {
                 let respawnsBool: boolean | null | undefined
@@ -148,7 +148,7 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
     }
 
     const toggleCollapse = () => {
-        setCollapsed(!collpased)
+        setShowAdvanced(!showAdvanced)
     }
 
     React.useEffect(() => {
@@ -200,7 +200,7 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
             {/* Start advanced */}
             <div
                 className={styles['advanced']}
-                style={{ display: collpased ? 'block' : 'none' }}
+                style={{ display: showAdvanced ? 'block' : 'none' }}
             >
                 <div className={styles['advanced-upper']}>
                     {/* Start first row of advanced */}
