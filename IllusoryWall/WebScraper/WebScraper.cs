@@ -39,8 +39,9 @@ namespace WebScraper
         // Find infobox that contains image and enemy stats
         private static HtmlNode _infoBox(WebPage page)
         {
-            var infoBox = page.Html.CssSelect(".portable-infobox");
-            return infoBox?.FirstOrDefault();
+            return page.Html
+                .CssSelect(".portable-infobox")
+                .FirstOrDefault();
         }
 
         // Extract enemy name
