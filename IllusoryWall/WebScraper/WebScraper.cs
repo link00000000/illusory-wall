@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ScrapySharp.Network;
 using ScrapySharp.Extensions;
 using System.Linq;
@@ -117,9 +117,13 @@ namespace WebScraper
                 .Where(h =>
                 {
                     int x;
-                    return Int32.TryParse(h, out x);
+                    return Int32.TryParse(
+                        h,
+                        NumberStyles.AllowThousands,
+                        new CultureInfo("en-US"),
+                        out x);
                 })
-                .Select(h => Int32.Parse(h));
+                .Select(h => Int32.Parse(h, NumberStyles.AllowThousands));
 
             if (hp.Count() > 0)
             {
