@@ -4,6 +4,7 @@ using ScrapySharp.Extensions;
 using System.Linq;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace WebScraper
 {
@@ -12,6 +13,7 @@ namespace WebScraper
     {
         public string Name { get; set; }
         public Uri ImageUrl { get; set; }
+        public IEnumerable<string> Locations { get; set; }
     }
 
     public static class Scraper
@@ -29,7 +31,8 @@ namespace WebScraper
             return new ScraperResult
             {
                 Name = _name(infoBox),
-                ImageUrl = _imageUrl(infoBox)
+                ImageUrl = _imageUrl(infoBox),
+                Locations = _locations(infoBox)
             };
         }
 
@@ -78,6 +81,18 @@ namespace WebScraper
 
             // Return the whole url if an extension cannot be found
             return new Uri(imageSrc.Value);
+        }
+
+        // Extract list of location names
+        private static IEnumerable<string> _locations(HtmlNode infoBox)
+        {
+            var locations = infoBox.CssSelect(".pi-item")
+                ?.ElementAtOrDefault(2)
+                ?.ChildNodes.ElementAtOrDefault(3)
+                ?.ChildNodes.Select(l => l.InnerText)
+                .Where(l => l.Length > 0);
+
+            return locations;
         }
     }
 }
