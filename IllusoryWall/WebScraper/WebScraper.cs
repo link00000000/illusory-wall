@@ -3,6 +3,7 @@ using ScrapySharp.Network;
 using ScrapySharp.Extensions;
 using System.Linq;
 using HtmlAgilityPack;
+using System.Text.RegularExpressions;
 
 namespace WebScraper
 {
@@ -10,6 +11,7 @@ namespace WebScraper
     public class ScraperResult
     {
         public string Name { get; set; }
+        public Uri ImageUrl { get; set; }
     }
 
     public static class Scraper
@@ -26,7 +28,8 @@ namespace WebScraper
             // Map results to object
             return new ScraperResult
             {
-                Name = _name(infoBox)
+                Name = _name(infoBox),
+                ImageUrl = _imageUrl(infoBox)
             };
         }
 
@@ -42,6 +45,39 @@ namespace WebScraper
         {
             var name = infoBox.CssSelect(".pi-title");
             return name?.FirstOrDefault()?.InnerText;
+        }
+
+        // Extract image Url
+        private static Uri _imageUrl(HtmlNode infoBox)
+        {
+            var image = infoBox.CssSelect(".pi-image-thumbnail")?.FirstOrDefault();
+            if (image == null)
+            {
+                return null;
+            }
+
+            var imageSrc = image.Attributes["src"];
+            if (imageSrc == null)
+            {
+                return null;
+            }
+
+            if (imageSrc.Value == null)
+            {
+                return null;
+            }
+
+            // Typically images are in the format:
+            // https://static.wikia.nocookie.net/darksouls/images/5/51/Sulyvahn.png/revision/latest/scale-to-width-down/350?cb=20180211153506
+            // By removing everyting after the file extension, we can a higher-quality image
+            var fileType = Regex.Match(imageSrc.Value, @"\.(png|jpg|gif)");
+            if (fileType.Success)
+            {
+                return new Uri(imageSrc.Value.Substring(0, fileType.Index + fileType.Length));
+            }
+
+            // Return the whole url if an extension cannot be found
+            return new Uri(imageSrc.Value);
         }
     }
 }
