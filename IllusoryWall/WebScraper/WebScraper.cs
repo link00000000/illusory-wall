@@ -83,11 +83,12 @@ namespace WebScraper
         // Extract list of location names
         private static IEnumerable<string> _locations(HtmlNode infoBox)
         {
-            var locations = infoBox.CssSelect(".pi-item")
+            return infoBox.CssSelect(".pi-item")
                 ?.ElementAtOrDefault(2)
                 ?.ChildNodes.ElementAtOrDefault(3)
                 ?.ChildNodes.Select(l => l.InnerText)
                 .Where(l => l.Length > 0);
+        }
 
             return locations;
         }
