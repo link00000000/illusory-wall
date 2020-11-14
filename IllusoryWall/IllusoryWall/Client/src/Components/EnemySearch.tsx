@@ -57,15 +57,6 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
     const handleSubmit = async (_event: any): Promise<void> => {
         let enemyEntries: EnemyEntry[] = []
 
-        // Ensure name field was entered
-        if (name.length === 0) {
-            notification.error({
-                message: 'An enemy name is required',
-                duration: 3
-            })
-            return
-        }
-
         try {
             // If advanced menu is closed, only use name to search
             if (!showAdvanced) {
@@ -83,12 +74,12 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
                 }
 
                 let parsedHp: [number, number] = hp
-                if (parsedHp[1] == maxHPSlider) {
+                if (parsedHp[1] === maxHPSlider) {
                     parsedHp[1] = Infinity
                 }
 
                 let parsedSouls: [number, number] = souls
-                if (parsedSouls[1] == maxSoulsSlider) {
+                if (parsedSouls[1] === maxSoulsSlider) {
                     parsedSouls[1] = Infinity
                 }
 
@@ -101,6 +92,14 @@ export const EnemySearch: FunctionComponent<IProps> = (props: IProps) => {
                 )
             }
         } catch (error) {
+            if (error.message === '404') {
+                notification.error({
+                    message: 'Invalid search query',
+                    duration: 3
+                })
+                return
+            }
+
             console.error(error)
         }
 

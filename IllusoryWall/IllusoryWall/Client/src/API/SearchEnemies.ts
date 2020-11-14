@@ -16,10 +16,6 @@ export async function search(
     hp?: [number, number],
     souls?: [number, number]
 ): Promise<EnemyEntry[]> {
-    if (name.length === 0) {
-        throw Error('Invalid search arguments')
-    }
-
     let options: { [key: string]: any } = {}
 
     if (name && name.length > 0) {
@@ -67,7 +63,10 @@ export async function search(
 
         return response.data
     } catch (error) {
-        console.error(error)
+        if (error.message === 'Request failed with status code 404') {
+            throw Error('404')
+        }
+
         throw error
     }
 }
