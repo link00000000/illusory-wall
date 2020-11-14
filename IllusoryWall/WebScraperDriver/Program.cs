@@ -20,7 +20,8 @@ namespace WebScraperDriver
             foreach (var url in urls)
             {
                 var result = Scraper.scrape(url);
-                Console.WriteLine($"{result.Name}: {result.ImageUrl}");
+                Console.WriteLine(result.Name);
+                Console.WriteLine($" - ImageUrl: {result.ImageUrl}");
                 Console.WriteLine(" - Locations");
                 foreach (var location in result.Locations)
                 {
@@ -132,6 +133,8 @@ namespace WebScraperDriver
                 {
                     Console.WriteLine("Unknown");
                 }
+
+                Console.WriteLine();
             }
         }
     }
