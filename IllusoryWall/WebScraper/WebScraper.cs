@@ -47,8 +47,10 @@ namespace WebScraper
         // Extract enemy name
         private static string _name(HtmlNode infoBox)
         {
-            var name = infoBox.CssSelect(".pi-title");
-            return name?.FirstOrDefault()?.InnerText;
+            return infoBox
+                .CssSelect(".pi-title")
+                ?.FirstOrDefault()
+                ?.InnerText;
         }
 
         // Extract image Url
