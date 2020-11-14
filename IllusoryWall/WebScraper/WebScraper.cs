@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ScrapySharp.Network;
 using ScrapySharp.Extensions;
 using System.Linq;
@@ -53,19 +53,13 @@ namespace WebScraper
         // Extract image Url
         private static Uri _imageUrl(HtmlNode infoBox)
         {
-            var image = infoBox.CssSelect(".pi-image-thumbnail")?.FirstOrDefault();
-            if (image == null)
-            {
-                return null;
-            }
+            var imageSrc = infoBox
+                .CssSelect(".pi-image-thumbnail")
+                ?.FirstOrDefault()
+                ?.Attributes["src"]
+                ?.Value;
 
-            var imageSrc = image.Attributes["src"];
             if (imageSrc == null)
-            {
-                return null;
-            }
-
-            if (imageSrc.Value == null)
             {
                 return null;
             }
@@ -73,14 +67,14 @@ namespace WebScraper
             // Typically images are in the format:
             // https://static.wikia.nocookie.net/darksouls/images/5/51/Sulyvahn.png/revision/latest/scale-to-width-down/350?cb=20180211153506
             // By removing everyting after the file extension, we can a higher-quality image
-            var fileType = Regex.Match(imageSrc.Value, @"\.(png|jpg|gif)");
+            var fileType = Regex.Match(imageSrc, @"\.(png|jpg|gif)");
             if (fileType.Success)
             {
-                return new Uri(imageSrc.Value.Substring(0, fileType.Index + fileType.Length));
+                return new Uri(imageSrc.Substring(0, fileType.Index + fileType.Length));
             }
 
             // Return the whole url if an extension cannot be found
-            return new Uri(imageSrc.Value);
+            return new Uri(imageSrc);
         }
 
         // Extract list of location names
