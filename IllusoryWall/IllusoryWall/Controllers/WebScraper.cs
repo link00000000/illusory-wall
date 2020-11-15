@@ -2,9 +2,10 @@ using System.Text.RegularExpressions;
 using System;
 using Microsoft.AspNetCore.Mvc;
 using WebScraper;
-using IllusoryWall.Models;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using IllusoryWall.Models;
 
 namespace IllusoryWall.Controllers
 {
@@ -47,66 +48,66 @@ namespace IllusoryWall.Controllers
             return Ok(model);
         }
 
-        private Enemy _resultToModel(ScraperResult result)
+        private PartialEnemy _resultToModel(ScraperResult result)
         {
-            var model = new Enemy();
+            var model = new PartialEnemy();
 
             if (result.Name != null) model.Name = result.Name;
             if (result.Description != null) model.Description = result.Description;
             if (result.ImageUrl != null) model.ImagePath = result.ImageUrl.AbsoluteUri;
 
-            if (result.Drops != null) model.Drops = result.Drops
-                 .Select(d => new Drop() { Name = d })
+            if (result.Drops != null) model.PartialDrops = result.Drops
+                 .Select(d => new PartialDrop() { Name = d })
                  .ToList();
-            if (result.Locations != null) model.Locations = result.Locations
+            if (result.Locations != null) model.PartialLocations = result.Locations
                  .Select(l =>
                  {
-                     var loc = new Location() { Name = l };
+                     var loc = new PartialLocation() { Name = l };
                      if (result.HP != null) loc.HP = result.HP;
                      if (result.Souls != null) loc.Souls = result.Souls;
                      return loc;
                  })
                  .ToList();
 
-            model.Damages = new List<Damage>();
+            model.PartialDamages = new List<PartialDamage>();
             if (result.Damages.Physical != null)
-                model.Damages.Add(
-                    new Damage() { DamageType = "physical", Category = result.Damages.Physical }
+                model.PartialDamages.Add(
+                    new PartialDamage() { DamageType = "physical", Category = result.Damages.Physical }
                 );
 
             if (result.Damages.Magic != null)
-                model.Damages.Add(
-                    new Damage() { DamageType = "magic", Category = result.Damages.Magic }
+                model.PartialDamages.Add(
+                    new PartialDamage() { DamageType = "magic", Category = result.Damages.Magic }
                 );
 
             if (result.Damages.Fire != null)
-                model.Damages.Add(
-                    new Damage() { DamageType = "fire", Category = result.Damages.Fire }
+                model.PartialDamages.Add(
+                    new PartialDamage() { DamageType = "fire", Category = result.Damages.Fire }
                 );
 
             if (result.Damages.Lightning != null)
-                model.Damages.Add(
-                    new Damage() { DamageType = "lightning", Category = result.Damages.Lightning }
+                model.PartialDamages.Add(
+                    new PartialDamage() { DamageType = "lightning", Category = result.Damages.Lightning }
                 );
 
             if (result.Damages.Dark != null)
-                model.Damages.Add(
-                    new Damage() { DamageType = "dark", Category = result.Damages.Dark }
+                model.PartialDamages.Add(
+                    new PartialDamage() { DamageType = "dark", Category = result.Damages.Dark }
                 );
 
             if (result.Damages.Bleed != null)
-                model.Damages.Add(
-                    new Damage() { DamageType = "bleed", Category = result.Damages.Bleed }
+                model.PartialDamages.Add(
+                    new PartialDamage() { DamageType = "bleed", Category = result.Damages.Bleed }
                 );
 
             if (result.Damages.Poison != null)
-                model.Damages.Add(
-                    new Damage() { DamageType = "poison", Category = result.Damages.Poison }
+                model.PartialDamages.Add(
+                    new PartialDamage() { DamageType = "poison", Category = result.Damages.Poison }
                 );
 
             if (result.Damages.Frost != null)
-                model.Damages.Add(
-                    new Damage() { DamageType = "frost", Category = result.Damages.Frost }
+                model.PartialDamages.Add(
+                    new PartialDamage() { DamageType = "frost", Category = result.Damages.Frost }
                 );
 
             return model;

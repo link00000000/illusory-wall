@@ -33,4 +33,10 @@ namespace IllusoryWall.Models
         [Required]
         public string Name { get; set; }
     }
+
+    class PartialLocation : Location
+    {
+        [JsonIgnore]
+        public new int Id { get; set; }
+    }
 }
