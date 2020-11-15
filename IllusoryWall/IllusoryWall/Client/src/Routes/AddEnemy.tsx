@@ -8,6 +8,7 @@ import { IWEnemy } from '../Utils/Models'
 type IProps = {}
 type IState = {
     loading: boolean
+    model: Partial<IWEnemy>
 }
 
 /**
@@ -25,7 +26,8 @@ export class AddEnemy extends Component<IProps, IState> {
         this.showSuccess = this.showSuccess.bind(this)
 
         this.state = {
-            loading: false
+            loading: false,
+            model: {}
         }
     }
 
@@ -33,10 +35,14 @@ export class AddEnemy extends Component<IProps, IState> {
      * Add enemy to database
      * @param model Enemy model
      */
-    private async handleSubmit(model: IWEnemy): Promise<void> {
+    private async handleSubmit(model: Partial<IWEnemy>): Promise<void> {
         this.setState({ loading: true })
 
-        const error = await AddEnemyAPI.commit(model)
+        if (model.name === undefined) {
+            return
+        }
+
+        const error = await AddEnemyAPI.commit(model as IWEnemy)
         if (error) {
             this.showError(error)
             return
@@ -83,11 +89,30 @@ export class AddEnemy extends Component<IProps, IState> {
 
     render() {
         return (
-            <EnemyForm
-                submitText='Add Enemy'
-                onSubmit={this.handleSubmit}
-                loading={this.state.loading}
-            />
+            <>
+                <EnemyForm
+                    model={this.state.model}
+                    onChange={(model: Partial<IWEnemy>) => {
+                        this.setState({ model })
+                    }}
+                    onSubmit={this.handleSubmit}
+                    loading={this.state.loading}
+                />
+                <button
+                    onClick={() => {
+                        this.setState({ model: { respawns: null } })
+                    }}
+                >
+                    Reset
+                </button>
+                <button
+                    onClick={() => {
+                        this.setState({ loading: !this.state.loading })
+                    }}
+                >
+                    Toggle Loading
+                </button>
+            </>
         )
     }
 }

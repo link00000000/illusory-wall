@@ -1,7 +1,13 @@
-.tail-button {
-    margin-right: 8px;
+.form-input {
+    margin-bottom: 24px;
 }
 
-.tail-button:last-child {
-    margin-right: 0;
+.form-label-text {
+    margin-bottom: 8px;
+}
+
+.form-label-text.required::before {
+    content: '*';
+    color: #ff4d4f;
+    margin-right: 4px;
 }
