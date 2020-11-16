@@ -27,7 +27,9 @@ export class AddEnemy extends Component<IProps, IState> {
 
         this.state = {
             loading: false,
-            model: {}
+            model: {
+                locations: [{ name: 'testing', hp: 10, souls: 20 }]
+            }
         }
     }
 
@@ -100,7 +102,14 @@ export class AddEnemy extends Component<IProps, IState> {
                 />
                 <button
                     onClick={() => {
-                        this.setState({ model: { respawns: null } })
+                        this.setState({
+                            model: {
+                                respawns: null,
+                                locations: [
+                                    { name: 'test location', hp: 10, souls: 20 }
+                                ]
+                            }
+                        })
                     }}
                 >
                     Reset

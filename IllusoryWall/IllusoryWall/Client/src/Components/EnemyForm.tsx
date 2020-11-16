@@ -4,6 +4,7 @@ import { IWEnemy } from '../Utils/Models'
 import { EnemyClass } from '../Utils/Types'
 import EnemyClassDisplayNames from '../Utils/EnemyClassDisplayNames'
 import styles from './EnemyForm.module.css'
+import { LocationList } from './LocationList'
 
 interface IProps {
     model: Partial<IWEnemy>
@@ -138,6 +139,11 @@ export const EnemyForm: FunctionComponent<IProps> = (props: IProps) => {
                     className={styles['form-input']}
                 />
             </label>
+
+            <LocationList
+                locations={model.locations ?? []}
+                onChange={(locations) => setModel({ locations })}
+            />
 
             <Button type='primary' loading={props.loading}>
                 {props.buttonText ?? 'Submit'}
