@@ -28,7 +28,8 @@ export class AddEnemy extends Component<IProps, IState> {
         this.state = {
             loading: false,
             model: {
-                locations: [{ name: 'testing', hp: 10, souls: 20 }]
+                locations: [{ name: 'testing', hp: 10, souls: 20 }],
+                drops: [{ name: 'test drop', location: 'nowhere', rate: 1 }]
             }
         }
     }
@@ -107,6 +108,13 @@ export class AddEnemy extends Component<IProps, IState> {
                                 respawns: null,
                                 locations: [
                                     { name: 'test location', hp: 10, souls: 20 }
+                                ],
+                                drops: [
+                                    {
+                                        name: 'test drop',
+                                        location: 'nowhere',
+                                        rate: 1
+                                    }
                                 ]
                             }
                         })

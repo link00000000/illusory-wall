@@ -1,55 +1,53 @@
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Table } from 'antd'
 import React, { FunctionComponent } from 'react'
-import { IWLocation } from '../Utils/Models'
-import { LocationFormModal } from './LocationFormModal'
+import { IWDrop } from '../Utils/Models'
+import { DropFormModal } from './DropFormModal'
 
-interface ILocationListProps {
-    locations: IWLocation[]
-    onChange?: (locations: IWLocation[]) => void
+interface IDropListProps {
+    drops: IWDrop[]
+    onChange?: (drops: IWDrop[]) => void
     disabled?: boolean
 }
 
-export const LocationList: FunctionComponent<ILocationListProps> = (
-    props: ILocationListProps
+export const DropList: FunctionComponent<IDropListProps> = (
+    props: IDropListProps
 ) => {
-    const [locations, setLocations] = React.useState<IWLocation[]>(
-        props.locations
-    )
+    const [drops, setDrops] = React.useState<IWDrop[]>(props.drops)
     const [showModal, setShowModal] = React.useState<boolean>(false)
 
     React.useEffect(() => {
-        if (props.locations != locations) {
-            setLocations(props.locations)
+        if (props.drops != drops) {
+            setDrops(props.drops)
         }
-    }, [props.locations])
+    }, [props.drops])
 
     React.useEffect(() => {
         if (props.onChange) {
-            props.onChange(locations)
+            props.onChange(drops)
         }
-    }, [locations])
+    }, [drops])
 
     return (
         <>
-            {locations.length > 0 && (
+            {drops.length > 0 && (
                 <Table
                     columns={[
                         { title: 'Name', dataIndex: 'name' },
-                        { title: 'HP', dataIndex: 'hp' },
-                        { title: 'Souls', dataIndex: 'souls' },
+                        { title: 'Rate', dataIndex: 'rate' },
+                        { title: 'Location', dataIndex: 'location' },
                         { dataIndex: 'action' }
                     ]}
-                    dataSource={locations.map((location, index) => ({
-                        ...location,
-                        key: location.name,
+                    dataSource={drops.map((drop, index) => ({
+                        ...drop,
+                        key: drop.name,
                         action: (
                             <Button
                                 type='text'
                                 onClick={() => {
-                                    let newLocations = locations.slice()
-                                    newLocations.splice(index, 1)
-                                    setLocations(newLocations)
+                                    let newDrops = drops.slice()
+                                    newDrops.splice(index, 1)
+                                    setDrops(newDrops)
                                 }}
                             >
                                 <MinusCircleOutlined />
@@ -69,17 +67,17 @@ export const LocationList: FunctionComponent<ILocationListProps> = (
                 }}
             >
                 <PlusCircleOutlined />
-                Add Location
+                Add Drops
             </Button>
 
-            <LocationFormModal
+            <DropFormModal
                 visible={showModal}
                 onCancel={() => {
                     setShowModal(false)
                 }}
-                onSubmit={(newLocation) => {
+                onSubmit={(newDrop) => {
                     setShowModal(false)
-                    setLocations([...locations, newLocation])
+                    setDrops([...drops, newDrop])
                 }}
             />
         </>

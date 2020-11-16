@@ -5,6 +5,7 @@ import { EnemyClass } from '../Utils/Types'
 import EnemyClassDisplayNames from '../Utils/EnemyClassDisplayNames'
 import styles from './EnemyForm.module.css'
 import { LocationList } from './LocationList'
+import { DropList } from './DropList'
 
 interface IProps {
     model: Partial<IWEnemy>
@@ -52,6 +53,7 @@ export const EnemyForm: FunctionComponent<IProps> = (props: IProps) => {
 
     React.useEffect(() => {
         props.onChange(model)
+        console.log(model)
     }, [model])
 
     return (
@@ -142,7 +144,12 @@ export const EnemyForm: FunctionComponent<IProps> = (props: IProps) => {
 
             <LocationList
                 locations={model.locations ?? []}
-                onChange={(locations) => setModel({ locations })}
+                onChange={(locations) => setModel({ ...model, locations })}
+            />
+
+            <DropList
+                drops={model.drops ?? []}
+                onChange={(drops) => setModel({ ...model, drops })}
             />
 
             <Button type='primary' loading={props.loading}>
