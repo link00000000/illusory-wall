@@ -2,9 +2,9 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Linq;
 using System.Diagnostics;
-using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -30,8 +30,8 @@ namespace IllusoryWall.Controllers
             Configuration = configuration;
         }
 
-        [Route("Login")]
         [HttpPost]
+        [Route("Login")]
         public IActionResult Login(UserAuthenticate user)
         {
             User foundUser = _context.Users.Where(p => p.Username == user.Username).Single();
@@ -42,7 +42,7 @@ namespace IllusoryWall.Controllers
             string hashed = Convert.ToBase64String(
                 KeyDerivation.Pbkdf2(
                     user.Password,
-                    Encoding.UTF8.GetBytes(foundUser.Spice),
+                    Convert.FromBase64String(foundUser.Spice),
                     KeyDerivationPrf.HMACSHA512,
                     10000,
                     512 / 8));
@@ -73,11 +73,47 @@ namespace IllusoryWall.Controllers
             return Ok(new { Username = user.Username, Token = tokenString });
         }
 
-        [Route("Register")]
         [HttpPost]
-        public IActionResult Register(User user)
+        [Route("Register")]
+        public IActionResult Register(UserAuthenticate user)
         {
-            return Ok();
+            User newUser = new User();
+            newUser.Username = user.Username;
+
+            byte[] salt = new byte[128 / 8];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+
+            string hashedPass = Convert.ToBase64String(
+                KeyDerivation.Pbkdf2(
+                    user.Password,
+                    salt,
+                    KeyDerivationPrf.HMACSHA512,
+                    10000,
+                    512 / 8));
+            newUser.Password = hashedPass;
+            newUser.Spice = Convert.ToBase64String(salt);
+            newUser.Type = 'g';
+
+            _context.Users.Add(newUser);
+            int count;
+
+            try
+            {
+                count = _context.SaveChanges();
+            }
+            catch (System.Exception oops)
+            {
+                Console.Write("\n" + oops.ToString() + "\n\n");
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }
+
+            // if changes occurred it worked, else something went wrong
+            if (count > 0)
+                return Ok(newUser);
+            return StatusCode((int)HttpStatusCode.InternalServerError);
         }
     }
 }

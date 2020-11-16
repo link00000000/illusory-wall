@@ -21,6 +21,7 @@ namespace IllusoryWall.Models
         public char Type { get; set; }
 
         [Required]
+        [JsonIgnore]
         public string Spice { get; set; }
 
     }

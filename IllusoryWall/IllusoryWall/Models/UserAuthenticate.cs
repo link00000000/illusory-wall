@@ -11,7 +11,6 @@ namespace IllusoryWall.Models
         public string Username { get; set; }
 
         [Required]
-        [JsonIgnore]
         public string Password { get; set; }
     }
 }
