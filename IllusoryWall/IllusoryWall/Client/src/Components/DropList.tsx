@@ -49,6 +49,7 @@ export const DropList: FunctionComponent<IDropListProps> = (
                                     newDrops.splice(index, 1)
                                     setDrops(newDrops)
                                 }}
+                                disabled={props.disabled}
                             >
                                 <MinusCircleOutlined />
                             </Button>

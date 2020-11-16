@@ -53,6 +53,7 @@ export const DamageList: FunctionComponent<IDamageListProps> = (
                                     newDamage.splice(index, 1)
                                     setDamages(newDamage)
                                 }}
+                                disabled={props.disabled}
                             >
                                 <MinusCircleOutlined />
                             </Button>

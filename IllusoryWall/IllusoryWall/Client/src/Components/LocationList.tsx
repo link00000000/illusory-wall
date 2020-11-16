@@ -51,6 +51,7 @@ export const LocationList: FunctionComponent<ILocationListProps> = (
                                     newLocations.splice(index, 1)
                                     setLocations(newLocations)
                                 }}
+                                disabled={props.disabled}
                             >
                                 <MinusCircleOutlined />
                             </Button>
