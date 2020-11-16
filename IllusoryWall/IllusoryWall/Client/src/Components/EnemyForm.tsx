@@ -176,19 +176,3 @@ const _formOffset = (): { [key: string]: number } => {
 
     return obj
 }
-
-const _formCombined = (): { [key: string]: {} } => {
-    const obj: { [key: string]: {} } = {}
-    Object.keys(_formSpan).forEach((key) => {
-        obj[key] = {
-            span: _formSpan[key],
-            offset: _formOffset()[key]
-        }
-    })
-
-    return obj
-}
-
-const initialValues: Partial<IWEnemy> | any = {
-    respawns: 'null'
-}
