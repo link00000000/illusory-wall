@@ -3,11 +3,14 @@ import { ArgsProps } from 'antd/lib/notification'
 import React, { Component } from 'react'
 import * as AddEnemyAPI from '../API/AddEnemy'
 import { EnemyForm } from '../Components/EnemyForm'
+import { WebScraperModal } from '../Components/WebScraperModal'
 import { IWEnemy } from '../Utils/Models'
+import { DamageCategory, DamageType } from '../Utils/Types'
 
 type IProps = {}
 type IState = {
     loading: boolean
+    model: IWEnemy
 }
 
 /**
@@ -25,7 +28,13 @@ export class AddEnemy extends Component<IProps, IState> {
         this.showSuccess = this.showSuccess.bind(this)
 
         this.state = {
-            loading: false
+            loading: false,
+            model: {
+                name: '',
+                locations: [],
+                drops: [],
+                damages: []
+            }
         }
     }
 
@@ -33,10 +42,14 @@ export class AddEnemy extends Component<IProps, IState> {
      * Add enemy to database
      * @param model Enemy model
      */
-    private async handleSubmit(model: IWEnemy): Promise<void> {
+    private async handleSubmit(model: Partial<IWEnemy>): Promise<void> {
         this.setState({ loading: true })
 
-        const error = await AddEnemyAPI.commit(model)
+        if (model.name === undefined) {
+            return
+        }
+
+        const error = await AddEnemyAPI.commit(model as IWEnemy)
         if (error) {
             this.showError(error)
             return
@@ -83,11 +96,28 @@ export class AddEnemy extends Component<IProps, IState> {
 
     render() {
         return (
-            <EnemyForm
-                submitText='Add Enemy'
-                onSubmit={this.handleSubmit}
-                loading={this.state.loading}
-            />
+            <>
+                <div
+                    style={{
+                        maxWidth: '500px',
+                        margin: '0 auto',
+                        display: 'flex',
+                        justifyContent: 'flex-end'
+                    }}
+                >
+                    <WebScraperModal
+                        onSubmit={(model) => this.setState({ model })}
+                    />
+                </div>
+                <EnemyForm
+                    model={this.state.model}
+                    onChange={(model: IWEnemy) => {
+                        this.setState({ model })
+                    }}
+                    onSubmit={this.handleSubmit}
+                    loading={this.state.loading}
+                />
+            </>
         )
     }
 }

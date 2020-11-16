@@ -6,14 +6,14 @@ export enum EnemyClass {
 }
 
 export enum DamageType {
+    PHYSICAL = 'physical',
     MAGIC = 'magic',
     FIRE = 'fire',
     LIGHTNING = 'lightning',
     DARK = 'dark',
-    PHYSICAL = 'physical',
-    STRIKE = 'strike',
-    SLASH = 'slash',
-    THRUST = 'thrust'
+    BLEED = 'bleed',
+    POISON = 'poison',
+    FROST = 'frost'
 }
 
 export enum DamageCategory {

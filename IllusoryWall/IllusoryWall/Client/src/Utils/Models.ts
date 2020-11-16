@@ -7,9 +7,9 @@ export type IWEnemy = {
     respawns?: boolean | null
     class?: EnemyClass
     imagePath?: string
-    locations?: IWLocation[]
-    drops?: IWDrop[]
-    damages?: IWDamage[]
+    locations: IWLocation[]
+    drops: IWDrop[]
+    damages: IWDamage[]
 }
 
 export type IWLocation = {

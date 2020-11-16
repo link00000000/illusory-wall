@@ -1,14 +1,14 @@
 import { DamageType } from './Types'
 
 const DamageTypeDisplayNames: { [key in DamageType]: string } = {
+    [DamageType.PHYSICAL]: 'Physical',
     [DamageType.MAGIC]: 'Magic',
     [DamageType.FIRE]: 'Fire',
     [DamageType.LIGHTNING]: 'Lightning',
     [DamageType.DARK]: 'Dark',
-    [DamageType.PHYSICAL]: 'Physical',
-    [DamageType.STRIKE]: 'Strike',
-    [DamageType.SLASH]: 'Slash',
-    [DamageType.THRUST]: 'Thrust'
+    [DamageType.BLEED]: 'Bleed',
+    [DamageType.POISON]: 'Poison',
+    [DamageType.FROST]: 'Frost'
 }
 
 export default DamageTypeDisplayNames

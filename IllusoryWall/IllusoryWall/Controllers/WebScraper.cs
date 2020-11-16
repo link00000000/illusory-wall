@@ -18,13 +18,22 @@ namespace IllusoryWall.Controllers
         {
             if (urlString == null)
             {
-                return BadRequest("Url required.");
+                return BadRequest("Url is required");
             }
 
-            var url = new Uri(urlString);
+            Uri url;
+            try
+            {
+                url = new Uri(urlString);
+            }
+            catch (UriFormatException)
+            {
+                return BadRequest("Malformed or incomplete Url");
+            }
+
             if (url == null || !url.IsWellFormedOriginalString())
             {
-                return BadRequest("Malformed Url.");
+                return BadRequest("Malformed or incomplete Url");
             }
 
             try
@@ -33,7 +42,7 @@ namespace IllusoryWall.Controllers
             }
             catch (InvalidOperationException)
             {
-                return BadRequest("Url is not absolute.");
+                return BadRequest("Url is not absolute");
             }
 
             var rx = new Regex(@"^https?:\/\/darksouls\.fandom\.com\/wiki\/");
