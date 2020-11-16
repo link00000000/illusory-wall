@@ -3,6 +3,7 @@ import { ArgsProps } from 'antd/lib/notification'
 import React, { Component } from 'react'
 import * as AddEnemyAPI from '../API/AddEnemy'
 import { EnemyForm } from '../Components/EnemyForm'
+import { WebScraperModal } from '../Components/WebScraperModal'
 import { IWEnemy } from '../Utils/Models'
 import { DamageCategory, DamageType } from '../Utils/Types'
 
@@ -96,6 +97,18 @@ export class AddEnemy extends Component<IProps, IState> {
     render() {
         return (
             <>
+                <div
+                    style={{
+                        maxWidth: '500px',
+                        margin: '0 auto',
+                        display: 'flex',
+                        justifyContent: 'flex-end'
+                    }}
+                >
+                    <WebScraperModal
+                        onSubmit={(model) => this.setState({ model })}
+                    />
+                </div>
                 <EnemyForm
                     model={this.state.model}
                     onChange={(model: IWEnemy) => {
