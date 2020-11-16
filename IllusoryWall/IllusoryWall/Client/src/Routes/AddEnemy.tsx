@@ -104,42 +104,6 @@ export class AddEnemy extends Component<IProps, IState> {
                     onSubmit={this.handleSubmit}
                     loading={this.state.loading}
                 />
-                <button
-                    onClick={() => {
-                        this.setState({
-                            model: {
-                                name: 'Testing',
-                                description: 'this is the description',
-                                respawns: null,
-                                locations: [
-                                    { name: 'test location', hp: 10, souls: 20 }
-                                ],
-                                drops: [
-                                    {
-                                        name: 'test drop',
-                                        location: 'nowhere',
-                                        rate: 1
-                                    }
-                                ],
-                                damages: [
-                                    {
-                                        category: 'w' as DamageCategory,
-                                        damageType: 'frost' as DamageType
-                                    }
-                                ]
-                            }
-                        })
-                    }}
-                >
-                    Reset
-                </button>
-                <button
-                    onClick={() => {
-                        this.setState({ loading: !this.state.loading })
-                    }}
-                >
-                    Toggle Loading
-                </button>
             </>
         )
     }
