@@ -66,6 +66,7 @@ export const EnemyForm: FunctionComponent<IProps> = (props: IProps) => {
 
     return (
         <Form
+            className={styles['form']}
             onFinish={() => {
                 props.onSubmit && props.onSubmit(model)
             }}
