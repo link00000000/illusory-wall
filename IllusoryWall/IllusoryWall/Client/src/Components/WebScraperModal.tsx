@@ -12,6 +12,7 @@ export const WebScraperModal: FunctionComponent<IProps> = (props: IProps) => {
     WebScraperModal.displayName = WebScraperModal.name
 
     const [showModal, setShowModal] = React.useState<boolean>(false)
+    const [loading, setLoading] = React.useState<boolean>(false)
 
     let formRef = React.createRef<FormInstance>()
 
@@ -23,8 +24,22 @@ export const WebScraperModal: FunctionComponent<IProps> = (props: IProps) => {
     const handleSubmit = async () => {
         if (formRef.current == null) return
 
+        setLoading(true)
+
         try {
-            const formData = await formRef.current.validateFields()
+            let formData: any
+            try {
+                formData = await formRef.current.validateFields()
+            } catch (_e) {
+                setLoading(false)
+                return
+            }
+
+            if (formData === undefined) {
+                setLoading(false)
+                return
+            }
+
             const { url }: { [key: string]: string } = formData
 
             formRef.current?.resetFields()
@@ -33,9 +48,10 @@ export const WebScraperModal: FunctionComponent<IProps> = (props: IProps) => {
             props.onSubmit(model)
         } catch (error) {
             notification.error({ message: error.message })
-        } finally {
-            setShowModal(false)
         }
+
+        setLoading(false)
+        setShowModal(false)
     }
 
     return (
@@ -46,6 +62,7 @@ export const WebScraperModal: FunctionComponent<IProps> = (props: IProps) => {
                 okText='Scrape'
                 onCancel={handleCancel}
                 onOk={handleSubmit}
+                confirmLoading={loading}
             >
                 <Form
                     layout='horizontal'
