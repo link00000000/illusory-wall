@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react'
-import { Button, Form, Input, Radio, Select } from 'antd'
+import { Button, Form, Input, notification, Radio, Select } from 'antd'
 import { IWEnemy } from '../Utils/Models'
 import { EnemyClass } from '../Utils/Types'
 import EnemyClassDisplayNames from '../Utils/EnemyClassDisplayNames'
@@ -45,6 +45,13 @@ export const EnemyForm: FunctionComponent<IProps> = (props: IProps) => {
             case -1:
                 setModel({ ...model, respawns: null })
                 break
+        }
+    }
+
+    const handleSubmit = () => {
+        if (validate(model)) {
+            props.onSubmit && props.onSubmit(model)
+            return
         }
     }
 
@@ -161,7 +168,11 @@ export const EnemyForm: FunctionComponent<IProps> = (props: IProps) => {
                 disabled={props.loading}
             />
 
-            <Button type='primary' loading={props.loading}>
+            <Button
+                type='primary'
+                loading={props.loading}
+                onClick={handleSubmit}
+            >
                 {props.buttonText ?? 'Submit'}
             </Button>
         </Form>
@@ -184,4 +195,15 @@ const _formOffset = (): { [key: string]: number } => {
     })
 
     return obj
+}
+
+const validate = (model: IWEnemy): boolean => {
+    if (model.name.length === 0) {
+        notification.error({
+            message: 'Enemy name required'
+        })
+        return false
+    }
+
+    return true
 }
