@@ -1,9 +1,10 @@
 using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
 using System.Security.Cryptography;
-using Microsoft.AspNetCore.Authentication.jw
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Net;
@@ -35,7 +36,7 @@ namespace IllusoryWall.Controllers
             string hashed = Convert.ToBase64String(
                 KeyDerivation.Pbkdf2(
                     user.Password,
-                    foundUser.Spice,
+                    Encoding.UTF8.GetBytes(foundUser.Spice),
                     KeyDerivationPrf.HMACSHA512,
                     10000,
                     512 / 8));

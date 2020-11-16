@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace IllusoryWall.Models
 {
@@ -13,6 +14,7 @@ namespace IllusoryWall.Models
         public string Username { get; set; }
 
         [Required]
+        [JsonIgnore]
         public string Password { get; set; }
 
         [Required]
