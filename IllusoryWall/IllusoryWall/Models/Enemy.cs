@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace IllusoryWall.Models
 {
@@ -54,5 +55,29 @@ namespace IllusoryWall.Models
         /// </summary>
         [InverseProperty("Enemy")]
         public virtual ICollection<Damage> Damages { get; set; }
+    }
+
+    class PartialEnemy : Enemy
+    {
+        [JsonIgnore]
+        public new int Id { get; set; }
+
+        [JsonIgnore]
+        public override ICollection<Location> Locations { get; set; }
+
+        [JsonPropertyName("locations")]
+        public ICollection<PartialLocation> PartialLocations { get; set; }
+
+        [JsonIgnore]
+        public override ICollection<Drop> Drops { get; set; }
+
+        [JsonPropertyName("drops")]
+        public ICollection<PartialDrop> PartialDrops { get; set; }
+
+        [JsonIgnore]
+        public override ICollection<Damage> Damages { get; set; }
+
+        [JsonPropertyName("damages")]
+        public ICollection<PartialDamage> PartialDamages { get; set; }
     }
 }

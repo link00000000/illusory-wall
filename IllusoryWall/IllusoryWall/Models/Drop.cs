@@ -36,4 +36,10 @@ namespace IllusoryWall.Models
         /// </summary>
         public string Location { get; set; }
     }
+
+    class PartialDrop : Drop
+    {
+        [JsonIgnore]
+        public new int Id { get; set; }
+    }
 }

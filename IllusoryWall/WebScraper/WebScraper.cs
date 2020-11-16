@@ -12,7 +12,7 @@ namespace WebScraper
     public static class Scraper
     {
         // Scrape a page at a Url
-        public static ScraperResult scrape(Uri url)
+        public static ScraperResult Scrape(Uri url)
         {
             // Start ScrapySharp pseudo-browser
             var browser = new ScrapingBrowser();
