@@ -64,6 +64,7 @@ export const DamageList: FunctionComponent<IDamageListProps> = (
             )}
 
             <Button
+                style={{ marginBottom: '32px' }}
                 block
                 type='dashed'
                 onClick={() => {

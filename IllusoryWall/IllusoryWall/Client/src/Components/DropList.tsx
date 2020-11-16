@@ -60,6 +60,7 @@ export const DropList: FunctionComponent<IDropListProps> = (
             )}
 
             <Button
+                style={{ marginBottom: '32px' }}
                 disabled={props.disabled}
                 block
                 type='dashed'

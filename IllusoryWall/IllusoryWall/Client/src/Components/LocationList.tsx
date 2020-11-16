@@ -62,6 +62,7 @@ export const LocationList: FunctionComponent<ILocationListProps> = (
             )}
 
             <Button
+                style={{ marginBottom: '32px' }}
                 disabled={props.disabled}
                 block
                 type='dashed'
