@@ -29,4 +29,10 @@ namespace IllusoryWall.Models
         [Required]
         public char? Category { get; set; }
     }
+
+    class PartialDamage : Damage
+    {
+        [JsonIgnore]
+        public new int Id { get; set; }
+    }
 }
