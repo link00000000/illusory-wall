@@ -6,11 +6,12 @@ import EnemyClassDisplayNames from '../Utils/EnemyClassDisplayNames'
 import styles from './EnemyForm.module.css'
 import { LocationList } from './LocationList'
 import { DropList } from './DropList'
+import { DamageList } from './DamageList'
 
 interface IProps {
-    model: Partial<IWEnemy>
-    onChange: (model: Partial<IWEnemy>) => void
-    onSubmit?: (model: Partial<IWEnemy>) => void
+    model: IWEnemy
+    onChange: (model: IWEnemy) => void
+    onSubmit?: (model: IWEnemy) => void
     loading?: boolean
     buttonText?: string
 }
@@ -18,7 +19,7 @@ interface IProps {
 export const EnemyForm: FunctionComponent<IProps> = (props: IProps) => {
     EnemyForm.displayName = EnemyForm.name
 
-    const [model, setModel] = React.useState<Partial<IWEnemy>>(props.model)
+    const [model, setModel] = React.useState<IWEnemy>(props.model)
 
     const getRespawns = () => {
         switch (model.respawns) {
@@ -118,7 +119,7 @@ export const EnemyForm: FunctionComponent<IProps> = (props: IProps) => {
                     showSearch
                     disabled={props.loading}
                     value={model.class}
-                    onChange={(value) => setModel({ class: value })}
+                    onChange={(value) => setModel({ ...model, class: value })}
                     className={styles['form-input']}
                     style={{ width: '100%' }}
                 >
@@ -136,20 +137,28 @@ export const EnemyForm: FunctionComponent<IProps> = (props: IProps) => {
                     disabled={props.loading}
                     value={model.imagePath}
                     onChange={({ target: { value } }) =>
-                        setModel({ imagePath: value })
+                        setModel({ ...model, imagePath: value })
                     }
                     className={styles['form-input']}
                 />
             </label>
 
             <LocationList
-                locations={model.locations ?? []}
+                locations={model.locations}
                 onChange={(locations) => setModel({ ...model, locations })}
+                disabled={props.loading}
             />
 
             <DropList
-                drops={model.drops ?? []}
+                drops={model.drops}
                 onChange={(drops) => setModel({ ...model, drops })}
+                disabled={props.loading}
+            />
+
+            <DamageList
+                damages={model.damages}
+                onChange={(damages) => setModel({ ...model, damages })}
+                disabled={props.loading}
             />
 
             <Button type='primary' loading={props.loading}>

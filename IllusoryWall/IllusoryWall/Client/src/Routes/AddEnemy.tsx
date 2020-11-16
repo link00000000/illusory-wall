@@ -4,11 +4,12 @@ import React, { Component } from 'react'
 import * as AddEnemyAPI from '../API/AddEnemy'
 import { EnemyForm } from '../Components/EnemyForm'
 import { IWEnemy } from '../Utils/Models'
+import { DamageCategory, DamageType } from '../Utils/Types'
 
 type IProps = {}
 type IState = {
     loading: boolean
-    model: Partial<IWEnemy>
+    model: IWEnemy
 }
 
 /**
@@ -28,8 +29,10 @@ export class AddEnemy extends Component<IProps, IState> {
         this.state = {
             loading: false,
             model: {
-                locations: [{ name: 'testing', hp: 10, souls: 20 }],
-                drops: [{ name: 'test drop', location: 'nowhere', rate: 1 }]
+                name: '',
+                locations: [],
+                drops: [],
+                damages: []
             }
         }
     }
@@ -95,7 +98,7 @@ export class AddEnemy extends Component<IProps, IState> {
             <>
                 <EnemyForm
                     model={this.state.model}
-                    onChange={(model: Partial<IWEnemy>) => {
+                    onChange={(model: IWEnemy) => {
                         this.setState({ model })
                     }}
                     onSubmit={this.handleSubmit}
@@ -105,6 +108,8 @@ export class AddEnemy extends Component<IProps, IState> {
                     onClick={() => {
                         this.setState({
                             model: {
+                                name: 'Testing',
+                                description: 'this is the description',
                                 respawns: null,
                                 locations: [
                                     { name: 'test location', hp: 10, souls: 20 }
@@ -114,6 +119,12 @@ export class AddEnemy extends Component<IProps, IState> {
                                         name: 'test drop',
                                         location: 'nowhere',
                                         rate: 1
+                                    }
+                                ],
+                                damages: [
+                                    {
+                                        category: 'w' as DamageCategory,
+                                        damageType: 'frost' as DamageType
                                     }
                                 ]
                             }
