@@ -121,9 +121,12 @@ export class ModifyEnemyId extends Component<IProps, IState> {
                     <Layout>
                         <Layout.Content>
                             <EnemyForm
-                                submitText='Update Enemy'
+                                buttonText='Update Enemy'
                                 onSubmit={this.handleSubmit}
-                                initialValues={this.state.model}
+                                model={this.state.model}
+                                onChange={(newModel) =>
+                                    this.setState({ model: newModel })
+                                }
                                 loading={this.state.loading}
                             />
                         </Layout.Content>
