@@ -11,8 +11,17 @@ export async function login(credentials: Credentials): Promise<string> {
     const response = await axios({
         method: 'POST',
         url: '/user/login',
-        data: credentials
+        data: credentials,
+        validateStatus: () => true
     })
+
+    if (response.status === 400) {
+        throw Error('Could not find an account with that username and password')
+    }
+
+    if (response.status === 500) {
+        throw Error('An error has occurred, please try again later')
+    }
 
     if (response.status !== 200) {
         throw Error(response.statusText)
@@ -30,8 +39,17 @@ export async function register(credentials: Credentials): Promise<void> {
     const response = await axios({
         method: 'POST',
         url: '/user/register',
-        data: credentials
+        data: credentials,
+        validateStatus: () => true
     })
+
+    if (response.status === 401) {
+        throw Error('An account with that username already exists')
+    }
+
+    if (response.status === 500) {
+        throw Error('An error has occurred, please try again later')
+    }
 
     if (response.status !== 200) {
         throw Error(response.statusText)
