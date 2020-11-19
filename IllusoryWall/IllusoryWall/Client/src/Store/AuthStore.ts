@@ -1,4 +1,4 @@
-import { Store } from 'pullstate'
+import ps, { Store } from 'pullstate'
 
 export interface IAuthStore {
     authenticated: boolean

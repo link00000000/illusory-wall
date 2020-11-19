@@ -1,17 +1,14 @@
-import { Button, Modal, Form, Input } from 'antd'
+import { Button, Modal, Form, Input, notification } from 'antd'
 import React, { FunctionComponent } from 'react'
 import styles from './AuthenticateButton.module.css'
-
-interface Credentials {
-    username: string
-    password: string
-}
+import { Credentials } from '../Utils/AuthModels'
+import { login, register } from '../API/Auth'
 
 interface IProps {
     authenticated: boolean
     username?: string
-    onLogin?: (username: string, password: string) => void
-    onRegister?: (username: string, password: string) => void
+    onLogin?: (token: string, username: string) => void
+    onRegister?: (token: string, username: string) => void
     onLogout?: () => void
 }
 
@@ -30,18 +27,37 @@ export const AuthenticateButton: FunctionComponent<IProps> = (
         const credentials = (await loginFormRef.validateFields()) as Credentials
         loginFormRef.resetFields()
         setShowLogin(false)
+
+        try {
+            const token = await login(credentials)
+            props.onLogin && props.onLogin(token, credentials.username)
+        } catch (error) {
+            notification.error({ message: error.message })
+        }
     }
 
     const handleRegisterFormSubmit = async () => {
         const credentials = (await registerFromRef.validateFields()) as Credentials
         registerFromRef.resetFields()
         setShowRegistration(false)
+
+        try {
+            await register(credentials)
+            const token = await login(credentials)
+            props.onRegister && props.onRegister(token, credentials.username)
+        } catch (error) {
+            notification.error({ message: error.message })
+        }
+    }
+
+    const handleLogoutClick = () => {
+        props.onLogout && props.onLogout()
     }
 
     return (
         <div className={styles['authenticate-button']}>
             {props.authenticated ? (
-                <Button>Logout</Button>
+                <Button onClick={handleLogoutClick}>Logout</Button>
             ) : (
                 <>
                     <Button

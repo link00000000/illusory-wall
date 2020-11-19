@@ -21,6 +21,22 @@ export const DefaultLayout: FunctionComponent<IProps> = (
     const [collapsed, setCollapsed] = React.useState<boolean>(false)
     const auth = AuthStore.useState()
 
+    const handleAuthenticate = (token: string, username: string) => {
+        AuthStore.update((s) => {
+            s.authenticated = true
+            s.jwt = token
+            s.username = username
+        })
+    }
+
+    const handleLogout = () => {
+        AuthStore.update((s) => {
+            s.authenticated = false
+            s.jwt = ''
+            s.username = ''
+        })
+    }
+
     return (
         <div>
             <Layout
@@ -65,6 +81,9 @@ export const DefaultLayout: FunctionComponent<IProps> = (
                         >
                             <AuthenticateButton
                                 authenticated={auth.authenticated}
+                                onLogin={handleAuthenticate}
+                                onRegister={handleAuthenticate}
+                                onLogout={handleLogout}
                             />
                         </Col>
                     </Row>
