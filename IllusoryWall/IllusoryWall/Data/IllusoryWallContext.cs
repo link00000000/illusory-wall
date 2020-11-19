@@ -34,6 +34,8 @@ namespace IllusoryWall.Data
         /// </summary>
         public DbSet<Drop> Drops { get; set; }
 
+        public DbSet<User> Users { get; set; }
+
         /// <summary>
         ///     Calls when creating the models to fine tune some of the options
         /// </summary>
@@ -43,6 +45,10 @@ namespace IllusoryWall.Data
             // Make the Name attribute in the Enemy model unique
             builder.Entity<Enemy>()
                 .HasIndex(p => p.Name)
+                .IsUnique();
+
+            builder.Entity<User>()
+                .HasIndex(p => p.Username)
                 .IsUnique();
 
             // Make foreign keys optional but cascade on delete
