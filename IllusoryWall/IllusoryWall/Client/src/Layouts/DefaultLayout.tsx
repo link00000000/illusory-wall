@@ -1,9 +1,10 @@
 import { Col, Layout, Row } from 'antd'
-import React, { Component, FunctionComponent } from 'react'
+import React, { FunctionComponent } from 'react'
 import { AuthenticateButton } from '../Components/AuthenticateButton'
 import { EnemySearch } from '../Components/EnemySearch'
 import { NavigationMenu } from '../Components/NavigationMenu'
 import styles from './DefaultLayout.module.css'
+import { AuthStore } from '../Store/AuthStore'
 
 type IProps = {
     disableSearch?: boolean
@@ -18,6 +19,7 @@ export const DefaultLayout: FunctionComponent<IProps> = (
     DefaultLayout.displayName = DefaultLayout.name
 
     const [collapsed, setCollapsed] = React.useState<boolean>(false)
+    const auth = AuthStore.useState()
 
     return (
         <div>
@@ -61,7 +63,9 @@ export const DefaultLayout: FunctionComponent<IProps> = (
                             xs={{ span: 7, offset: 2 }}
                             className={styles['authenticate-button']}
                         >
-                            <AuthenticateButton authenticated={true} />
+                            <AuthenticateButton
+                                authenticated={auth.authenticated}
+                            />
                         </Col>
                     </Row>
                 </Layout.Header>
