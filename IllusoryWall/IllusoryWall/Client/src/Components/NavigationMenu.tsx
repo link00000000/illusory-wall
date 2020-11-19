@@ -7,19 +7,14 @@ import {
     PlusOutlined
 } from '@ant-design/icons'
 import { Menu } from 'antd'
-import React, { Component, FunctionComponent } from 'react'
+import React, { FunctionComponent } from 'react'
 import { NavLink, RouteComponentProps, withRouter } from 'react-router-dom'
 import { Logo } from './Logo'
 import { AuthStore } from '../Store/AuthStore'
+import { AuthorizationLevel } from '../Utils/AuthModels'
 
 interface IProps extends RouteComponentProps {
     collapsed?: boolean
-}
-
-enum AuthorizationLevel {
-    None = 0,
-    User = 1,
-    Admin = 2
 }
 
 const navigationItems: {
