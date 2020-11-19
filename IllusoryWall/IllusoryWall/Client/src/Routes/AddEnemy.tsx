@@ -14,6 +14,8 @@ type IProps = {}
 const messageDuration = 2
 
 export const AddEnemy: FunctionComponent<IProps> = (props: IProps) => {
+    AddEnemy.displayName = AddEnemy.name
+
     const [loading, setLoading] = React.useState<boolean>(false)
     const [model, setModel] = React.useState<IWEnemy>({
         name: '',
