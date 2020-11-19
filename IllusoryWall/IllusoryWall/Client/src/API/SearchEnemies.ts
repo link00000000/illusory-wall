@@ -1,6 +1,7 @@
 import { EnemyClass } from './../Utils/Types'
 import axios from 'axios'
 import { EnemyEntry } from '../Utils/Models'
+import * as FetchEntries from './FetchEntries'
 
 const ENDPOINT = '/enemy/search'
 

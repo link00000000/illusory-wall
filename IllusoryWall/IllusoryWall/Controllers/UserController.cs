@@ -91,11 +91,6 @@ namespace IllusoryWall.Controllers
         [Route("Register")]
         public IActionResult Register(UserAuthenticate user)
         {
-            if (_context.Users.Where(u => u.Username == user.Username).Any())
-            {
-                return Unauthorized("An account with that username already exists");
-            }
-
             User newUser = new User();
             newUser.Username = user.Username;
 
