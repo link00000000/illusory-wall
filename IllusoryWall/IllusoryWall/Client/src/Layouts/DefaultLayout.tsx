@@ -1,4 +1,4 @@
-import { Col, Layout, Row } from 'antd'
+import { Col, Layout, notification, Row } from 'antd'
 import React, { FunctionComponent } from 'react'
 import { AuthenticateButton } from '../Components/AuthenticateButton'
 import { EnemySearch } from '../Components/EnemySearch'
@@ -25,16 +25,16 @@ export const DefaultLayout: FunctionComponent<IProps> = (
         AuthStore.update((s) => {
             s.authenticated = true
             s.jwt = token
-            s.username = username
         })
+        notification.info({ message: 'Logged in as ' + username })
     }
 
     const handleLogout = () => {
         AuthStore.update((s) => {
             s.authenticated = false
-            s.jwt = ''
-            s.username = ''
         })
+
+        notification.info({ message: 'Logged out successfully' })
     }
 
     return (
