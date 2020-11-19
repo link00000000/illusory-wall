@@ -9,7 +9,7 @@ import {
     Typography
 } from 'antd'
 import React, { FunctionComponent } from 'react'
-import { EnemyState, ViewEnemiesStore } from '../Store/ViewEnemiesStore'
+import { IEnemyState, ViewEnemiesStore } from '../Store/ViewEnemiesStore'
 import DamageCategoryDisplayNames from '../Utils/DamageCategoryDisplayNames'
 import DamageTypeDisplayNames from '../Utils/DamageTypeDisplayNames'
 import EnemyClassDisplayNames from '../Utils/EnemyClassDisplayNames'
@@ -111,7 +111,7 @@ export const EnemyCard: FunctionComponent<IProps> = (props: IProps) => {
     )
 
     const viewEnemiesStoreState = ViewEnemiesStore.useState((s) => s.enemies)
-    const [viewEnemiesState, setViewEnemiesState] = React.useState<EnemyState>(
+    const [viewEnemiesState, setViewEnemiesState] = React.useState<IEnemyState>(
         viewEnemiesStoreState
     )
 

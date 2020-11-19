@@ -1,5 +1,6 @@
 import { Col, Layout, Row } from 'antd'
 import React, { Component } from 'react'
+import { AuthenticateButton } from '../Components/AuthenticateButton'
 import { EnemySearch } from '../Components/EnemySearch'
 import { NavigationMenu } from '../Components/NavigationMenu'
 import styles from './DefaultLayout.module.css'
@@ -40,6 +41,7 @@ export class DefaultLayout extends Component<IProps, IState> {
                         collapsible
                         collapsed={this.state.collapsed}
                         onCollapse={this.handleCollapse}
+                        breakpoint='lg'
                     >
                         <NavigationMenu collapsed={this.state.collapsed} />
                     </Layout.Sider>
@@ -51,10 +53,26 @@ export class DefaultLayout extends Component<IProps, IState> {
                         }
                     >
                         <Row>
-                            <Col span={12} offset={6}>
+                            <Col
+                                xxl={{ span: 12, offset: 6 }}
+                                xl={{ span: 14, offset: 5 }}
+                                lg={{ span: 14, offset: 3 }}
+                                md={{ span: 14, offset: 2 }}
+                                xs={{ span: 14, offset: 1 }}
+                            >
                                 <EnemySearch
                                     disabled={this.props.disableSearch}
                                 />
+                            </Col>
+                            <Col
+                                xxl={{ span: 3, offset: 3 }}
+                                xl={{ span: 4, offset: 1 }}
+                                lg={{ span: 5, offset: 2 }}
+                                md={{ span: 6, offset: 2 }}
+                                xs={{ span: 7, offset: 2 }}
+                                className={styles['authenticate-button']}
+                            >
+                                <AuthenticateButton authenticated={true} />
                             </Col>
                         </Row>
                     </Layout.Header>
