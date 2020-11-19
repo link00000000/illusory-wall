@@ -1,17 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using IllusoryWall.Data;
 using IllusoryWall.Models;
+using Microsoft.AspNetCore.Authorization;
+using IllusoryWall.Utils;
 
 namespace IllusoryWall.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class EnemyController : ControllerBase
+    public class EnemyController : IWControllerBase
     {
         private readonly IllusoryWallContext _context;
 
@@ -35,10 +35,15 @@ namespace IllusoryWall.Controllers
             return Ok(enemy);
         }
 
+        [Authorize]
         [HttpPost]
         [Route("Add")]
         public IActionResult AddEnemy(Enemy enemy)
         {
+            if (!IsAdmin())
+            {
+                return StatusCode((int)HttpStatusCode.Unauthorized);
+            }
 
             // add enemy and save changes
             _context.Enemies.Add(enemy);
@@ -62,10 +67,16 @@ namespace IllusoryWall.Controllers
             return StatusCode(500);
         }
 
+        [Authorize]
         [HttpDelete]
         [Route("Remove/{id}")]
         public IActionResult RemoveEnemy(int id)
         {
+            if (!IsAdmin())
+            {
+                return StatusCode((int)HttpStatusCode.Unauthorized);
+            }
+
             // add enemy and save changes
             Enemy enemy = _context.Enemies.Find(id);
 
@@ -93,10 +104,16 @@ namespace IllusoryWall.Controllers
             return StatusCode(500);
         }
 
+        [Authorize]
         [HttpPut]
         [Route("Update/{id}")]
         public IActionResult UpdateEnemy(Enemy newEnemy, int id)
         {
+            if (!IsAdmin())
+            {
+                return StatusCode((int)HttpStatusCode.Unauthorized);
+            }
+
             // get outdated enemy entry
             Enemy enemy = _context.Enemies.Find(id);
 
@@ -158,7 +175,7 @@ namespace IllusoryWall.Controllers
         (
             [FromQuery] string name = null,
             [FromQuery(Name = "use_respawns")] bool useRespawns = false,
-            [FromQuery] bool? respawns = null, 
+            [FromQuery] bool? respawns = null,
             [FromQuery(Name = "use_class")] bool useClass = false,
             [FromQuery] string classification = null,
             [FromQuery(Name = "hp_null")] bool HpNull = false,
@@ -182,23 +199,23 @@ namespace IllusoryWall.Controllers
             var response = _context.Enemies.AsQueryable();
 
             // Enemies.Name
-            if(name != null && name.Length > 0)
+            if (name != null && name.Length > 0)
             {
                 response = response.Where(e => e.Name.Contains(name));
                 send = true;
             }
-            
+
             // Enemies.Respawns
-            if(useRespawns)
+            if (useRespawns)
             {
                 response = response.Where(e => e.Respawns == respawns);
                 send = true;
             }
 
             // Enemies.Class
-            if(useClass)
+            if (useClass)
             {
-                if(classification == "generic" || classification == "boss" || classification == "npc" || classification == "invader" || classification == null)
+                if (classification == "generic" || classification == "boss" || classification == "npc" || classification == "invader" || classification == null)
                 {
                     response = response.Where(e => e.Class == classification);
                     send = true;
@@ -210,7 +227,7 @@ namespace IllusoryWall.Controllers
             }
 
             // Enemies.Locations.Name
-            if(locname != null)
+            if (locname != null)
             {
                 response = response.Where(e => e.Locations.Any(l => l.Name.Contains(locname)));
                 send = true;
@@ -218,20 +235,20 @@ namespace IllusoryWall.Controllers
 
             // Enemies.Locations.HP
             // All varitons of HP can be achieved with these ranges (such as ==, !=, >, and <)
-            if(!HpNull && (hplt != null || hpgt != null))
+            if (!HpNull && (hplt != null || hpgt != null))
             {
-                if(hplt != null)
+                if (hplt != null)
                 {
                     response = response.Where(e => e.Locations.Any(l => l.HP <= hplt));
                     send = true;
                 }
-                if(hpgt != null)
+                if (hpgt != null)
                 {
                     response = response.Where(e => e.Locations.Any(l => l.HP >= hpgt));
                     send = true;
                 }
             }
-            else if(HpNull)
+            else if (HpNull)
             {
                 response = response.Where(e => e.Locations.Any(l => l.HP == null));
                 send = true;
@@ -239,34 +256,34 @@ namespace IllusoryWall.Controllers
 
             // Enemies.Locations.Souls
             // All varitons of Souls can be achieved with these ranges (such as ==, !=, >, and <)
-            if(!SoulsNull && (soulslt != null || soulsgt != null))
+            if (!SoulsNull && (soulslt != null || soulsgt != null))
             {
-                if(soulslt != null)
+                if (soulslt != null)
                 {
                     response = response.Where(e => e.Locations.Any(l => l.Souls <= soulslt));
                     send = true;
                 }
-                if(soulsgt != null)
+                if (soulsgt != null)
                 {
                     response = response.Where(e => e.Locations.Any(l => l.Souls >= soulsgt));
                     send = true;
                 }
             }
-            else if(SoulsNull)
+            else if (SoulsNull)
             {
                 response = response.Where(e => e.Locations.Any(l => l.Souls == null));
                 send = true;
             }
 
             // Enemies.Drops.Name
-            if(dropname != null)
+            if (dropname != null)
             {
                 response = response.Where(e => e.Drops.Any(d => d.Name.Contains(dropname)));
                 send = true;
             }
 
             // Enemies.Drops.Location
-            if(droploc != null)
+            if (droploc != null)
             {
                 response = response.Where(e => e.Drops.Any(d => d.Location.Contains(droploc)));
                 send = true;
@@ -274,29 +291,29 @@ namespace IllusoryWall.Controllers
 
             // Enemies.Drops.Rate
             // All varitons of Souls can be achieved with these ranges (such as ==, !=, >, and <)
-            if(!RateNull && (ratelt != null || rategt != null))
+            if (!RateNull && (ratelt != null || rategt != null))
             {
-                if(ratelt != null)
+                if (ratelt != null)
                 {
                     response = response.Where(e => e.Drops.Any(d => d.Rate <= ratelt));
                     send = true;
                 }
-                if(rategt != null)
+                if (rategt != null)
                 {
                     response = response.Where(e => e.Drops.Any(d => d.Rate >= rategt));
                     send = true;
                 }
             }
-            else if(RateNull)
+            else if (RateNull)
             {
                 response = response.Where(e => e.Drops.Any(d => d.Rate == null));
                 send = true;
             }
-            
+
             // Enemies.Damages.DamageType
-            if(damagetype != null)
+            if (damagetype != null)
             {
-                if(damagetype == "lightning" || damagetype == "poison" || damagetype == "frost" || damagetype == "bleed" 
+                if (damagetype == "lightning" || damagetype == "poison" || damagetype == "frost" || damagetype == "bleed"
                     || damagetype == "physical" || damagetype == "fire" || damagetype == "magic" || damagetype == "thrust"
                     || damagetype == "slash" || damagetype == "strike")
                 {
@@ -310,9 +327,9 @@ namespace IllusoryWall.Controllers
             }
 
             // Enemies.Damages.Category
-            if(category != null)
+            if (category != null)
             {
-                if(category == 'i' || category == 'r' || category == 'w')
+                if (category == 'i' || category == 'r' || category == 'w')
                 {
                     response = response.Where(e => e.Damages.Any(d => d.Category == category));
                     send = true;
@@ -323,8 +340,8 @@ namespace IllusoryWall.Controllers
                 }
             }
 
-        
-            if(send)
+
+            if (send)
             {
                 return Ok(response
                     .Select(e => new EnemyEntry()

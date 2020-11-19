@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Linq;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
@@ -14,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using IllusoryWall.Data;
 using IllusoryWall.Models;
+using IllusoryWall.Utils;
 
 namespace IllusoryWall.Controllers
 {
@@ -62,7 +61,7 @@ namespace IllusoryWall.Controllers
                     issuer: Configuration.GetValue<string>("ValidIssuer"),
                     audience: Configuration.GetValue<string>("ValidAudience"),
 
-                    claims: new List<Claim>() { new Claim("Username", foundUser.Username), new Claim("Account Type", "admin") },
+                    claims: new List<Claim>() { new Claim("Username", foundUser.Username), new Claim("Account Type", AccountType.Admin) },
 
                     expires: DateTime.Now.AddYears(1),
                     signingCredentials: signingCredentials
@@ -74,7 +73,7 @@ namespace IllusoryWall.Controllers
                     issuer: Configuration.GetValue<string>("ValidIssuer"),
                     audience: Configuration.GetValue<string>("ValidAudience"),
 
-                    claims: new List<Claim>() { new Claim("Username", foundUser.Username), new Claim("Account Type", "general") },
+                    claims: new List<Claim>() { new Claim("Username", foundUser.Username), new Claim("Account Type", AccountType.General) },
 
                     expires: DateTime.Now.AddYears(1),
                     signingCredentials: signingCredentials
