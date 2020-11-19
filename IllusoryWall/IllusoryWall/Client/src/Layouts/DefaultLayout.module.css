@@ -20,6 +20,7 @@
     padding-left: 0;
     padding-right: 0;
     background-color: #ffffff;
+    min-width: 675px;
 }
 
 .layout-header-collapsed {
@@ -29,6 +30,7 @@
     padding-left: 0;
     padding-right: 0;
     background-color: #ffffff;
+    min-width: 675px;
 }
 
 .layout-sider {
