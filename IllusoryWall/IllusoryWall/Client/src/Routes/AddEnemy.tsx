@@ -1,74 +1,37 @@
 import { notification } from 'antd'
 import { ArgsProps } from 'antd/lib/notification'
-import React, { Component } from 'react'
+import React, { FunctionComponent } from 'react'
 import * as AddEnemyAPI from '../API/AddEnemy'
 import { EnemyForm } from '../Components/EnemyForm'
 import { WebScraperModal } from '../Components/WebScraperModal'
 import { IWEnemy } from '../Utils/Models'
-import { DamageCategory, DamageType } from '../Utils/Types'
+import { AuthStore } from '../Store/AuthStore'
+import { Redirect } from 'react-router-dom'
+import { AuthorizationLevel } from '../Utils/AuthModels'
 
 type IProps = {}
-type IState = {
-    loading: boolean
-    model: IWEnemy
-}
 
-/**
- * /add-enemy route
- */
-export class AddEnemy extends Component<IProps, IState> {
-    static displayName = AddEnemy.name
-    private readonly _messageDuration = 2
+const messageDuration = 2
 
-    constructor(props: IProps) {
-        super(props)
+export const AddEnemy: FunctionComponent<IProps> = (props: IProps) => {
+    const [loading, setLoading] = React.useState<boolean>(false)
+    const [model, setModel] = React.useState<IWEnemy>({
+        name: '',
+        locations: [],
+        drops: [],
+        damages: []
+    })
+    const [authenticated, level] = AuthStore.useState((s) => [
+        s.authenticated,
+        s.level
+    ])
 
-        this.handleSubmit = this.handleSubmit.bind(this)
-        this.showError = this.showError.bind(this)
-        this.showSuccess = this.showSuccess.bind(this)
-
-        this.state = {
-            loading: false,
-            model: {
-                name: '',
-                locations: [],
-                drops: [],
-                damages: []
-            }
-        }
-    }
-
-    /**
-     * Add enemy to database
-     * @param model Enemy model
-     */
-    private async handleSubmit(model: Partial<IWEnemy>): Promise<void> {
-        this.setState({ loading: true })
-
-        if (model.name === undefined) {
-            return
-        }
-
-        const error = await AddEnemyAPI.commit(model as IWEnemy)
-        if (error) {
-            this.showError(error)
-            return
-        }
-
-        this.showSuccess()
-    }
-
-    /**
-     * Displays any errors that occur when submitting
-     * the AddEnemyForm
-     * @param error Error when submitting AddEnemyForm
-     */
-    private showError(error?: Error): void {
-        this.setState({ loading: false })
+    const showError = (error?: Error): void => {
+        setLoading(false)
 
         const notificationArgs: ArgsProps = {
             message: 'Failed to create new enemy',
-            duration: this._messageDuration
+            duration: messageDuration
         }
 
         if (error) {
@@ -79,45 +42,57 @@ export class AddEnemy extends Component<IProps, IState> {
         notification.error(notificationArgs)
     }
 
-    /**
-     * Shows success message if AddEnemyForm submits without
-     * errors
-     */
-    private showSuccess(): void {
-        this.setState({ loading: false })
+    const handleSubmit = async (model: Partial<IWEnemy>): Promise<void> => {
+        setLoading(true)
+
+        if (model.name === undefined) {
+            return
+        }
+
+        const error = await AddEnemyAPI.commit(model as IWEnemy)
+        if (error) {
+            showError(error)
+            return
+        }
+
+        showSuccess()
+    }
+
+    const showSuccess = (): void => {
+        setLoading(false)
 
         const notificationArgs: ArgsProps = {
             message: 'Created new enemy successfully',
-            duration: this._messageDuration
+            duration: messageDuration
         }
 
         notification.success(notificationArgs)
     }
 
-    render() {
-        return (
-            <>
-                <div
-                    style={{
-                        maxWidth: '500px',
-                        margin: '0 auto',
-                        display: 'flex',
-                        justifyContent: 'flex-end'
-                    }}
-                >
-                    <WebScraperModal
-                        onSubmit={(model) => this.setState({ model })}
-                    />
-                </div>
-                <EnemyForm
-                    model={this.state.model}
-                    onChange={(model: IWEnemy) => {
-                        this.setState({ model })
-                    }}
-                    onSubmit={this.handleSubmit}
-                    loading={this.state.loading}
-                />
-            </>
-        )
+    if (!(authenticated && level === AuthorizationLevel.Admin)) {
+        return <Redirect to='/' />
     }
+
+    return (
+        <>
+            <div
+                style={{
+                    maxWidth: '500px',
+                    margin: '0 auto',
+                    display: 'flex',
+                    justifyContent: 'flex-end'
+                }}
+            >
+                <WebScraperModal onSubmit={(model) => setModel(model)} />
+            </div>
+            <EnemyForm
+                model={model}
+                onChange={(model: IWEnemy) => {
+                    setModel(model)
+                }}
+                onSubmit={handleSubmit}
+                loading={loading}
+            />
+        </>
+    )
 }
