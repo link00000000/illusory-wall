@@ -51,21 +51,35 @@ namespace IllusoryWall.Controllers
                 return BadRequest(new { message = "Incorrect Password" });
 
             // Create JWT
-            var secretKey = new SymmetricSecurityKey( // This value MUST match the same value in Startup.cs
+            var secretKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(Configuration.GetValue<string>("SecretKey")));
             var signingCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
-            var tokenOptions = new JwtSecurityToken(
-                issuer: Configuration.GetValue<string>("ValidIssuer"), // Must match Startup.cs
-                audience: Configuration.GetValue<string>("ValidAudience"), // Must match Startup.cs
+            JwtSecurityToken tokenOptions;
+            if (foundUser.Type == 'a')
+            {
+                tokenOptions = new JwtSecurityToken(
+                    issuer: Configuration.GetValue<string>("ValidIssuer"),
+                    audience: Configuration.GetValue<string>("ValidAudience"),
 
-                // Store the username as a JWT Claim (refer to RFC Specification: https://tools.ietf.org/html/rfc7519#section-4)
-                claims: new List<Claim>() { new Claim("Username", user.Username) },
+                    claims: new List<Claim>() { new Claim("Username", foundUser.Username), new Claim("Account Type", "admin") },
 
-                // I made this value really long so the token wont expire, this way we dont have to worry about refreshing tokens
-                expires: DateTime.Now.AddYears(1),
-                signingCredentials: signingCredentials
-            );
+                    expires: DateTime.Now.AddYears(1),
+                    signingCredentials: signingCredentials
+                );
+            }
+            else
+            {
+                tokenOptions = new JwtSecurityToken(
+                    issuer: Configuration.GetValue<string>("ValidIssuer"),
+                    audience: Configuration.GetValue<string>("ValidAudience"),
+
+                    claims: new List<Claim>() { new Claim("Username", foundUser.Username), new Claim("Account Type", "general") },
+
+                    expires: DateTime.Now.AddYears(1),
+                    signingCredentials: signingCredentials
+                );
+            }
 
             // Return stringified JWT to client
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
