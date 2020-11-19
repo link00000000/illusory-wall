@@ -9,16 +9,12 @@ import { ModifyEnemyId } from './Routes/ModifyEnemyId'
 import { RemoveEnemy } from './Routes/RemoveEnemy'
 import { ViewEnemy } from './Routes/ViewEnemy'
 
-const SearchableRoutes = ['/', '/comparison']
-
 function App() {
     const location = useLocation()
 
     return (
         <div className='App'>
-            <DefaultLayout
-                disableSearch={!SearchableRoutes.includes(location.pathname)}
-            >
+            <DefaultLayout disableSearch={location.pathname != '/'}>
                 <Switch>
                     <Route exact path='/' component={ViewEnemy} />
                     <Route exact path='/add' component={AddEnemy} />

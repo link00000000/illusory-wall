@@ -3,7 +3,15 @@ import {
     CloseOutlined,
     PlusOutlined
 } from '@ant-design/icons'
-import { AutoComplete, Button, notification, Radio, Select, Slider } from 'antd'
+import {
+    AutoComplete,
+    Button,
+    notification,
+    Radio,
+    Select,
+    Slider,
+    Form
+} from 'antd'
 import React, { FunctionComponent } from 'react'
 import { fetch } from '../API/FetchEnemy'
 import { fetch as fetchAll } from '../API/FetchEntries'
