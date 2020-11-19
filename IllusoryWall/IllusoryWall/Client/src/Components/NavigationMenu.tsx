@@ -83,7 +83,10 @@ const _NavigationMenu: FunctionComponent<IProps> = (props: IProps) => {
                             case AuthorizationLevel.User:
                                 return auth.authenticated
                             case AuthorizationLevel.Admin:
-                                return auth.authenticated // @FIXME Check if authenticated user is admin
+                                return (
+                                    auth.authenticated &&
+                                    auth.level === AuthorizationLevel.Admin
+                                )
                         }
                     })
                     .map(([displayName, { route, icon }]) => (
