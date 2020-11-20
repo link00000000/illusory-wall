@@ -34,7 +34,6 @@ export async function commit(
 
         return null
     } catch (error) {
-        console.error(error)
         return error
     }
 }
