@@ -8,13 +8,24 @@ const ENDPOINT = '/enemy/add'
  * Add new enemy to database
  * @param model New enemy model to add to database
  */
-export async function commit(model: IWEnemy): Promise<Error | null> {
+export async function commit(
+    model: IWEnemy,
+    token?: string
+): Promise<Error | null> {
     try {
         const response = await axios({
             method: 'POST',
             url: ENDPOINT,
-            data: Nullify(model)
+            data: Nullify(model),
+            headers: {
+                Authorization: 'Bearer ' + token
+            },
+            validateStatus: () => true
         })
+
+        if (response.status === 401) {
+            return Error('Not authorized')
+        }
 
         if (response.status !== 200) {
             return Error(response.statusText)
@@ -22,7 +33,6 @@ export async function commit(model: IWEnemy): Promise<Error | null> {
 
         return null
     } catch (error) {
-        console.error(error)
         return error
     }
 }
