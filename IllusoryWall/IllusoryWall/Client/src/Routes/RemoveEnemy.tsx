@@ -1,26 +1,29 @@
 import { Col, Row } from 'antd'
-import React, { Component } from 'react'
+import React, { FunctionComponent } from 'react'
+import { Redirect } from 'react-router-dom'
 import { RemoveEnemyInput } from '../Components/RemoveEnemyInput'
+import { AuthStore } from '../Store/AuthStore'
+import { AuthorizationLevel } from '../Utils/AuthModels'
 
 type IProps = {}
-type IState = {}
 
-export class RemoveEnemy extends Component<IProps, IState> {
-    static displayName = RemoveEnemy.name
+export const RemoveEnemy: FunctionComponent<IProps> = (props: IProps) => {
+    RemoveEnemy.displayName = RemoveEnemy.name
 
-    constructor(props: IProps) {
-        super(props)
+    const [authenticated, level] = AuthStore.useState((s) => [
+        s.authenticated,
+        s.level
+    ])
 
-        this.state = {}
+    if (!(authenticated && level === AuthorizationLevel.Admin)) {
+        return <Redirect to='/' />
     }
 
-    render() {
-        return (
-            <Row justify='center'>
-                <Col sm={24} md={24} lg={12} xl={12} xxl={8}>
-                    <RemoveEnemyInput />
-                </Col>
-            </Row>
-        )
-    }
+    return (
+        <Row justify='center'>
+            <Col sm={24} md={24} lg={12} xl={12} xxl={8}>
+                <RemoveEnemyInput />
+            </Col>
+        </Row>
+    )
 }
