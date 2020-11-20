@@ -1,139 +1,110 @@
-import { Layout, notification } from 'antd'
-import { ArgsProps } from 'antd/lib/notification'
-import React, { Component } from 'react'
-import { RouteComponentProps } from 'react-router-dom'
+import React, { FunctionComponent } from 'react'
+import { Redirect, RouteComponentProps, useHistory } from 'react-router-dom'
+import { IWEnemy } from '../Utils/Models'
 import * as FetchEnemyAPI from '../API/FetchEnemy'
 import * as ModifyEnemyAPI from '../API/ModifyEnemy'
+import { Layout, notification } from 'antd'
+import { ArgsProps } from 'antd/lib/notification'
 import { EnemyForm } from '../Components/EnemyForm'
-import { IWEnemy } from '../Utils/Models'
+import { AuthStore } from '../Store/AuthStore'
+import { AuthorizationLevel } from '../Utils/AuthModels'
 
 interface IMatchParams {
     id: string
 }
 interface IProps extends RouteComponentProps<IMatchParams> {}
-type IState = {
-    loading: boolean
-    id: number
-    model?: IWEnemy
-}
 
-export class ModifyEnemyId extends Component<IProps, IState> {
-    static displayName = ModifyEnemyId.name
-    private readonly _messageDuration = 2
+export const ModifyEnemyId: FunctionComponent<IProps> = (props: IProps) => {
+    ModifyEnemyId.displayName = ModifyEnemyId.name
 
-    constructor(props: IProps) {
-        super(props)
+    const history = useHistory()
 
-        this.handleSubmit = this.handleSubmit.bind(this)
-        this.showError = this.showError.bind(this)
-        this.showSuccess = this.showSuccess.bind(this)
+    const [loading, setLoading] = React.useState<boolean>(false)
+    const [id, setId] = React.useState<number>(-1)
+    const [model, setModel] = React.useState<IWEnemy | undefined>()
+    const [authenticated, level] = AuthStore.useState((s) => [
+        s.authenticated,
+        s.level
+    ])
 
-        this.state = {
-            loading: false,
-            id: -1
-        }
-    }
+    const handleSubmit = async (enemy: IWEnemy): Promise<void> => {
+        setLoading(true)
 
-    /**
-     * Fetch the enemy id from the route.
-     * If no valid id specified, redirect
-     */
-    async componentDidMount() {
-        const idString = this.props.match.params.id
-
-        if (!idString) {
-            this.props.history.replace('/')
-        }
-
-        const id = parseInt(idString)
-        if (Number.isNaN(id)) {
-            this.props.history.replace('/')
-        }
-
-        try {
-            const model = await FetchEnemyAPI.fetch(id)
-            this.setState({ id, model })
-
-            return
-        } catch (_error) {
-            this.props.history.replace('/')
-        }
-
-        this.props.history.replace('/')
-    }
-
-    /**
-     * Update enemy in database
-     * @param model Enemy model
-     */
-    private async handleSubmit(model: IWEnemy): Promise<void> {
-        this.setState({ loading: true })
-
-        const error = await ModifyEnemyAPI.commit(this.state.id, model)
+        const error = await ModifyEnemyAPI.commit(id, enemy)
         if (error) {
-            this.showError(error)
+            showError(error)
             return
         }
 
-        this.showSuccess()
+        showSuccess()
     }
 
-    /**
-     * Displays any errors that occur when submitting
-     * the AddEnemyForm
-     * @param error Error when submitting AddEnemyForm
-     */
-    private showError(error?: Error): void {
-        this.setState({ loading: false })
+    const showError = (error?: Error) => {
+        setLoading(false)
 
         const notificationArgs: ArgsProps = {
-            message: 'Failed to modify enemy',
-            duration: this._messageDuration
+            message: 'Failed to modify enemy'
         }
 
         if (error) {
-            error.name = ''
-            notificationArgs['description'] = error.toString()
+            notificationArgs['description'] = error.message
         }
 
         notification.error(notificationArgs)
     }
 
-    /**
-     * Shows success message if AddEnemyForm submits without
-     * errors
-     */
-    private showSuccess(): void {
-        this.setState({ loading: false })
+    const showSuccess = () => {
+        setLoading(false)
 
         const notificationArgs: ArgsProps = {
-            message: 'Modified enemy successfully',
-            duration: this._messageDuration
+            message: 'Modified enemy successfully'
         }
 
         notification.success(notificationArgs)
     }
 
-    render() {
-        if (this.state.model) {
-            return (
-                <>
-                    <Layout>
-                        <Layout.Content>
-                            <EnemyForm
-                                buttonText='Update Enemy'
-                                onSubmit={this.handleSubmit}
-                                model={this.state.model}
-                                onChange={(newModel) =>
-                                    this.setState({ model: newModel })
-                                }
-                                loading={this.state.loading}
-                            />
-                        </Layout.Content>
-                    </Layout>
-                </>
-            )
+    React.useEffect(() => {
+        const idString = props.match.params.id
+
+        if (!idString) {
+            history.replace('/')
         }
-        return <></>
+
+        const id = parseInt(idString)
+        if (Number.isNaN(id)) {
+            history.replace('/')
+        }
+
+        FetchEnemyAPI.fetch(id)
+            .then((model) => {
+                setId(id)
+                setModel(model)
+            })
+            .catch((_error) => {
+                history.replace('/')
+            })
+    }, [])
+
+    if (!(authenticated && level == AuthorizationLevel.Admin)) {
+        return <Redirect to='/' />
     }
+
+    if (model) {
+        return (
+            <>
+                <Layout>
+                    <Layout.Content>
+                        <EnemyForm
+                            buttonText='Update Enemy'
+                            onSubmit={handleSubmit}
+                            model={model}
+                            onChange={(newModel) => setModel(newModel)}
+                            loading={loading}
+                        />
+                    </Layout.Content>
+                </Layout>
+            </>
+        )
+    }
+    return <></>
 }
