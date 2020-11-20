@@ -23,6 +23,17 @@ namespace IllusoryWall.Utils
             if (accountTypeClaim.Value == AccountType.General) return false;
             throw new InvalidJWTException();
         }
+
+        public string Username()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity == null) throw new InvalidJWTException();
+
+            var usernameClaim = identity.FindFirst("Username");
+            if (usernameClaim == null) throw new InvalidJWTException();
+
+            return usernameClaim.Value;
+        }
     }
 
     [System.Serializable]

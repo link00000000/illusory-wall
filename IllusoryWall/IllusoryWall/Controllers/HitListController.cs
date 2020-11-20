@@ -1,25 +1,17 @@
 using System;
-using System.Text;
 using System.Collections.Generic;
-using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Linq;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 using IllusoryWall.Data;
 using IllusoryWall.Models;
+using IllusoryWall.Utils;
 
 namespace IllusoryWall.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class HitListController : ControllerBase
+    public class HitListController : IWControllerBase
     {
         private readonly IllusoryWallContext _context;
         public IConfiguration Configuration { get; }
