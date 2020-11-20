@@ -36,6 +36,8 @@ namespace IllusoryWall.Data
 
         public DbSet<User> Users { get; set; }
 
+        public DbSet<HitList> HitLists { get; set; }
+
         /// <summary>
         ///     Calls when creating the models to fine tune some of the options
         /// </summary>
