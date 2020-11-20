@@ -27,6 +27,7 @@ export const AddEnemy: FunctionComponent<IProps> = (props: IProps) => {
         s.authenticated,
         s.level
     ])
+    const token = AuthStore.useState((s) => s.jwt)
 
     const showError = (error?: Error): void => {
         setLoading(false)
@@ -51,7 +52,7 @@ export const AddEnemy: FunctionComponent<IProps> = (props: IProps) => {
             return
         }
 
-        const error = await AddEnemyAPI.commit(model as IWEnemy)
+        const error = await AddEnemyAPI.commit(model as IWEnemy, token)
         if (error) {
             showError(error)
             return
