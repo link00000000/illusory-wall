@@ -26,11 +26,12 @@ export const ModifyEnemyId: FunctionComponent<IProps> = (props: IProps) => {
         s.authenticated,
         s.level
     ])
+    const token = AuthStore.useState((s) => s.jwt)
 
     const handleSubmit = async (enemy: IWEnemy): Promise<void> => {
         setLoading(true)
 
-        const error = await ModifyEnemyAPI.commit(id, enemy)
+        const error = await ModifyEnemyAPI.commit(id, enemy, token)
         if (error) {
             showError(error)
             return
