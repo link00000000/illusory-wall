@@ -109,25 +109,26 @@ namespace IllusoryWall.Controllers
                 return StatusCode((int)HttpStatusCode.RequestedRangeNotSatisfiable,
                     "More enemies requested than available");
 
-
+            // Create empty hitlist and add it to the database
             var hitlist = _context.HitLists
                 .Add(new HitList() { Status = false })
                 .Entity;
 
-            // Generate random list of enemies and join with hitlist
-            var enemies = _context.Enemies
+            // Generate random list of enemies and join with new hitlist
+            _context.Enemies
                 .Shuffle()
                 .Take(size)
-                .Select(e =>
+                .ToList()
+                .ForEach(e =>
+                {
                     _context.EnemyHitListJoins.Add(new EnemyHitListJoin()
                     {
                         Enemy = e,
                         EnemyId = e.Id,
                         HitList = hitlist,
                         HitListId = hitlist.Id
-                    }).Entity
-                )
-                .ToList();
+                    });
+                });
 
             // Add hitlist to user
             if (user.Hitlists == null)
