@@ -4,11 +4,13 @@ using System.Text;
 using IllusoryWall.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace IllusoryWall.Data {
+namespace IllusoryWall.Data
+{
     /// <summary>
     ///     Class for the context of the database
     /// </summary>
-    public class IllusoryWallContext : DbContext {
+    public class IllusoryWallContext : DbContext
+    {
         public IllusoryWallContext(DbContextOptions<IllusoryWallContext> options) : base(options) { }
 
         /// <summary>
@@ -35,11 +37,14 @@ namespace IllusoryWall.Data {
 
         public DbSet<HitList> HitLists { get; set; }
 
+        public DbSet<EnemyHitListJoin> EnemyHitListJoins { get; set; }
+
         /// <summary>
         ///     Calls when creating the models to fine tune some of the options
         /// </summary>
         /// <param name="builder">Object to set options for specific models</param>
-        protected override void OnModelCreating(ModelBuilder builder) {
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
             // Make the Name attribute in the Enemy model unique
             builder.Entity<Enemy>()
                 .HasIndex(p => p.Name)
@@ -64,6 +69,24 @@ namespace IllusoryWall.Data {
                 .HasOne(i => i.Enemy)
                 .WithMany(d => d.Damages)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<HitList>()
+                .HasOne(h => h.User)
+                .WithMany(u => u.Hitlists)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<EnemyHitListJoin>()
+                .HasKey(eh => new { eh.EnemyId, eh.HitListId });
+
+            builder.Entity<EnemyHitListJoin>()
+                .HasOne(eh => eh.Enemy)
+                .WithMany(e => e.EnemyHitListJoins)
+                .HasForeignKey(eh => eh.EnemyId);
+
+            builder.Entity<EnemyHitListJoin>()
+                .HasOne(eh => eh.HitList)
+                .WithMany(e => e.EnemyHitListJoins)
+                .HasForeignKey(eh => eh.HitListId);
         }
     }
 }

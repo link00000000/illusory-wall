@@ -3,12 +3,10 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace IllusoryWall.Models {
-    public class Enemy {
-        public Enemy() {
-            HitLists = new HashSet<HitList>();
-        }
-
+namespace IllusoryWall.Models
+{
+    public class Enemy
+    {
         /// <summary>
         ///     Unique field for the entry id of the enemy
         /// </summary>
@@ -58,10 +56,13 @@ namespace IllusoryWall.Models {
         [InverseProperty("Enemy")]
         public virtual ICollection<Damage> Damages { get; set; }
 
-        public virtual ICollection<HitList> HitLists { get; set; }
+        // Required to create a many-to-many relationship
+        [JsonIgnore]
+        public virtual ICollection<EnemyHitListJoin> EnemyHitListJoins { get; set; }
     }
 
-    class PartialEnemy : Enemy {
+    class PartialEnemy : Enemy
+    {
         [JsonIgnore]
         public new int Id { get; set; }
 

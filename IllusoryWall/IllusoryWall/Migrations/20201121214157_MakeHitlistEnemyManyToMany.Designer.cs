@@ -3,14 +3,16 @@ using System;
 using IllusoryWall.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IllusoryWall.Migrations
 {
     [DbContext(typeof(IllusoryWallContext))]
-    partial class IllusoryWallContextModelSnapshot : ModelSnapshot
+    [Migration("20201121214157_MakeHitlistEnemyManyToMany")]
+    partial class MakeHitlistEnemyManyToMany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,8 +224,7 @@ namespace IllusoryWall.Migrations
                 {
                     b.HasOne("IllusoryWall.Models.User", "User")
                         .WithMany("Hitlists")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("IllusoryWall.Models.Location", b =>

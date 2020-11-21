@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Net;
-using System.Runtime.CompilerServices;
 using IllusoryWall.Data;
 using IllusoryWall.Models;
 using IllusoryWall.Utils;
@@ -28,7 +26,7 @@ namespace IllusoryWall.Controllers
 
         [Authorize]
         [HttpGet]
-        public IActionResult GetHitlists()
+        public IActionResult GetLists()
         {
             // Get authenticated user from database
             var user = _context.Users
@@ -45,16 +43,16 @@ namespace IllusoryWall.Controllers
             var response = hitlists.Select(h => new
             {
                 Id = h.Id,
-                Enemies = h.Enemies.Select(e => new
+                Enemies = h.EnemyHitListJoins.Select(eh => new
                 {
-                    Id = e.Id,
-                    Name = e.Name,
-                    ImagePath = e.ImagePath
+                    Id = eh.Enemy.Id,
+                    Name = eh.Enemy.Name,
+                    ImagePath = eh.Enemy.ImagePath
                 }),
                 Status = h.Status
             });
 
-            return Ok(hitlists);
+            return Ok(response);
         }
 
         [Authorize]
@@ -73,15 +71,14 @@ namespace IllusoryWall.Controllers
             // Find hitlist with ID if it belongs to the user
             var hitlist = user.Hitlists.FirstOrDefault(h => h.Id == listId);
             if (hitlist == null)
-                return BadRequest("Specified list does not belong to user");
+                return BadRequest("There is no list with that ID that belongs to user");
 
-            // Remove hitlist
+            // Remove hitlist from user
             user.Hitlists.Remove(hitlist);
 
             // Commit changes to database
             try
             {
-
                 if (_context.SaveChanges() > 0)
                     return Ok();
             }
@@ -112,18 +109,25 @@ namespace IllusoryWall.Controllers
                 return StatusCode((int)HttpStatusCode.RequestedRangeNotSatisfiable,
                     "More enemies requested than available");
 
-            // Generate random list of enemies
-            ICollection<Enemy> enemies = _context.Enemies
+
+            var hitlist = _context.HitLists
+                .Add(new HitList() { Status = false })
+                .Entity;
+
+            // Generate random list of enemies and join with hitlist
+            var enemies = _context.Enemies
                 .Shuffle()
                 .Take(size)
+                .Select(e =>
+                    _context.EnemyHitListJoins.Add(new EnemyHitListJoin()
+                    {
+                        Enemy = e,
+                        EnemyId = e.Id,
+                        HitList = hitlist,
+                        HitListId = hitlist.Id
+                    }).Entity
+                )
                 .ToList();
-
-            // Create new hitlist with enemies
-            var hitlist = new HitList()
-            {
-                Enemies = enemies,
-                Status = false
-            };
 
             // Add hitlist to user
             if (user.Hitlists == null)
