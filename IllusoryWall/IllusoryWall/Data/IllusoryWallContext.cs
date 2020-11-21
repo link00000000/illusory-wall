@@ -1,18 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
 using IllusoryWall.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace IllusoryWall.Data
-{
+namespace IllusoryWall.Data {
     /// <summary>
     ///     Class for the context of the database
     /// </summary>
-    public class IllusoryWallContext : DbContext
-    {
-        public IllusoryWallContext(DbContextOptions<IllusoryWallContext> options) : base(options)
-        { }
+    public class IllusoryWallContext : DbContext {
+        public IllusoryWallContext(DbContextOptions<IllusoryWallContext> options) : base(options) { }
 
         /// <summary>
         ///     Create Enemies table using Enemy Model class
@@ -42,8 +39,7 @@ namespace IllusoryWall.Data
         ///     Calls when creating the models to fine tune some of the options
         /// </summary>
         /// <param name="builder">Object to set options for specific models</param>
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
+        protected override void OnModelCreating(ModelBuilder builder) {
             // Make the Name attribute in the Enemy model unique
             builder.Entity<Enemy>()
                 .HasIndex(p => p.Name)

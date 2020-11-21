@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
+using System.Net;
+using System.Runtime.CompilerServices;
 using IllusoryWall.Data;
 using IllusoryWall.Models;
 using IllusoryWall.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace IllusoryWall.Controllers
 {
@@ -26,117 +28,122 @@ namespace IllusoryWall.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("Get/{user}")]
-        public IActionResult GetList(int user)
+        public IActionResult GetHitlists()
         {
-            string username = _context.Users.Find(user).Username;
-            if (username == null)
-                return NotFound(new { message = "User ID Not Found" });
+            // Get authenticated user from database
+            var user = _context.Users
+                .FirstOrDefault(u => u.Username == Username());
 
-            if (!IsUser(username))
-                return Unauthorized();
+            if (user == null)
+                return StatusCode((int)HttpStatusCode.InternalServerError,
+                    "Unable to resolve user");
 
-            var results = _context.HitLists.Where(p => p.User.Id == user);
-            if (results == null)
-                return NotFound();
+            // Get all hitlists that belong to the user
+            var hitlists = user.Hitlists;
 
-            return Ok(results);
+            // Map hitlists to condensed response
+            var response = hitlists.Select(h => new
+            {
+                Id = h.Id,
+                Enemies = h.Enemies.Select(e => new
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    ImagePath = e.ImagePath
+                }),
+                Status = h.Status
+            });
+
+            return Ok(hitlists);
         }
 
         [Authorize]
-        [HttpGet]
-        [Route("Delete/{user}")]
-        public IActionResult DeleteList(int user)
+        [HttpDelete]
+        [Route("{listId}")]
+        public IActionResult DeleteList(int listId)
         {
+            // Get authenticated user from database
+            var user = _context.Users
+                .FirstOrDefault(u => u.Username == Username());
 
-            string username = _context.Users.Find(user).Username;
-            if (username == null)
-                return NotFound(new { message = "User ID Not Found" });
+            if (user == null)
+                return StatusCode((int)HttpStatusCode.InternalServerError,
+                    "Unable to resolve user");
 
-            if (!IsUser(username))
-                return Unauthorized();
+            // Find hitlist with ID if it belongs to the user
+            var hitlist = user.Hitlists.FirstOrDefault(h => h.Id == listId);
+            if (hitlist == null)
+                return BadRequest("Specified list does not belong to user");
 
-            var results = _context.HitLists.Where(p => p.User.Id == user);
-            if (results == null)
-                return NotFound();
+            // Remove hitlist
+            user.Hitlists.Remove(hitlist);
 
-            _context.HitLists.RemoveRange(results);
-            int count;
-
+            // Commit changes to database
             try
             {
-                count = _context.SaveChanges();
+
+                if (_context.SaveChanges() > 0)
+                    return Ok();
             }
             catch (System.Exception oops)
             {
                 Console.Write("\n" + oops.ToString() + "\n\n");
-                return StatusCode(500);
             }
 
-            // if changes occurred it worked, else something went wrong
-            if (count > 0)
-                return Ok();
-
-            return StatusCode(500);
+            return StatusCode((int)HttpStatusCode.InternalServerError);
         }
 
         [Authorize]
-        [HttpGet]
-        [Route("Create/{user}")]
-        public IActionResult CreateList(int user, [FromQuery] int size = 8)
+        [HttpPost]
+        [Route("Create")]
+        public IActionResult CreateList([FromQuery] int size = 8)
         {
+            // Get authenticated user from database
+            var user = _context.Users
+                .FirstOrDefault(u => u.Username == Username());
 
-            string username = _context.Users.Find(user).Username;
-            if (username == null)
-                return NotFound(new { message = "User ID Not Found" });
+            if (user == null)
+                return StatusCode((int)HttpStatusCode.InternalServerError,
+                    "Unable to resolve user");
 
-            if (!IsUser(username))
-                return Unauthorized();
-
+            // Verify that size is valid
             int enemyTableSize = _context.Enemies.Count();
             if (size > enemyTableSize)
-                return BadRequest(new { message = "Not enough entries in the enemies table" });
+                return StatusCode((int)HttpStatusCode.RequestedRangeNotSatisfiable,
+                    "More enemies requested than available");
 
-            User userEntry = _context.Users.Find(user);
+            // Generate random list of enemies
+            ICollection<Enemy> enemies = _context.Enemies
+                .Shuffle()
+                .Take(size)
+                .ToList();
 
-            List<int> enemyIDs = _context.Enemies.Select(p => p.Id).ToList<int>();
-            List<int> hitlistEnemies = new List<int>();
-            int index;
-            Random rand = new Random();
-            for (int i = 0; i < size; ++i)
+            // Create new hitlist with enemies
+            var hitlist = new HitList()
             {
-                index = rand.Next(0, enemyIDs.Count() - 1);
-                hitlistEnemies.Add(enemyIDs[index]);
-                enemyIDs.RemoveAt(index);
-            }
+                Enemies = enemies,
+                Status = false
+            };
 
-            List<HitList> final = new List<HitList>();
-            HitList item = new HitList();
-            for (int i = 0; i < size; ++i)
+            // Add hitlist to user
+            if (user.Hitlists == null)
             {
-                item.User = userEntry;
-                item.Enemy = _context.Enemies.Find(hitlistEnemies[i]);
-                item.Status = false;
-                final.Add(item);
+                user.Hitlists = new List<HitList>();
             }
+            user.Hitlists.Add(hitlist);
 
-            _context.HitLists.AddRange(final);
-            int count;
+            // Commit changes to database
             try
             {
-                count = _context.SaveChanges();
+                if (_context.SaveChanges() > 0)
+                    return Ok();
             }
             catch (System.Exception oops)
             {
                 Console.Write("\n" + oops.ToString() + "\n\n");
-                return StatusCode(500);
             }
 
-            // if changes occurred it worked, else something went wrong
-            if (count > 0)
-                return Ok(new { message = "Hitlist Created" });
-
-            return StatusCode(500);
+            return StatusCode((int)HttpStatusCode.InternalServerError);
         }
     }
 }
