@@ -24,6 +24,19 @@ namespace IllusoryWall.Utils
             throw new InvalidJWTException();
         }
 
+        public bool IsUser(string username)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity == null) throw new InvalidJWTException();
+
+            var usernameClaim = identity.FindFirst("Username");
+            if (usernameClaim == null) throw new InvalidJWTException();
+
+            if (usernameClaim.Value == username) return true;
+            else return false;
+            throw new InvalidJWTException();
+        }
+
         public string Username()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;

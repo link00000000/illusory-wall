@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using IllusoryWall.Data;
 using IllusoryWall.Models;
 using IllusoryWall.Utils;
@@ -22,10 +24,18 @@ namespace IllusoryWall.Controllers
             Configuration = configuration;
         }
 
+        [Authorize]
         [HttpGet]
         [Route("Get/{user}")]
         public IActionResult GetList(int user)
         {
+            string username = _context.Users.Find(user).Username;
+            if (username == null)
+                return NotFound(new { message = "User ID Not Found" });
+
+            if (!IsUser(username))
+                return Unauthorized();
+
             var results = _context.HitLists.Where(p => p.User.Id == user);
             if (results == null)
                 return NotFound();
@@ -33,10 +43,19 @@ namespace IllusoryWall.Controllers
             return Ok(results);
         }
 
+        [Authorize]
         [HttpGet]
         [Route("Delete/{user}")]
         public IActionResult DeleteList(int user)
         {
+
+            string username = _context.Users.Find(user).Username;
+            if (username == null)
+                return NotFound(new { message = "User ID Not Found" });
+
+            if (!IsUser(username))
+                return Unauthorized();
+
             var results = _context.HitLists.Where(p => p.User.Id == user);
             if (results == null)
                 return NotFound();
@@ -61,10 +80,19 @@ namespace IllusoryWall.Controllers
             return StatusCode(500);
         }
 
+        [Authorize]
         [HttpGet]
         [Route("Create/{user}")]
         public IActionResult CreateList(int user, [FromQuery] int size = 8)
         {
+
+            string username = _context.Users.Find(user).Username;
+            if (username == null)
+                return NotFound(new { message = "User ID Not Found" });
+
+            if (!IsUser(username))
+                return Unauthorized();
+
             int enemyTableSize = _context.Enemies.Count();
             if (size > enemyTableSize)
                 return BadRequest(new { message = "Not enough entries in the enemies table" });
