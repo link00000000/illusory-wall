@@ -15,7 +15,7 @@ export async function commit(
             method: 'DELETE',
             url: ENDPOINT + '/' + id.toString(),
             headers: {
-                Authorized: 'Bearer ' + token
+                Authorization: 'Bearer ' + token
             },
             validateStatus: () => true
         })
