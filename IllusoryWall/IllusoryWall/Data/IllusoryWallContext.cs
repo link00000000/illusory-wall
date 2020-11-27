@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
 using IllusoryWall.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace IllusoryWall.Data
 {
@@ -11,8 +11,7 @@ namespace IllusoryWall.Data
     /// </summary>
     public class IllusoryWallContext : DbContext
     {
-        public IllusoryWallContext(DbContextOptions<IllusoryWallContext> options) : base(options)
-        { }
+        public IllusoryWallContext(DbContextOptions<IllusoryWallContext> options) : base(options) { }
 
         /// <summary>
         ///     Create Enemies table using Enemy Model class
@@ -37,6 +36,8 @@ namespace IllusoryWall.Data
         public DbSet<User> Users { get; set; }
 
         public DbSet<HitList> HitLists { get; set; }
+
+        public DbSet<EnemyHitListJoin> EnemyHitListJoins { get; set; }
 
         /// <summary>
         ///     Calls when creating the models to fine tune some of the options
@@ -68,6 +69,24 @@ namespace IllusoryWall.Data
                 .HasOne(i => i.Enemy)
                 .WithMany(d => d.Damages)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<HitList>()
+                .HasOne(h => h.User)
+                .WithMany(u => u.Hitlists)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<EnemyHitListJoin>()
+                .HasKey(eh => new { eh.EnemyId, eh.HitListId });
+
+            builder.Entity<EnemyHitListJoin>()
+                .HasOne(eh => eh.Enemy)
+                .WithMany(e => e.EnemyHitListJoins)
+                .HasForeignKey(eh => eh.EnemyId);
+
+            builder.Entity<EnemyHitListJoin>()
+                .HasOne(eh => eh.HitList)
+                .WithMany(e => e.EnemyHitListJoins)
+                .HasForeignKey(eh => eh.HitListId);
         }
     }
 }
