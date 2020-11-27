@@ -27,13 +27,10 @@ export const HitListEntry: FunctionComponent<IProps> = (props: IProps) => {
                     handleCheckbox(checked)
                 }}
             />
-            {props.entry.enemy.imagePath && (
-                <img
-                    src={entry.enemy.imagePath}
-                    alt={'Image of ' + entry.enemy.name}
-                />
+            {props.entry.imagePath && (
+                <img src={entry.imagePath} alt={'Image of ' + entry.name} />
             )}
-            <h1>{props.entry.enemy.name}</h1>
+            <h1>{props.entry.name}</h1>
         </div>
     )
 }

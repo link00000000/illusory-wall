@@ -35,7 +35,9 @@ export type EnemyEntry = {
 }
 
 export type IWHitListEntry = {
-    enemy: IWEnemy
+    id: number
+    name: string
+    imagePath: string
     completed: boolean
 }
 
