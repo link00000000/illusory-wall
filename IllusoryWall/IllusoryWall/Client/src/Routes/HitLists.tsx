@@ -4,7 +4,7 @@ import { HitList } from '../Components/HitList'
 import { AuthStore } from '../Store/AuthStore'
 import { IWHitList } from '../Utils/Models'
 import * as HitListAPI from '../API/HitLists'
-import { notification } from 'antd'
+import { notification, Pagination } from 'antd'
 
 interface IProps {}
 
@@ -13,6 +13,7 @@ export const HitLists: FunctionComponent<IProps> = (props: IProps) => {
     const token = AuthStore.useState((s) => s.jwt)
 
     const [hitlists, setHitlists] = React.useState<IWHitList[]>([])
+    const [selection, setSelection] = React.useState<number>(1)
 
     React.useEffect(() => {
         if (token === undefined || token === null) {
@@ -52,8 +53,24 @@ export const HitLists: FunctionComponent<IProps> = (props: IProps) => {
 
     return (
         <div>
+            <Pagination
+                current={selection}
+                pageSize={1}
+                total={hitlists.length}
+                onChange={(value) => {
+                    setSelection(value)
+                }}
+                style={{ marginBottom: '16px' }}
+            />
             {hitlists.map((list, index) => (
-                <HitList key={index} list={list} onChange={handleChange} />
+                <div
+                    key={index}
+                    style={{
+                        display: index + 1 === selection ? 'block' : 'none'
+                    }}
+                >
+                    <HitList list={list} onChange={handleChange} />
+                </div>
             ))}
         </div>
     )
