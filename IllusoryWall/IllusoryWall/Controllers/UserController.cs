@@ -83,7 +83,7 @@ namespace IllusoryWall.Controllers
             // Return stringified JWT to client
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
-            return Ok(new { Username = user.Username, Token = tokenString });
+            return Ok(new { Id = foundUser.Id, Username = foundUser.Username, Token = tokenString });
         }
 
         [HttpPost]
