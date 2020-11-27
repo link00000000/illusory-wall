@@ -3,14 +3,16 @@ using System;
 using IllusoryWall.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IllusoryWall.Migrations
 {
     [DbContext(typeof(IllusoryWallContext))]
-    partial class IllusoryWallContextModelSnapshot : ModelSnapshot
+    [Migration("20201120025719_HitListTable")]
+    partial class HitListTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,28 +99,13 @@ namespace IllusoryWall.Migrations
                     b.ToTable("Enemies");
                 });
 
-            modelBuilder.Entity("IllusoryWall.Models.EnemyHitListJoin", b =>
-                {
-                    b.Property<int>("EnemyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HitListId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("tinyint(1)");
-
-                    b.HasKey("EnemyId", "HitListId");
-
-                    b.HasIndex("HitListId");
-
-                    b.ToTable("EnemyHitListJoins");
-                });
-
             modelBuilder.Entity("IllusoryWall.Models.HitList", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EnemyId")
                         .HasColumnType("int");
 
                     b.Property<bool>("Status")
@@ -128,6 +115,8 @@ namespace IllusoryWall.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EnemyId");
 
                     b.HasIndex("UserId");
 
@@ -206,27 +195,15 @@ namespace IllusoryWall.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("IllusoryWall.Models.EnemyHitListJoin", b =>
-                {
-                    b.HasOne("IllusoryWall.Models.Enemy", "Enemy")
-                        .WithMany("EnemyHitListJoins")
-                        .HasForeignKey("EnemyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("IllusoryWall.Models.HitList", "HitList")
-                        .WithMany("EnemyHitListJoins")
-                        .HasForeignKey("HitListId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("IllusoryWall.Models.HitList", b =>
                 {
+                    b.HasOne("IllusoryWall.Models.Enemy", "Enemy")
+                        .WithMany()
+                        .HasForeignKey("EnemyId");
+
                     b.HasOne("IllusoryWall.Models.User", "User")
-                        .WithMany("Hitlists")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("IllusoryWall.Models.Location", b =>

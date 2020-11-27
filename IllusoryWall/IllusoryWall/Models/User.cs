@@ -1,12 +1,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace IllusoryWall.Models
-{
-    public class User
-    {
+namespace IllusoryWall.Models {
+    public class User {
 
         public int Id { get; set; }
 
@@ -24,5 +21,7 @@ namespace IllusoryWall.Models
         [JsonIgnore]
         public string Spice { get; set; }
 
+        [JsonIgnore]
+        public virtual ICollection<HitList> Hitlists { get; set; }
     }
 }
