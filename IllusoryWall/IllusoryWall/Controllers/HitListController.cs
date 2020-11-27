@@ -151,5 +151,51 @@ namespace IllusoryWall.Controllers
 
             return StatusCode((int)HttpStatusCode.InternalServerError);
         }
+
+        public class PutStatusBody
+        {
+            public int ListId { get; set; }
+            public int EnemyId { get; set; }
+            public bool Status { get; set; }
+        }
+
+        [Authorize]
+        [HttpPut]
+        [Route("Status")]
+        public IActionResult PutStatus(PutStatusBody body)
+        {
+            // Get authenticated user from database
+            var user = _context.Users
+                .FirstOrDefault(u => u.Username == Username());
+
+            if (user == null)
+                return StatusCode((int)HttpStatusCode.InternalServerError,
+                    "Unable to resolve user");
+
+            // Find hitlist with ID if it belongs to the user
+            var hitlist = user.Hitlists.FirstOrDefault(h => h.Id == body.ListId);
+            if (hitlist == null)
+                return BadRequest("There is no list with that ID that belongs to user");
+
+            // Find enemy entry in hitlist with ID
+            var enemyEntry = hitlist.EnemyHitListJoins.FirstOrDefault(eh => eh.EnemyId == body.EnemyId);
+            if (enemyEntry == null)
+                return BadRequest("There is no enemy with that ID in the specified list");
+
+            enemyEntry.Status = body.Status;
+
+            // Commit changes to database
+            try
+            {
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (System.Exception oops)
+            {
+                Console.Write("\n" + oops.ToString() + "\n\n");
+            }
+
+            return StatusCode((int)HttpStatusCode.InternalServerError);
+        }
     }
 }
