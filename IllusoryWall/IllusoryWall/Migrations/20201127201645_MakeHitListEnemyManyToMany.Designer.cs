@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IllusoryWall.Migrations
 {
     [DbContext(typeof(IllusoryWallContext))]
-    [Migration("20201121221259_SetHitListDeleteBehavior")]
-    partial class SetHitListDeleteBehavior
+    [Migration("20201127201645_MakeHitListEnemyManyToMany")]
+    partial class MakeHitListEnemyManyToMany
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -106,6 +106,9 @@ namespace IllusoryWall.Migrations
 
                     b.Property<int>("HitListId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("EnemyId", "HitListId");
 

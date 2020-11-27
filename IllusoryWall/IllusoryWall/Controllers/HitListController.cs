@@ -47,9 +47,9 @@ namespace IllusoryWall.Controllers
                 {
                     Id = eh.Enemy.Id,
                     Name = eh.Enemy.Name,
-                    ImagePath = eh.Enemy.ImagePath
-                }),
-                Status = h.Status
+                    ImagePath = eh.Enemy.ImagePath,
+                    Status = eh.Status
+                })
             });
 
             return Ok(response);
@@ -111,7 +111,7 @@ namespace IllusoryWall.Controllers
 
             // Create empty hitlist and add it to the database
             var hitlist = _context.HitLists
-                .Add(new HitList() { Status = false })
+                .Add(new HitList())
                 .Entity;
 
             // Generate random list of enemies and join with new hitlist
@@ -126,7 +126,8 @@ namespace IllusoryWall.Controllers
                         Enemy = e,
                         EnemyId = e.Id,
                         HitList = hitlist,
-                        HitListId = hitlist.Id
+                        HitListId = hitlist.Id,
+                        Status = false
                     });
                 });
 

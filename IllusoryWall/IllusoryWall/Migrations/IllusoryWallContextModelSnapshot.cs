@@ -105,6 +105,9 @@ namespace IllusoryWall.Migrations
                     b.Property<int>("HitListId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("Status")
+                        .HasColumnType("tinyint(1)");
+
                     b.HasKey("EnemyId", "HitListId");
 
                     b.HasIndex("HitListId");

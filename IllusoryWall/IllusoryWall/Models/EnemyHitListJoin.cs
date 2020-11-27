@@ -6,5 +6,6 @@ namespace IllusoryWall.Models
         public virtual Enemy Enemy { get; set; }
         public int HitListId { get; set; }
         public virtual HitList HitList { get; set; }
+        public bool Status { get; set; }
     }
 }

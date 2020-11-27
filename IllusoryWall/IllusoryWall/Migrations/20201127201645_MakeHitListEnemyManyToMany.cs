@@ -2,13 +2,17 @@
 
 namespace IllusoryWall.Migrations
 {
-    public partial class MakeHitlistEnemyManyToMany : Migration
+    public partial class MakeHitListEnemyManyToMany : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_Enemies_HitLists_HitListId",
                 table: "Enemies");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_HitLists_Users_UserId",
+                table: "HitLists");
 
             migrationBuilder.DropIndex(
                 name: "IX_Enemies_HitListId",
@@ -23,7 +27,8 @@ namespace IllusoryWall.Migrations
                 columns: table => new
                 {
                     EnemyId = table.Column<int>(nullable: false),
-                    HitListId = table.Column<int>(nullable: false)
+                    HitListId = table.Column<int>(nullable: false),
+                    Status = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -46,10 +51,22 @@ namespace IllusoryWall.Migrations
                 name: "IX_EnemyHitListJoins_HitListId",
                 table: "EnemyHitListJoins",
                 column: "HitListId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_HitLists_Users_UserId",
+                table: "HitLists",
+                column: "UserId",
+                principalTable: "Users",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_HitLists_Users_UserId",
+                table: "HitLists");
+
             migrationBuilder.DropTable(
                 name: "EnemyHitListJoins");
 
@@ -69,6 +86,14 @@ namespace IllusoryWall.Migrations
                 table: "Enemies",
                 column: "HitListId",
                 principalTable: "HitLists",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_HitLists_Users_UserId",
+                table: "HitLists",
+                column: "UserId",
+                principalTable: "Users",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
         }
