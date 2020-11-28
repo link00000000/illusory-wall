@@ -61,7 +61,6 @@ export const EnemyForm: FunctionComponent<IProps> = (props: IProps) => {
 
     React.useEffect(() => {
         props.onChange(model)
-        console.log(model)
     }, [model])
 
     return (

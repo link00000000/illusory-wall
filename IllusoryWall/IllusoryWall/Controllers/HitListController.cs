@@ -142,7 +142,22 @@ namespace IllusoryWall.Controllers
             try
             {
                 if (_context.SaveChanges() > 0)
-                    return Ok();
+                {
+                    // Map hitlist to condensed response
+                    var response = new
+                    {
+                        Id = hitlist.Id,
+                        Enemies = hitlist.EnemyHitListJoins.Select(eh => new
+                        {
+                            Id = eh.Enemy.Id,
+                            Name = eh.Enemy.Name,
+                            ImagePath = eh.Enemy.ImagePath,
+                            Status = eh.Status
+                        })
+                    };
+
+                    return Ok(response);
+                }
             }
             catch (System.Exception oops)
             {
