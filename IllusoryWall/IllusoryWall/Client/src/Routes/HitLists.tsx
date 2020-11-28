@@ -166,7 +166,7 @@ export const HitLists: FunctionComponent<IProps> = (props: IProps) => {
                             You have no Hitlists. Use the{' '}
                             <span style={{ color: blue.primary }}>
                                 Create New Hitlist
-                            </span>
+                            </span>{' '}
                             button to create one!
                         </span>
                     }
