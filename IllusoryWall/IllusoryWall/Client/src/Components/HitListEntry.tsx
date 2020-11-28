@@ -12,8 +12,11 @@ export const HitListEntry: FunctionComponent<IProps> = (props: IProps) => {
     const [entry, setEntry] = React.useState<IWHitListEntry>(props.entry)
 
     const handleCheckbox = (value: boolean) => {
-        setEntry((prevState) => ({ ...prevState, completed: value }))
-        props.onChange && props.onChange(entry)
+        let newEntry = Object.assign({}, entry)
+        newEntry.completed = value
+        setEntry(newEntry)
+
+        props.onChange && props.onChange(newEntry)
     }
 
     React.useEffect(() => {
