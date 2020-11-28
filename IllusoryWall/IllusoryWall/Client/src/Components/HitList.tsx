@@ -50,7 +50,6 @@ export const HitList: FunctionComponent<IProps> = (props: IProps) => {
                     key={index}
                     entry={entry}
                     onChange={(newEntry) => {
-                        console.log('HitList: ' + newEntry.completed)
                         handleChange(index, newEntry)
                     }}
                 />

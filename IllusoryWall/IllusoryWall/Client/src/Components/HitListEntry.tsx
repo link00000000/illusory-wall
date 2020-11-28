@@ -24,7 +24,10 @@ export const HitListEntry: FunctionComponent<IProps> = (props: IProps) => {
     }, [props.entry])
 
     return (
-        <div className={styles['hitlist-entry']}>
+        <div
+            className={styles['hitlist-entry']}
+            onClick={() => handleCheckbox(!entry.completed)}
+        >
             {props.entry.imagePath && (
                 <img
                     src={entry.imagePath}
@@ -50,9 +53,9 @@ export const HitListEntry: FunctionComponent<IProps> = (props: IProps) => {
             <Checkbox
                 className={styles['checkbox']}
                 checked={entry.completed}
-                onChange={({ target: { checked } }) => {
-                    handleCheckbox(checked)
-                }}
+                // onChange={({ target: { checked } }) => {
+                //     handleCheckbox(checked)
+                // }}
             />
         </div>
     )

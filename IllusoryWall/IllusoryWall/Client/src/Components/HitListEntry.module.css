@@ -1,12 +1,18 @@
 .hitlist-entry {
     display: flex;
     align-items: center;
+    cursor: pointer;
+    transition: opacity 100ms ease-out;
 }
 
 .hitlist-entry:not(:last-child) {
     padding-bottom: 16px;
     margin-bottom: 16px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.hitlist-entry:hover {
+    opacity: 0.8;
 }
 
 .checkbox {
