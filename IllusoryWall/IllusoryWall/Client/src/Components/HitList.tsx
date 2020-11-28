@@ -39,6 +39,10 @@ export const HitList: FunctionComponent<IProps> = (props: IProps) => {
         props.onChange && props.onChange(list)
     }, [list])
 
+    React.useEffect(() => {
+        setList(props.list)
+    }, [props.list])
+
     return (
         <Card>
             {list.entries.map((entry, index) => (

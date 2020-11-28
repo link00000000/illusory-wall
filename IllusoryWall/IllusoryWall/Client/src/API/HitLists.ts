@@ -55,13 +55,28 @@ export const deleteList = async (listId: number, token: string) => {
     })
 }
 
-export const createList = async (token: string, length?: number) => {
-    await axios({
-        url: '/hitlist',
+export const createList = async (
+    token: string,
+    length?: number
+): Promise<IWHitList> => {
+    const response = await axios({
+        url: '/hitlist/create',
         params: length ? { size: length } : null,
         method: 'POST',
         headers: {
             Authorization: 'Bearer ' + token
         }
     })
+
+    return {
+        id: response.data.id,
+        entries: response.data.enemies.map(
+            (enemy: any): IWHitListEntry => ({
+                id: enemy.id,
+                name: enemy.name,
+                imagePath: enemy.imagePath,
+                completed: enemy.status
+            })
+        )
+    }
 }

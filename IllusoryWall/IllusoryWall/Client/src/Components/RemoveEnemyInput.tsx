@@ -85,7 +85,7 @@ export class RemoveEnemyInput extends Component<IProps, IState> {
 
     private showDeleteConfirm() {
         Modal.confirm({
-            title: `Are you sure delete ${this.state.selectedValue}?`,
+            title: `Are you sure you want to delete ${this.state.selectedValue}?`,
             icon: <ExclamationCircleOutlined />,
             content: `${this.state.selectedValue} will be deleted permanently. This action cannot be undone`,
             okText: 'Delete',

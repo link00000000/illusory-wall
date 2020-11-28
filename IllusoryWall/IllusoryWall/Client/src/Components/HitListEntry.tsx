@@ -12,12 +12,12 @@ export const HitListEntry: FunctionComponent<IProps> = (props: IProps) => {
 
     const handleCheckbox = (value: boolean) => {
         setEntry((prevState) => ({ ...prevState, completed: value }))
+        props.onChange && props.onChange(entry)
     }
 
     React.useEffect(() => {
-        props.onChange && props.onChange(entry)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [entry])
+        setEntry(props.entry)
+    }, [props.entry])
 
     return (
         <div>

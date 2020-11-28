@@ -4,7 +4,14 @@ import { HitList } from '../Components/HitList'
 import { AuthStore } from '../Store/AuthStore'
 import { IWHitList } from '../Utils/Models'
 import * as HitListAPI from '../API/HitLists'
-import { notification, Pagination } from 'antd'
+import { notification, Pagination, Button, Modal, Empty } from 'antd'
+import {
+    CloseOutlined,
+    ExclamationCircleOutlined,
+    PlusOutlined
+} from '@ant-design/icons'
+import { HitListCreateModal } from '../Components/HitListCreateModal'
+import { blue } from '@ant-design/colors'
 
 interface IProps {}
 
@@ -14,6 +21,7 @@ export const HitLists: FunctionComponent<IProps> = (props: IProps) => {
 
     const [hitlists, setHitlists] = React.useState<IWHitList[]>([])
     const [selection, setSelection] = React.useState<number>(1)
+    const [showCreateModal, setShowCreateModal] = React.useState<boolean>(false)
 
     React.useEffect(() => {
         if (token === undefined || token === null) {
@@ -26,7 +34,6 @@ export const HitLists: FunctionComponent<IProps> = (props: IProps) => {
 
         HitListAPI.fetch(token)
             .then((data) => {
-                console.log(data)
                 setHitlists(data)
             })
             .catch((error) => {
@@ -41,37 +48,142 @@ export const HitLists: FunctionComponent<IProps> = (props: IProps) => {
         const newHitlists = hitlists ? hitlists.slice() : []
         let index = newHitlists.findIndex((l) => l.id === list.id)
 
-        console.log(newHitlists)
-
         if (index === -1) return
 
         newHitlists[index] = list
         setHitlists(newHitlists)
     }
 
+    const createHitlist = async (length?: number) => {
+        if (!token) return
+        try {
+            const newHitlist = await HitListAPI.createList(token, length)
+            setHitlists([...hitlists, newHitlist])
+            notification.info({ message: 'Successfully created new Hitlist' })
+        } catch (error) {
+            notification.error({
+                message: 'Error creating Hitlist',
+                description: error.message
+            })
+        }
+    }
+
+    const deleteConfirmationModal = () => {
+        Modal.confirm({
+            title: `Are you sure you want to delete this Hitlist?`,
+            icon: <ExclamationCircleOutlined />,
+            content: `This Hitlist will be deleted permanently. This action cannot be undone`,
+            okText: 'Delete',
+            okType: 'danger',
+            cancelText: 'Cancel',
+            onOk: () => {
+                deleteHitlist(selection - 1)
+            }
+        })
+    }
+
+    const deleteHitlist = async (hitlistIndex: number) => {
+        if (!token) return
+        try {
+            await HitListAPI.deleteList(hitlists[hitlistIndex].id, token)
+
+            if (selection > hitlists.length - 1) {
+                setSelection(hitlists.length - 1)
+            }
+
+            let newHitlists = hitlists.slice()
+            newHitlists.splice(hitlistIndex, 1)
+            setHitlists(newHitlists)
+
+            notification.info({ message: 'Successfully deleted Hitlist' })
+        } catch (error) {
+            notification.error({
+                message: 'Error deleting Hitlist',
+                description: error.message
+            })
+        }
+    }
+
     if (!authenticated) return <Redirect to='/' />
 
     return (
-        <div>
-            <Pagination
-                current={selection}
-                pageSize={1}
-                total={hitlists.length}
-                onChange={(value) => {
-                    setSelection(value)
+        <>
+            <div
+                style={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    marginBottom: '16px'
                 }}
-                style={{ marginBottom: '16px' }}
-            />
-            {hitlists.map((list, index) => (
-                <div
-                    key={index}
-                    style={{
-                        display: index + 1 === selection ? 'block' : 'none'
-                    }}
+            >
+                <Button
+                    icon={<CloseOutlined />}
+                    type='default'
+                    danger
+                    style={{ marginRight: '8px' }}
+                    onClick={deleteConfirmationModal}
+                    disabled={hitlists.length === 0}
                 >
-                    <HitList list={list} onChange={handleChange} />
-                </div>
-            ))}
-        </div>
+                    Delete
+                </Button>
+                <Button
+                    icon={<PlusOutlined />}
+                    type='primary'
+                    onClick={() => setShowCreateModal(true)}
+                >
+                    Create New Hitlist
+                </Button>
+            </div>
+
+            {hitlists.length > 0 ? (
+                <>
+                    <Pagination
+                        current={selection}
+                        pageSize={1}
+                        total={hitlists.length}
+                        onChange={(value) => {
+                            setSelection(value)
+                        }}
+                        style={{ marginBottom: '16px' }}
+                    />
+
+                    <HitList
+                        list={hitlists[selection - 1]}
+                        onChange={handleChange}
+                    />
+                </>
+            ) : (
+                <Empty
+                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                    style={{
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center'
+                    }}
+                    description={
+                        <span>
+                            You have no Hitlists. Use the{' '}
+                            <span style={{ color: blue.primary }}>
+                                Create New Hitlist
+                            </span>
+                            button to create one!
+                        </span>
+                    }
+                />
+            )}
+
+            <HitListCreateModal
+                visible={showCreateModal}
+                onSubmit={async (length) => {
+                    await createHitlist(length)
+                    setShowCreateModal(false)
+                    setSelection(hitlists.length + 1)
+                }}
+                onCancel={() => {
+                    setShowCreateModal(false)
+                }}
+            />
+        </>
     )
 }
