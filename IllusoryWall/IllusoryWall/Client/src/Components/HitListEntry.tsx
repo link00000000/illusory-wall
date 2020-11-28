@@ -28,18 +28,16 @@ export const HitListEntry: FunctionComponent<IProps> = (props: IProps) => {
             className={styles['hitlist-entry']}
             onClick={() => handleCheckbox(!entry.completed)}
         >
-            {props.entry.imagePath && (
-                <img
-                    src={entry.imagePath}
-                    alt={'Image of ' + entry.name}
-                    className={styles['image']}
-                    style={
-                        entry.completed
-                            ? { filter: 'grayscale(1) opacity(0.7)' }
-                            : {}
-                    }
-                />
-            )}
+            <img
+                src={entry.imagePath || '/fallback-image.png'}
+                alt={'Image of ' + entry.name}
+                className={styles['image']}
+                style={
+                    entry.completed
+                        ? { filter: 'grayscale(1) opacity(0.7)' }
+                        : {}
+                }
+            />
             <h1
                 className={styles['name']}
                 style={
@@ -53,9 +51,6 @@ export const HitListEntry: FunctionComponent<IProps> = (props: IProps) => {
             <Checkbox
                 className={styles['checkbox']}
                 checked={entry.completed}
-                // onChange={({ target: { checked } }) => {
-                //     handleCheckbox(checked)
-                // }}
             />
         </div>
     )
