@@ -10,11 +10,12 @@ import {
 } from 'antd'
 import React, { Component } from 'react'
 import * as FetchEntries from '../API/FetchEntries'
-import * as RemoveEnemy from '../API/RemoveEnemy'
 import { EnemyEntry } from '../Utils/Models'
 import styles from './RemoveEnemyInput.module.css'
 
-type IProps = {}
+type IProps = {
+    onSubmit: (id: number) => Promise<void>
+}
 type IState = {
     entries: EnemyEntry[]
     loading: boolean
@@ -120,7 +121,7 @@ export class RemoveEnemyInput extends Component<IProps, IState> {
         }
 
         try {
-            await RemoveEnemy.commit(id)
+            await this.props.onSubmit(id)
         } catch (error) {
             console.error(error)
             throw error
