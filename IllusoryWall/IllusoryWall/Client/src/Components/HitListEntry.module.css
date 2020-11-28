@@ -1,0 +1,27 @@
+.hitlist-entry {
+    display: flex;
+    align-items: center;
+}
+
+.hitlist-entry:not(:last-child) {
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.checkbox {
+    width: 64px;
+}
+
+.name {
+    flex-grow: 1;
+    padding: 0 32px;
+    transition: opacity 200ms ease-out;
+}
+
+.image {
+    width: 128px;
+    height: 128px;
+    object-fit: cover;
+    transition: filter 200ms ease-out;
+}

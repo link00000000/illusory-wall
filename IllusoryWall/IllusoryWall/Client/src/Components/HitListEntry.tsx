@@ -1,6 +1,7 @@
 import { Checkbox } from 'antd'
 import React, { FunctionComponent } from 'react'
 import { IWHitListEntry } from '../Utils/Models'
+import styles from './HitListEntry.module.css'
 
 interface IProps {
     entry: IWHitListEntry
@@ -20,17 +21,36 @@ export const HitListEntry: FunctionComponent<IProps> = (props: IProps) => {
     }, [props.entry])
 
     return (
-        <div>
+        <div className={styles['hitlist-entry']}>
+            {props.entry.imagePath && (
+                <img
+                    src={entry.imagePath}
+                    alt={'Image of ' + entry.name}
+                    className={styles['image']}
+                    style={
+                        entry.completed
+                            ? { filter: 'grayscale(1) opacity(0.7)' }
+                            : {}
+                    }
+                />
+            )}
+            <h1
+                className={styles['name']}
+                style={
+                    entry.completed
+                        ? { textDecoration: 'line-through', opacity: 0.7 }
+                        : {}
+                }
+            >
+                {props.entry.name}
+            </h1>
             <Checkbox
+                className={styles['checkbox']}
                 checked={entry.completed}
                 onChange={({ target: { checked } }) => {
                     handleCheckbox(checked)
                 }}
             />
-            {props.entry.imagePath && (
-                <img src={entry.imagePath} alt={'Image of ' + entry.name} />
-            )}
-            <h1>{props.entry.name}</h1>
         </div>
     )
 }
