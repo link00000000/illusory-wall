@@ -38,6 +38,7 @@ export const ModifyEnemyId: FunctionComponent<IProps> = (props: IProps) => {
         }
 
         showSuccess()
+        history.push('/update')
     }
 
     const showError = (error?: Error) => {
