@@ -2,9 +2,10 @@ import { Card, Col, Row } from 'antd'
 import React, { FunctionComponent } from 'react'
 import { ChartHP } from '../Components/ChartHP'
 import { ChartSouls } from '../Components/ChartSouls'
+import { ChartEnemiesPerLocation } from '../Components/ChartEnemiesPerLocation'
 import { ViewEnemiesStore } from '../Store/ViewEnemiesStore'
 
-interface IProps {}
+interface IProps { }
 
 export const Comparison: FunctionComponent<IProps> = (props: IProps) => {
     Comparison.displayName = Comparison.name
@@ -23,6 +24,11 @@ export const Comparison: FunctionComponent<IProps> = (props: IProps) => {
             <Col sm={{ span: 24 }} xxl={{ span: 11, offset: 2 }}>
                 <Card title='Souls' style={{ marginBottom: '32px' }}>
                     <ChartSouls enemies={enemies} />
+                </Card>
+            </Col>
+            <Col sm={{ span: 24 }} xxl={{ span: 11, offset: 2 }}>
+                <Card title='Enemies Per Location' style={{ marginBottom: '32px' }}>
+                    <ChartEnemiesPerLocation enemies={enemies} />
                 </Card>
             </Col>
         </Row>
