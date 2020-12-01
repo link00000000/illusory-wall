@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react'
 import { Doughnut } from 'react-chartjs-2'
+import { Color } from '../Utils/Color'
 import { IWEnemy } from '../Utils/Models'
 import { IWLocation } from '../Utils/Models'
 
@@ -7,7 +8,9 @@ interface IProps {
     enemies: IWEnemy[]
 }
 
-export const ChartEnemiesPerLocation: FunctionComponent<IProps> = (props: IProps) => {
+export const ChartEnemiesPerLocation: FunctionComponent<IProps> = (
+    props: IProps
+) => {
     const [data, setData] = React.useState<{}>({})
 
     React.useEffect(() => {
@@ -22,26 +25,31 @@ export const ChartEnemiesPerLocation: FunctionComponent<IProps> = (props: IProps
         var locations = enemies.flatMap((e) => e.locations)
 
         var distinctlocs = locations
-            .filter((loc, i, arr) => arr.findIndex((c) => c.name === loc.name) === i)
+            .filter(
+                (loc, i, arr) => arr.findIndex((c) => c.name === loc.name) === i
+            )
             .map((l) => l.name)
         newData['labels'] = distinctlocs
 
         let counts: number[] = []
         for (var item of distinctlocs) {
-            counts.push(locations.map((l) => l.name).filter((l) => l === item).length)
+            counts.push(
+                locations.map((l) => l.name).filter((l) => l === item).length
+            )
         }
 
-        let backcolors: string[] = []
-        let bordcolors: string[] = []
-        let r: number
-        let g: number
-        let b: number
+        let borderColors: string[] = []
+        let backgroundColors: string[] = []
+
         for (let i = 0; i < counts.length; ++i) {
-            r = Math.floor(Math.random() * 200)
-            g = Math.floor(Math.random() * 200)
-            b = Math.floor(Math.random() * 200)
-            backcolors.push(('rgba(' + r + ', ' + g + ', ' + b + ', ' + '0.5)'))
-            bordcolors.push(('rgba(' + r + ', ' + g + ', ' + b + ', ' + '1)'))
+            const color = Color.random()
+            const borderColor = color.rgba()
+
+            color.a = 0.5
+            const backgroundColor = color.rgba()
+
+            borderColors.push(borderColor)
+            backgroundColors.push(backgroundColor)
         }
 
         newData['datasets'] = []
@@ -50,11 +58,10 @@ export const ChartEnemiesPerLocation: FunctionComponent<IProps> = (props: IProps
             key: '0',
             label: 'Enemies',
             data: counts,
-            backgroundColor: backcolors,
-            borderColor: bordcolors,
+            backgroundColor: backgroundColors,
+            borderColor: borderColors,
             borderWidth: 1
         })
-
 
         setData(newData)
     }
@@ -63,10 +70,9 @@ export const ChartEnemiesPerLocation: FunctionComponent<IProps> = (props: IProps
         <Doughnut
             data={data}
             options={{
-                legend: { display: false },
+                legend: { display: false }
             }}
             datasetKeyProvider={({ key }) => key}
         />
     )
-
 }
