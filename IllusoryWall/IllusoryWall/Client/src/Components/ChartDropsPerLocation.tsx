@@ -1,13 +1,13 @@
 import React, { FunctionComponent } from 'react'
 import { Doughnut } from 'react-chartjs-2'
-import { IWEnemy } from '../Utils/Models'
+import { IWDrop, IWEnemy } from '../Utils/Models'
 import { IWLocation } from '../Utils/Models'
 
 interface IProps {
     enemies: IWEnemy[]
 }
 
-export const ChartEnemiesPerLocation: FunctionComponent<IProps> = (props: IProps) => {
+export const ChartDropsPerLocation: FunctionComponent<IProps> = (props: IProps) => {
     const [data, setData] = React.useState<{}>({})
 
     React.useEffect(() => {
@@ -20,15 +20,17 @@ export const ChartEnemiesPerLocation: FunctionComponent<IProps> = (props: IProps
         const newData: { [key: string]: any } = {}
 
         var locations = enemies.flatMap((e) => e.locations)
+        var drops = enemies.flatMap((d) => d.drops)
 
         var distinctlocs = locations
             .filter((loc, i, arr) => arr.findIndex((c) => c.name === loc.name) === i)
             .map((l) => l.name)
+
         newData['labels'] = distinctlocs
 
         let counts: number[] = []
         for (var item of distinctlocs) {
-            counts.push(locations.map((l) => l.name).filter((l) => l === item).length)
+            counts.push(drops.map((d) => d.location).filter((d) => d === item).length)
         }
 
         let backcolors: string[] = []
@@ -48,7 +50,7 @@ export const ChartEnemiesPerLocation: FunctionComponent<IProps> = (props: IProps
 
         newData['datasets'].push({
             key: '0',
-            label: 'Enemies',
+            label: 'Drops',
             data: counts,
             backgroundColor: backcolors,
             borderColor: bordcolors,
