@@ -24,15 +24,14 @@ export const ChartEnemiesPerLocation: FunctionComponent<IProps> = (
 
         var locations = enemies.flatMap((e) => e.locations)
 
-        var distinctlocs = locations
-            .filter(
-                (loc, i, arr) => arr.findIndex((c) => c.name === loc.name) === i
-            )
-            .map((l) => l.name)
-        newData['labels'] = distinctlocs
+        var distinctLocations = Array.from(
+            new Set(locations.map((l) => l.name))
+        )
+
+        newData['labels'] = distinctLocations
 
         let counts: number[] = []
-        for (var item of distinctlocs) {
+        for (var item of distinctLocations) {
             counts.push(
                 locations.map((l) => l.name).filter((l) => l === item).length
             )
