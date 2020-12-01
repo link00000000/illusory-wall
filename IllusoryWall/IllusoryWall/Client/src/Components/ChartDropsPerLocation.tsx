@@ -36,6 +36,7 @@ export const ChartDropsPerLocation: FunctionComponent<IProps> = (
                 drops.map((d) => d.location).filter((d) => d === item).length
             )
         }
+        counts = counts.filter((value) => value !== 0)
 
         let borderColors: string[] = []
         let backgroundColors: string[] = []
@@ -51,16 +52,16 @@ export const ChartDropsPerLocation: FunctionComponent<IProps> = (
             backgroundColors.push(backgroundColor)
         }
 
-        newData['datasets'] = []
-
-        newData['datasets'].push({
-            key: '0',
-            label: 'Drops',
-            data: counts,
-            backgroundColor: backgroundColors,
-            borderColor: borderColors,
-            borderWidth: 1
-        })
+        newData['datasets'] = [
+            {
+                key: '0',
+                label: 'Drops',
+                data: counts,
+                backgroundColor: backgroundColors,
+                borderColor: borderColors,
+                borderWidth: 1
+            }
+        ]
 
         setData(newData)
     }

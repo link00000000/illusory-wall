@@ -2,7 +2,6 @@ import React, { FunctionComponent } from 'react'
 import { Doughnut } from 'react-chartjs-2'
 import { Color } from '../Utils/Color'
 import { IWEnemy } from '../Utils/Models'
-import { IWLocation } from '../Utils/Models'
 
 interface IProps {
     enemies: IWEnemy[]
@@ -36,6 +35,7 @@ export const ChartEnemiesPerLocation: FunctionComponent<IProps> = (
                 locations.map((l) => l.name).filter((l) => l === item).length
             )
         }
+        counts = counts.filter((value) => value !== 0)
 
         let borderColors: string[] = []
         let backgroundColors: string[] = []
@@ -51,16 +51,16 @@ export const ChartEnemiesPerLocation: FunctionComponent<IProps> = (
             backgroundColors.push(backgroundColor)
         }
 
-        newData['datasets'] = []
-
-        newData['datasets'].push({
-            key: '0',
-            label: 'Enemies',
-            data: counts,
-            backgroundColor: backgroundColors,
-            borderColor: borderColors,
-            borderWidth: 1
-        })
+        newData['datasets'] = [
+            {
+                key: '0',
+                label: 'Enemies',
+                data: counts,
+                backgroundColor: backgroundColors,
+                borderColor: borderColors,
+                borderWidth: 1
+            }
+        ]
 
         setData(newData)
     }
