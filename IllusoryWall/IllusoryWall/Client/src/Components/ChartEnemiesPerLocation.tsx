@@ -1,3 +1,4 @@
+import { Empty } from 'antd'
 import React, { FunctionComponent } from 'react'
 import { Doughnut } from 'react-chartjs-2'
 import { Color } from '../Utils/Color'
@@ -10,7 +11,8 @@ interface IProps {
 export const ChartEnemiesPerLocation: FunctionComponent<IProps> = (
     props: IProps
 ) => {
-    const [data, setData] = React.useState<{}>({})
+    const [data, setData] = React.useState<{ [key: string]: any }>({})
+    const [length, setLength] = React.useState<number>(0)
 
     React.useEffect(() => {
         if (props.enemies.length > 0) {
@@ -63,6 +65,11 @@ export const ChartEnemiesPerLocation: FunctionComponent<IProps> = (
         ]
 
         setData(newData)
+        setLength(counts.length)
+    }
+
+    if (length === 0) {
+        return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
     }
 
     return (
