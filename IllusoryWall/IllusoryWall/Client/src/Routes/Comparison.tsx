@@ -1,4 +1,4 @@
-import { Card, Col, Row } from 'antd'
+import { Card, Col, Empty, Row } from 'antd'
 import React, { FunctionComponent } from 'react'
 import { ChartHP } from '../Components/ChartHP'
 import { ChartSouls } from '../Components/ChartSouls'
@@ -14,6 +14,21 @@ export const Comparison: FunctionComponent<IProps> = (props: IProps) => {
     const enemies = ViewEnemiesStore.useState((s) =>
         Object.values(s.enemies).filter((x) => x !== undefined && x !== null)
     )
+
+    if (enemies.length === 0) {
+        return (
+            <div
+                style={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center'
+                }}
+            >
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            </div>
+        )
+    }
 
     return (
         <Row justify='space-around'>
