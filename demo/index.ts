@@ -11,7 +11,6 @@ import { login } from '../IllusoryWall/IllusoryWall/Client/src/API/Auth'
 import { fetch as scrape } from '../IllusoryWall/IllusoryWall/Client/src/API/WebScraper'
 import { commit as addEnemy } from '../IllusoryWall/IllusoryWall/Client/src/API/AddEnemy'
 import { blue, red, green } from 'chalk'
-import { fail } from 'assert'
 ;(async () => {
     const baseURL = 'https://localhost:5001'
 
