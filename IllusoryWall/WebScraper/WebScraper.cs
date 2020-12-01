@@ -213,8 +213,13 @@ namespace WebScraper
         {
             var nodes = page.Html
                 .SelectNodes("//div[@class='mw-parser-output']//p[preceding-sibling::h2[1][span[@id='Description']]]")
-                .Select(n => n.InnerText.Trim())
+                ?.Select(n => n.InnerText.Trim())
                 .Where(n => n.Length > 0);
+
+            if (nodes == null || nodes.Count() == 0)
+            {
+                return "";
+            }
 
             return string.Join("\n", nodes);
         }
