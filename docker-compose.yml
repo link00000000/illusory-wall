@@ -1,11 +1,11 @@
 version: '3.8'
 services:
     db:
-        build: ./db
+        image: mariadb:10.5.8
         container_name: db
         command: --default-authentication-plugin=mysql_native_password
         volumes:
-            - ./.mysql_data:/var/lib/mysql
+            - mariadb_data:/var/lib/mysql
         environment:
             MYSQL_USER: user
             MYSQL_PASSWORD: user
@@ -20,8 +20,6 @@ services:
             - db
         depends_on:
             - db
-        ports:
-            - 80:80
         restart: unless-stopped
         environment:
             'ConnectionStrings:DefaultConnection': 'server=db;port=3306;user=user;password=user;database=illusory_wall'
@@ -39,6 +37,19 @@ services:
             PMA_USER: user
             PMA_PASSWORD: user
             PMA_ARBIRARY: 1
-        ports:
-            - 5002:80
         restart: 'no'
+
+    caddy:
+        build: ./caddy
+        container_name: caddy
+        volumes:
+            - caddy_data:/data
+            - caddy_config:/config
+        ports:
+            - 80:80
+            - 443:443
+
+volumes:
+    mariadb_data:
+    caddy_data:
+    caddy_config:

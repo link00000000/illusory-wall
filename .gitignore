@@ -601,6 +601,3 @@ dist
 .vscode-test
 
 # End of https://www.toptal.com/developers/gitignore/api/node,csharp,dotnetcore,aspnetcore
-
-# mysql container volume
-.mysql_data/

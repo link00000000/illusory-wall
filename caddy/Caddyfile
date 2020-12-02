@@ -1,0 +1,11 @@
+localhost, illusorywall.accidentallycoded.com {
+    reverse_proxy illusorywall:80
+}
+
+db.localhost, db.illusorywall.accidentallycoded.com {
+    basicauth * {
+        root JDJhJDE0JGNZTVRTY0RFU1RWallWTkNieWV0MmUvc3RhLjNMTDE0d2RzSnd0dGNUOEJKTXpoLjl4NjRh
+    }
+
+    reverse_proxy phpmyadmin:80
+}
