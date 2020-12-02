@@ -4,7 +4,7 @@ localhost, illusorywall.accidentallycoded.com {
 
 db.localhost, db.illusorywall.accidentallycoded.com {
     basicauth * {
-        root JDJhJDEwJFh4YU9uYWEyd0kydk1TZkhEOW9PQnVuM3A1clUzUHRRY2UxdGpkSWRvYzNNTWVnZVZDVC55
+        root JDJhJDE0JGNZTVRTY0RFU1RWallWTkNieWV0MmUvc3RhLjNMTDE0d2RzSnd0dGNUOEJKTXpoLjl4NjRh
     }
 
     reverse_proxy phpmyadmin:80
