@@ -3,7 +3,7 @@ import axios from 'axios'
 
 const ENDPOINT = '/webscraper'
 
-export async function fetch(url: string): Promise<IWEnemy> {
+export async function fetch(url: string, baseURL?: string): Promise<IWEnemy> {
     try {
         const response = await axios({
             method: 'GET',
@@ -11,7 +11,8 @@ export async function fetch(url: string): Promise<IWEnemy> {
             params: { url },
             validateStatus: function (_status) {
                 return true
-            }
+            },
+            baseURL
         })
 
         if (response.status === 400) {

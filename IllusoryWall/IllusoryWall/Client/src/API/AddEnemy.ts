@@ -10,7 +10,8 @@ const ENDPOINT = '/enemy/add'
  */
 export async function commit(
     model: IWEnemy,
-    token?: string
+    token?: string,
+    baseURL?: string
 ): Promise<Error | null> {
     try {
         const response = await axios({
@@ -20,7 +21,8 @@ export async function commit(
             headers: {
                 Authorization: 'Bearer ' + token
             },
-            validateStatus: () => true
+            validateStatus: () => true,
+            baseURL
         })
 
         if (response.status === 401) {

@@ -7,12 +7,16 @@ import { Credentials } from '../Utils/AuthModels'
  * @param credentials User's username and password
  * @throws
  */
-export async function login(credentials: Credentials): Promise<string> {
+export async function login(
+    credentials: Credentials,
+    baseURL?: string
+): Promise<string> {
     const response = await axios({
         method: 'POST',
         url: '/user/login',
         data: credentials,
-        validateStatus: () => true
+        validateStatus: () => true,
+        baseURL
     })
 
     if (response.status === 400) {

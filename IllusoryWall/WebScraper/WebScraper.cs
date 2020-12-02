@@ -84,7 +84,8 @@ namespace WebScraper
             return infoBox.CssSelect(".pi-item")
                 ?.ElementAtOrDefault(2)
                 ?.ChildNodes.ElementAtOrDefault(3)
-                ?.ChildNodes.Select(l => l.InnerText)
+                ?.ChildNodes.Where(d => d.Name == "a")
+                .Select(l => l.InnerText)
                 .Where(l => l.Length > 0);
         }
 
@@ -94,7 +95,8 @@ namespace WebScraper
             return infoBox.CssSelect(".pi-item")
                 ?.ElementAtOrDefault(3)
                 ?.ChildNodes.ElementAtOrDefault(3)
-                ?.ChildNodes.Select(d => d.InnerText)
+                ?.ChildNodes.Where(d => d.Name == "a")
+                .Select(d => d.InnerText)
                 .Where(d => d.Length > 0);
         }
 
@@ -211,8 +213,13 @@ namespace WebScraper
         {
             var nodes = page.Html
                 .SelectNodes("//div[@class='mw-parser-output']//p[preceding-sibling::h2[1][span[@id='Description']]]")
-                .Select(n => n.InnerText.Trim())
+                ?.Select(n => n.InnerText.Trim())
                 .Where(n => n.Length > 0);
+
+            if (nodes == null || nodes.Count() == 0)
+            {
+                return "";
+            }
 
             return string.Join("\n", nodes);
         }
