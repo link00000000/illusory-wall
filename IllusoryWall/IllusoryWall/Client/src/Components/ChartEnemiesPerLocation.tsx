@@ -1,0 +1,84 @@
+import { Empty } from 'antd'
+import React, { FunctionComponent } from 'react'
+import { Doughnut } from 'react-chartjs-2'
+import { Color } from '../Utils/Color'
+import { IWEnemy } from '../Utils/Models'
+
+interface IProps {
+    enemies: IWEnemy[]
+}
+
+export const ChartEnemiesPerLocation: FunctionComponent<IProps> = (
+    props: IProps
+) => {
+    const [data, setData] = React.useState<{ [key: string]: any }>({})
+    const [length, setLength] = React.useState<number>(0)
+
+    React.useEffect(() => {
+        if (props.enemies.length > 0) {
+            mapData(props.enemies)
+        }
+    }, [props.enemies])
+
+    const mapData = (enemies: IWEnemy[]) => {
+        const newData: { [key: string]: any } = {}
+
+        var locations = enemies.flatMap((e) => e.locations)
+
+        var distinctLocations = Array.from(
+            new Set(locations.map((l) => l.name))
+        )
+
+        newData['labels'] = distinctLocations
+
+        let counts: number[] = []
+        for (var item of distinctLocations) {
+            counts.push(
+                locations.map((l) => l.name).filter((l) => l === item).length
+            )
+        }
+        counts = counts.filter((value) => value !== 0)
+
+        let borderColors: string[] = []
+        let backgroundColors: string[] = []
+
+        for (let i = 0; i < counts.length; ++i) {
+            const color = Color.random()
+            const borderColor = color.rgba()
+
+            color.a = 0.5
+            const backgroundColor = color.rgba()
+
+            borderColors.push(borderColor)
+            backgroundColors.push(backgroundColor)
+        }
+
+        newData['datasets'] = [
+            {
+                key: '0',
+                label: 'Enemies',
+                data: counts,
+                backgroundColor: backgroundColors,
+                borderColor: borderColors,
+                borderWidth: 1
+            }
+        ]
+
+        setData(newData)
+        setLength(counts.length)
+    }
+
+    if (length === 0) {
+        return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+    }
+
+    return (
+        <Doughnut
+            data={data}
+            options={{
+                legend: { display: false }
+            }}
+            datasetKeyProvider={({ key }) => key}
+        />
+    )
+}
