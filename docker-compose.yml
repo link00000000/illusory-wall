@@ -39,5 +39,15 @@ services:
             PMA_ARBIRARY: 1
         restart: 'no'
 
+    caddy:
+        build: ./caddy
+        container_name: caddy
+        volumes:
+            - caddy_data:/data
+        ports:
+            - 80:80
+            - 443:443
+
 volumes:
     mysql_data:
+    caddy_data:
