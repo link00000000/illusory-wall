@@ -20,8 +20,6 @@ services:
             - db
         depends_on:
             - db
-        ports:
-            - 80:80
         restart: unless-stopped
         environment:
             'ConnectionStrings:DefaultConnection': 'server=db;port=3306;user=user;password=user;database=illusory_wall'
@@ -39,8 +37,6 @@ services:
             PMA_USER: user
             PMA_PASSWORD: user
             PMA_ARBIRARY: 1
-        ports:
-            - 5002:80
         restart: 'no'
 
 volumes:
