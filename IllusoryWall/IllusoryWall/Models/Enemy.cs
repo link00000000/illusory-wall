@@ -55,6 +55,10 @@ namespace IllusoryWall.Models
         /// </summary>
         [InverseProperty("Enemy")]
         public virtual ICollection<Damage> Damages { get; set; }
+
+        // Required to create a many-to-many relationship
+        [JsonIgnore]
+        public virtual ICollection<EnemyHitListJoin> EnemyHitListJoins { get; set; }
     }
 
     class PartialEnemy : Enemy

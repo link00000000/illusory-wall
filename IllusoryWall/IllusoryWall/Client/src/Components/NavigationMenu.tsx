@@ -34,8 +34,8 @@ const navigationItems: {
         icon: <LineChartOutlined />,
         authorization: AuthorizationLevel.None
     },
-    Hitlist: {
-        route: '/hitlist',
+    Hitlists: {
+        route: '/hitlists',
         icon: <AimOutlined />,
         authorization: AuthorizationLevel.User
     },

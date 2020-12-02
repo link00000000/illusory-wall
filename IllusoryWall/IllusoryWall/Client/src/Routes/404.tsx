@@ -1,24 +1,21 @@
-import React, { Component } from 'react'
-import { RouteComponentProps } from 'react-router'
+import { Button } from 'antd'
+import React, { FunctionComponent } from 'react'
+import { RouteComponentProps, useHistory, useLocation } from 'react-router'
+import { ErrorMessage } from '../Components/ErrorMessage'
 
 interface IProps extends RouteComponentProps {}
-type IState = {}
 
-export class _404 extends Component<IProps, IState> {
-    static displayName = _404.name
+export const _404: FunctionComponent<IProps> = (props: IProps) => {
+    const history = useHistory()
 
-    constructor(props: IProps) {
-        super(props)
-
-        this.state = {}
-    }
-
-    render() {
-        return (
-            <div>
-                <h3>404: Not found</h3>
-                <p>{this.props.location.pathname}</p>
-            </div>
-        )
-    }
+    return (
+        <ErrorMessage
+            message='Page Not Found'
+            button={
+                <Button type='primary' onClick={() => history.push('/')}>
+                    Back Home
+                </Button>
+            }
+        />
+    )
 }

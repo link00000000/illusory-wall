@@ -4,6 +4,7 @@ import { RouteComponentProps } from 'react-router-dom'
 import * as FetchEnemyAPI from '../API/FetchEnemy'
 import { EnemyCard } from '../Components/EnemyCard'
 import { EnemyCardSkeleton } from '../Components/EnemyCardSkeleton'
+import { Homepage } from '../Components/Homepage'
 import { ViewEnemiesStore } from '../Store/ViewEnemiesStore'
 import { IWEnemy } from '../Utils/Models'
 import styles from './ViewEnemy.module.css'
@@ -44,7 +45,7 @@ export const ViewEnemy: FunctionComponent<IProps> = (props: IProps) => {
     const enemies = ViewEnemiesStore.useState((s) => s.enemies)
 
     if (Object.entries(enemies).length === 0) {
-        return <p>@TODO Homepage</p>
+        return <Homepage />
     }
 
     return (

@@ -33,3 +33,15 @@ export type EnemyEntry = {
     name: string
     id: number
 }
+
+export type IWHitListEntry = {
+    id: number
+    name: string
+    imagePath: string
+    completed: boolean
+}
+
+export type IWHitList = {
+    id: number
+    entries: IWHitListEntry[]
+}
