@@ -14,7 +14,7 @@ services:
         restart: unless-stopped
 
     illusorywall:
-        image: link00000000/illusorywall:latest
+        image: illusorywall/illusorywall:latest
         container_name: illusorywall
         links:
             - db
