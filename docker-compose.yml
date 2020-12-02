@@ -5,7 +5,7 @@ services:
         container_name: db
         command: --default-authentication-plugin=mysql_native_password
         volumes:
-            - ./.mysql_data:/var/lib/mysql
+            - mysql_data:/var/lib/mysql
         environment:
             MYSQL_USER: user
             MYSQL_PASSWORD: user
@@ -42,3 +42,6 @@ services:
         ports:
             - 5002:80
         restart: 'no'
+
+volumes:
+    mysql_data:
