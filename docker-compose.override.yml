@@ -5,9 +5,6 @@ services:
             - 3306:3306
         restart: 'no'
 
-    illusorywall:
-        build: ./IllusoryWall
-
     phpmyadmin:
         ports:
             - 8080:80
